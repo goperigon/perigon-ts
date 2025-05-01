@@ -18,6 +18,11 @@
   "module": "./dist/esm/index.js",
   "sideEffects": false,
 {{/supportsES6}}
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc{{#supportsES6}} && tsc -p tsconfig.esm.json{{/supportsES6}}",
     "test": "jest --coverage",

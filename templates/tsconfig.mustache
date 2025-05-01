@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "target": "es6",
+    "target": "{{#supportsES6}}es6{{/supportsES6}}{{^supportsES6}}es5{{/supportsES6}}",
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
@@ -10,5 +10,8 @@
     "strict": true,
     "declarationMap": true
   },
-  "exclude": ["dist", "node_modules"]
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

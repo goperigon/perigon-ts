@@ -12,6 +12,11 @@
   "typings": "./dist/index.d.ts",
   "module": "./dist/esm/index.js",
   "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc && tsc -p tsconfig.esm.json",
     "test": "jest --coverage",
