@@ -5,8 +5,9 @@
   "author": "OpenAPI-Generator",
   "repository": {
     "type": "git",
-    "url": "https://github.com/goperigon/perigon-sdks/tree/main/sdk/ts"
+    "url": "https://github.com/goperigon/perigon-ts"
   },
+  "license": "MIT",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "module": "./dist/esm/index.js",

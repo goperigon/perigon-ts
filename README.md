@@ -16,17 +16,9 @@
   <a href="https://github.com/goperigon/perigon-ts/actions/workflows/test.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/goperigon/perigon-ts/test.yml?label=tests%20%E2%9C%85&style=for-the-badge" alt="tests status">
   </a>
-  <!-- bundle size -->
-  <a href="https://bundlephobia.com/package/@goperigon/perigon-ts">
-    <img src="https://img.shields.io/bundlephobia/minzip/@goperigon/perigon-ts?style=for-the-badge" alt="bundle size (min + gzip)">
-  </a>
   <!-- docs -->
   <a href="https://docs.perigon.io">
     <img src="https://img.shields.io/badge/docs-perigon.io-informational?style=for-the-badge&logo=readthedocs" alt="documentation">
-  </a>
-  <!-- latest tag -->
-  <a href="https://github.com/goperigon/perigon-ts/releases">
-    <img src="https://img.shields.io/github/v/tag/goperigon/perigon-ts?label=version&style=for-the-badge" alt="latest tag">
   </a>
   <!-- license -->
   <a href="LICENSE">
