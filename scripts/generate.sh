@@ -7,3 +7,4 @@ npx @openapitools/openapi-generator-cli generate \
   -c ts-fetch.config.json
 
 npx prettier --write "**/*.{ts,js,json,md}"
+npx doctoc README.md --github --maxlevel 2

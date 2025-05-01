@@ -7,16 +7,14 @@
 <p align="center">TypeScript client for the <strong>Perigon&nbsp;API</strong></p>
 
 <!-- ----------  Badges  ---------- -->
-<!-- ----------  Badges  ---------- -->
-<!-- ────────── Badges ────────── -->
 <p align="center">
   <!-- npm -->
   <a href="https://www.npmjs.com/package/@goperigon/perigon-ts">
     <img src="https://img.shields.io/npm/v/@goperigon/perigon-ts?style=for-the-badge" alt="npm version">
   </a>
   <!-- tests -->
-  <a href="https://github.com///actions/workflows/test.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status///test.yml?label=tests%20%E2%9C%85&style=for-the-badge" alt="tests status">
+  <a href="https://github.com/goperigon/perigon-ts/actions/workflows/test.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/goperigon/perigon-ts/test.yml?label=tests%20%E2%9C%85&style=for-the-badge" alt="tests status">
   </a>
   <!-- bundle size -->
   <a href="https://bundlephobia.com/package/@goperigon/perigon-ts">
@@ -27,26 +25,41 @@
     <img src="https://img.shields.io/badge/docs-perigon.io-informational?style=for-the-badge&logo=readthedocs" alt="documentation">
   </a>
   <!-- latest tag -->
-  <a href="https://github.com///releases">
-    <img src="https://img.shields.io/github/v/tag//?label=version&style=for-the-badge" alt="latest tag">
+  <a href="https://github.com/goperigon/perigon-ts/releases">
+    <img src="https://img.shields.io/github/v/tag/goperigon/perigon-ts?label=version&style=for-the-badge" alt="latest tag">
   </a>
   <!-- license -->
   <a href="LICENSE">
-    <img src="https://img.shields.io/npm/l/@goperigon/perigon-ts?style=for-the-badge" alt="license">
+    <img src="https://img.shields.io/github/license/goperigon/perigon-ts?style=for-the-badge" alt="license">
   </a>
 </p>
 
-A fully‑typed, promise‑based SDK generated from the official Perigon OpenAPI specification. Works in Node.js, modern browsers, Cloudflare Workers, and Deno.
+A fully-typed, promise-based SDK generated from the official Perigon OpenAPI specification. Works in Node.js, modern browsers, Cloudflare Workers, and Deno.
+
+## Table&nbsp;of&nbsp;Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [✨ Features](#-features)
+- [📦 Installation](#-installation)
+- [🚀 Quick start](#-quick-start)
+- [🧑‍💻 Endpoint snippets](#-endpoint-snippets)
+- [🧪 Running integration tests](#-running-integration-tests)
+- [🤝 Contributing](#-contributing)
+- [🪪 License](#-license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ---
 
 ## ✨ Features
 
-- **Type‑safe** responses & request bodies (goodbye `any`)
-- **ESM & CommonJS** bundles with sourcemaps
-- Batteries‑included **pagination** helpers and **vector search**
-- Zero‑dependency core – bring your own fetch if you need to
-- Generated directly from [docs.perigon.io](https://docs.perigon.io) so it’s always in sync
+- **Type-safe** request/response models (goodbye `any`)
+- Ships as both **ESM & CommonJS** with sourcemaps
+- **Zero-dependency core** – bring your own `fetch` if needed
+- Generated directly from [docs.perigon.io](https://docs.perigon.io), so it’s always in sync
+- Runs in **Node, browsers, Deno, and edge runtimes**
 
 ---
 
@@ -222,12 +235,6 @@ npm test
 ```
 
 Set `PERIGON_API_KEY` in your CI to keep tests green.
-
----
-
-## 📚 Full reference
-
-For the full docs see **[docs.perigon.io](https://docs.perigon.io/)**.
 
 ---
 
