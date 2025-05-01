@@ -1,0 +1,37 @@
+## @goperigon/perigon-ts – TypeScript client for the Perigon API
+
+### Install
+
+```bash
+npm install @goperigon/perigon-ts
+```
+
+### Basic usage
+
+```ts
+import { Configuration, V1Api } from "@goperigon/perigon-ts";
+
+const perigon = new V1Api(
+  new Configuration({
+    // Replace with your API key or inject from env
+    apiKey: process.env.PERIGON_API_KEY!,
+    // basePath defaults to https://api.perigon.io; override if using a proxy
+    // basePath: 'https://api.perigon.io'
+  }),
+);
+
+// 🔍 Search recent news articles
+const { articles } = await perigon.searchArticles({
+  q: "artificial intelligence",
+  size: 5,
+});
+console.log(articles);
+
+// 👤 Look up a journalist by ID
+const journalist = await perigon.getJournalistById({ id: "123456" });
+console.log(journalist);
+```
+
+> All methods return **typed** promises, giving you full IntelliSense with no manual DTOs.
+
+For full endpoint reference and advanced query parameters, visit [docs.perigon.io](https://docs.perigon.io/).

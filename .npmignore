@@ -1,0 +1,8 @@
+# ignore everything by default
+*
+
+# but include these files/folders
+!dist/
+!README.md
+!LICENSE
+!package.json

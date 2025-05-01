@@ -1,0 +1,7 @@
+{
+  "npmName": "@goperigon/perigon-ts",
+  "npmVersion": "0.1.0",
+  "moduleName": "PerigonClient",
+  "supportsES6": true,
+  "withInterfaces": true
+}
