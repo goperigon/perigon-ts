@@ -24,3 +24,5 @@ jobs:
 
       - name: Run tests
         run: npm test
+        env:
+          PERIGON_API_KEY: ${{ secrets.PERIGON_API_KEY }}
