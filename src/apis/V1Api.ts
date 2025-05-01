@@ -76,302 +76,1115 @@ import {
 } from "../models/index";
 
 export interface GetJournalistByIdRequest {
+  /**
+   * Parameter id
+   * @required
+   */
   id: string;
 }
 
 export interface SearchArticlesRequest {
+  /**
+   * Search query, each article will be scored and ranked against it. Articles are searched on the title, description, and content fields.
+   */
   q?: string;
+  /**
+   * Search article headlines/title field. Semantic similar to q parameter.
+   */
   title?: string;
+  /**
+   * Search query on the description field. Semantic similar to q parameter.
+   */
   desc?: string;
+  /**
+   * Search query on the article\&#39;s body of content field. Semantic similar to q parameter.
+   */
   content?: string;
+  /**
+   * Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   */
   url?: string;
+  /**
+   * Article ID will search for a news article by the ID of the article. If several parameters are passed, all matched articles will be returned.
+   */
   articleId?: Array<string>;
+  /**
+   * Search for related content using a cluster ID. Passing a cluster ID will filter results to only the content found within the cluster.
+   */
   clusterId?: Array<string>;
+  /**
+   * \&#39;relevance\&#39; to sort by relevance to the query, \&#39;date\&#39; to sort by the publication date (desc), \&#39;pubDate\&#39; is a synonym to \&#39;date\&#39;, \&#39;addDate\&#39; to sort by \&#39;addDate\&#39; field (desc), \&#39;refreshDate\&#39; to sort by \&#39;refreshDate\&#39; field (desc). Defaults to \&#39;relevance\&#39;
+   */
   sortBy?: AllEndpointSortBy;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * The number of items per page.
+   */
   size?: number;
+  /**
+   * \&#39;from\&#39; filter, will search articles published after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   */
   from?: Date;
+  /**
+   * \&#39;to\&#39; filter, will search articles published before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   */
   to?: Date;
+  /**
+   * \&#39;addDateFrom\&#39; filter, will search articles added after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   */
   addDateFrom?: Date;
+  /**
+   * \&#39;addDateTo\&#39; filter, will search articles added before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   */
   addDateTo?: Date;
+  /**
+   * Will search articles that were refreshed after the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   */
   refreshDateFrom?: Date;
+  /**
+   * Will search articles that were refreshed before the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   */
   refreshDateTo?: Date;
+  /**
+   * Medium will filter out news articles medium, which could be \&#39;Video\&#39; or \&#39;Article\&#39;. If several parameters are passed, all matched articles will be returned.
+   */
   medium?: Array<string>;
+  /**
+   * Publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   */
   source?: Array<string>;
+  /**
+   * One of the supported source groups. Find Source Groups in the guided part of our documentation...
+   */
   sourceGroup?: Array<string>;
+  /**
+   * A list of built-in source group names to exclude from the results. The Perigon API categorizes sources into groups (for example, “top10” or “top100”) based on type or popularity. Using this filter allows you to remove articles coming from any source that belongs to one or more of the specified groups.
+   */
   excludeSourceGroup?: Array<string>;
+  /**
+   * The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   */
   excludeSource?: Array<string>;
+  /**
+   * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
+   */
   paywall?: boolean;
+  /**
+   * Author names to filter by. Article author bylines are used as a source field. If multiple parameters are passed, they will be applied as OR operations.
+   */
   byline?: Array<string>;
+  /**
+   * A list of author names to include. Only articles written by any of the specified authors are returned. This is ideal when you wish to focus on content from particular voices or experts.
+   */
   author?: Array<string>;
+  /**
+   *  A list of author names to exclude from the search results. Any article written by an author whose name matches one in this list will be omitted, which helps to avoid content from certain individuals.
+   */
   excludeAuthor?: Array<string>;
+  /**
+   * Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
+   */
   journalistId?: Array<string>;
+  /**
+   * A list of journalist (or reporter) identifiers to exclude. If an article is written by a journalist whose ID matches any in this list, it will not be part of the result set.
+   */
   excludeJournalistId?: Array<string>;
+  /**
+   * Language code to filter by language. If multiple parameters are passed, they will be applied as OR operations.
+   */
   language?: Array<string>;
+  /**
+   *  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
+   */
   excludeLanguage?: Array<string>;
+  /**
+   * Expand a query to search the translation, translatedTitle, and translatedDescription fields for non-English articles.
+   */
   searchTranslation?: boolean;
+  /**
+   * Labels to filter by, could be \&#39;Opinion\&#39;, \&#39;Paid-news\&#39;, \&#39;Non-news\&#39;, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   label?: Array<string>;
+  /**
+   * Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
+   */
   excludeLabel?: Array<string>;
+  /**
+   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   */
   category?: Array<string>;
+  /**
+   * A list of article categories to be omitted. If an article is tagged with any category present in this list (such as “Polotics”, “Tech”, “Sports”, etc.), it will not appear in the search results.
+   */
   excludeCategory?: Array<string>;
+  /**
+   * Filters results to include only articles with the specified topics. Topics are more specific classifications than categories, with an article potentially having multiple topics assigned. Perigon uses both human and machine curation to maintain an evolving list of available topics. Common examples include \&#39;Markets\&#39;, \&#39;Crime\&#39;, \&#39;Cryptocurrency\&#39;, \&#39;Social Issues\&#39;, \&#39;College Sports\&#39;, etc. See the Topics page in Docs for a complete list of available topics.
+   */
   topic?: Array<string>;
+  /**
+   * Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   excludeTopic?: Array<string>;
+  /**
+   * Returns only articles that point to specified links (as determined by the \&#39;links\&#39; field in the article response).
+   */
   linkTo?: string;
+  /**
+   * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is \&#39;true\&#39;.
+   */
   showReprints?: boolean;
+  /**
+   * Shows all articles belonging to the same reprint group. A reprint group includes one original article (the first one processed by the API) and all its known reprints.
+   */
   reprintGroupId?: string;
+  /**
+   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   city?: Array<string>;
+  /**
+   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+   */
   excludeCity?: Array<string>;
+  /**
+   * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   area?: Array<string>;
+  /**
+   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   state?: Array<string>;
+  /**
+   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+   */
   excludeState?: Array<string>;
+  /**
+   * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
+   */
   county?: Array<string>;
+  /**
+   * Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   */
   excludeCounty?: Array<string>;
+  /**
+   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   locationsCountry?: Array<string>;
+  /**
+   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
   country?: Array<string>;
+  /**
+   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+   */
   excludeLocationsCountry?: Array<string>;
+  /**
+   * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   */
   location?: Array<string>;
+  /**
+   * Latitude of the center point to search places
+   */
   lat?: number;
+  /**
+   * Longitude of the center point to search places
+   */
   lon?: number;
+  /**
+   * Maximum distance (in km) from starting point to search articles by tagged places
+   */
   maxDistance?: number;
+  /**
+   * Find articles published by sources that are located within a given city.
+   */
   sourceCity?: Array<string>;
+  /**
+   * Find articles published by sources that are located within a given county.
+   */
   sourceCounty?: Array<string>;
+  /**
+   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+   */
   sourceCountry?: Array<string>;
+  /**
+   * Find articles published by sources that are located within a given state.
+   */
   sourceState?: Array<string>;
+  /**
+   * Latitude of the center point to search articles created by local publications.
+   */
   sourceLat?: number;
+  /**
+   * Latitude of the center point to search articles created by local publications.
+   */
   sourceLon?: number;
+  /**
+   * Maximum distance from starting point to search articles created by local publications.
+   */
   sourceMaxDistance?: number;
+  /**
+   * List of person Wikidata IDs for filtering.
+   */
   personWikidataId?: Array<string>;
+  /**
+   * A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
+   */
   excludePersonWikidataId?: Array<string>;
+  /**
+   * List of person names for exact matches. Boolean and complex logic is not supported on this paramter.
+   */
   personName?: Array<string>;
+  /**
+   * A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
+   */
   excludePersonName?: Array<string>;
+  /**
+   * List of company IDs to filter by.
+   */
   companyId?: Array<string>;
+  /**
+   * A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
+   */
   excludeCompanyId?: Array<string>;
+  /**
+   * Search by company name.
+   */
   companyName?: string;
+  /**
+   * Search by company domains for filtering. E.g. companyDomain&#x3D;apple.com.
+   */
   companyDomain?: Array<string>;
+  /**
+   * A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, “example.com”), it will not be returned in the results.
+   */
   excludeCompanyDomain?: Array<string>;
+  /**
+   * Search by company symbols.
+   */
   companySymbol?: Array<string>;
+  /**
+   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+   */
   excludeCompanySymbol?: Array<string>;
+  /**
+   * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
+   */
   showNumResults?: boolean;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   positiveSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   positiveSentimentTo?: number;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
+   */
   neutralSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   neutralSentimentTo?: number;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   negativeSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   negativeSentimentTo?: number;
+  /**
+   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
+   */
   taxonomy?: Array<string>;
+  /**
+   * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   */
   prefixTaxonomy?: string;
 }
 
 export interface SearchCompaniesRequest {
+  /**
+   * Search by company id.
+   */
   id?: Array<string>;
+  /**
+   * Search by ticker symbol.
+   */
   symbol?: Array<string>;
+  /**
+   * Search by company domain.
+   */
   domain?: Array<string>;
+  /**
+   * Search by company country.
+   */
   country?: Array<string>;
+  /**
+   * Search by exchange name.
+   */
   exchange?: Array<string>;
+  /**
+   * Minimum number of employees.
+   */
   numEmployeesFrom?: number;
+  /**
+   * Maximum number of employees.
+   */
   numEmployeesTo?: number;
+  /**
+   * Starting IPO date.
+   */
   ipoFrom?: Date;
+  /**
+   * Ending IPO date.
+   */
   ipoTo?: Date;
+  /**
+   * Search companies over \&#39;name\&#39;, \&#39;altNames\&#39;, \&#39;domains\&#39; and \&#39;symbols.symbol\&#39; fields. Boolean operators and logic are supported.
+   */
   q?: string;
+  /**
+   * Search by company name. Boolean operators and logic are supported.
+   */
   name?: string;
+  /**
+   * Search by industry. Boolean operators and logic are supported.
+   */
   industry?: string;
+  /**
+   * Search by sector. Boolean operators and logic are supported.
+   */
   sector?: string;
+  /**
+   * The number of items per page.
+   */
   size?: number;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
 }
 
 export interface SearchJournalists1Request {
+  /**
+   * Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
+   */
   id?: Array<string>;
+  /**
+   * Searches through name, title, twitterBio fields with priority given to the name, then to the title, then to the twitter bio. Returns results sorted by relevance.
+   */
   q?: string;
+  /**
+   * Searches through journalist names, scores and ranks them, returns results sorted by relevance.
+   */
   name?: string;
+  /**
+   * Searches for journalists by (exact match) twitter handle.
+   */
   twitter?: string;
+  /**
+   * The number of items per page.
+   */
   size?: number;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * Search for journalist by the publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   */
   source?: Array<string>;
+  /**
+   * Searches for journalists by topic.
+   */
   topic?: Array<string>;
+  /**
+   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   category?: Array<string>;
+  /**
+   * Filter journalists by label. For example, searching \&#39;Opinion\&#39; will return the journalists where \&#39;Opinion\&#39;-type articles is one of the top labels for the articles they publish.
+   */
   label?: Array<string>;
+  /**
+   * Returns the journalists with the minimum indicated number of average monthly posts.
+   */
   minMonthlyPosts?: number;
+  /**
+   * Returns the journalist with the maximum indicated number of average monthly posts.
+   */
   maxMonthlyPosts?: number;
+  /**
+   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
   country?: Array<string>;
+  /**
+   * Starting date when the record was last updated.
+   */
   updatedAtFrom?: Date;
+  /**
+   * Ending date when the record was last updated.
+   */
   updatedAtTo?: Date;
+  /**
+   * If \&#39;true\&#39;, shows accurate number of results matched by the query. By default, the counter is accurate only up to 10,000 results due performance reasons.
+   */
   showNumResults?: boolean;
 }
 
 export interface SearchPeopleRequest {
+  /**
+   * Search by name of the person. Supports exact matching with quotes (\&quot;\&quot;) and Boolean operators (AND, OR, NOT).
+   */
   name?: string;
+  /**
+   * Filter by Wikidata entity ID(s). Use this to find specific people by their Wikidata identifiers.
+   */
   wikidataId?: Array<string>;
+  /**
+   * Filter by Wikidata occupation ID(s). Use this to find people with specific occupations.
+   */
   occupationId?: Array<string>;
+  /**
+   * Search by occupation name. Supports exact matching with quotes (\&quot;\&quot;) and Boolean operators (AND, OR, NOT).
+   */
   occupationLabel?: string;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * The number of items per page.
+   */
   size?: number;
 }
 
 export interface SearchSourcesRequest {
+  /**
+   * Domain name for the media source to lookup. This parameter supports wildcard queries, ie. \&quot;*.cnn.com\&quot; will match all subdomains for cnn.com.
+   */
   domain?: Array<string>;
+  /**
+   * Search by name of source. This parameter supports complex boolean search operators, and also searches the altNames field for alternative names of the source.
+   */
   name?: string;
+  /**
+   * Find all sources within a sourceGroup. Find Source Groups in the guided part of our documentation...
+   */
   sourceGroup?: string;
+  /**
+   * Use \&#39;relevance\&#39; to sort by relevance to the query, \&#39;globalRank\&#39; for top ranked sources based on popularity, \&#39;monthlyVisits\&#39; for sources with the largest audience, \&#39;avgMonthlyPosts\&#39; for sources with the highest publishing frequency. Defaults to \&#39;relevance\&#39;.
+   */
   sortBy?: SortBy;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * The number of items per page.
+   */
   size?: number;
+  /**
+   * Filter by popularity. Enter a minimum number of monthly visits that the source must have in order to match your query.
+   */
   minMonthlyVisits?: number;
+  /**
+   * Enter a maximum number of monthly visits that the source must have in order to match your query.
+   */
   maxMonthlyVisits?: number;
+  /**
+   * Returns the sources that have at least this number of average monthly posts.
+   */
   minMonthlyPosts?: number;
+  /**
+   * Returns the sources that have at most this number of average monthly posts.
+   */
   maxMonthlyPosts?: number;
+  /**
+   * Country code to filter sources by the countries in which they most commonly cover. If multiple parameters are passed, they will be applied as OR operations.
+   */
   country?: Array<string>;
+  /**
+   * Find all local publications that are located within a given country.
+   */
   sourceCountry?: Array<string>;
+  /**
+   * Find all local publications that are located within a given state.
+   */
   sourceState?: Array<string>;
+  /**
+   * Find all local publications that are located within a given county.
+   */
   sourceCounty?: Array<string>;
+  /**
+   * Find all local publications that are located within a given city.
+   */
   sourceCity?: Array<string>;
+  /**
+   * Latitude of the center point to search local publications.
+   */
   sourceLat?: number;
+  /**
+   * Longitude of the center point to search local publications.
+   */
   sourceLon?: number;
+  /**
+   * Maximum distance from starting point to search local publications.
+   */
   sourceMaxDistance?: number;
+  /**
+   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   category?: Array<string>;
+  /**
+   * Find sources by topic. For example, searching \&#39;Markets\&#39; will return the sources where \&#39;Markets\&#39; is one of the top 10 topics that they cover.
+   */
   topic?: Array<string>;
+  /**
+   * Filter sources by label. For example, searching \&#39;Opinion\&#39; will return the sources where \&#39;Opinion\&#39;-type articles is one of the top labels for the articles they publish.
+   */
   label?: Array<string>;
+  /**
+   * Use \&#39;true\&#39; to find only sources known to have a paywall, or use \&#39;false\&#39; to filter for only sources that do not have a paywall.
+   */
   paywall?: boolean;
+  /**
+   * Controls whether subdomains are included in the response. When set to true (default), all relevant subdomains of media sources will be returned as separate results. Set to false to consolidate results to parent domains only.
+   */
   showSubdomains?: boolean;
+  /**
+   * If \&#39;true\&#39;, shows accurate number of results matched by the query. By default, the counter is accurate only up to 10,000 results due performance reasons.
+   */
   showNumResults?: boolean;
 }
 
 export interface SearchStoriesRequest {
+  /**
+   * Search story by name, summary and key points. Preference is given to the name field. Supports complex query syntax, same way as q parameter from /all endpoint.
+   */
   q?: string;
+  /**
+   * Search story by name. Supports complex query syntax, same way as q parameter from /all endpoint.
+   */
   name?: string;
+  /**
+   * Filter to specific story. Passing a cluster ID will filter results to only the content found within the cluster. Multiple params could be passed.
+   */
   clusterId?: Array<string>;
+  /**
+   * Sort stories by count (\&#39;count\&#39;), total count (\&#39;totalCount\&#39;), creation date (\&#39;createdAt\&#39;), last updated date (\&#39;updatedAt\&#39;), or relevance (\&#39;relevance\&#39;). By default is sorted by \&#39;createdAt\&#39;
+   */
   sortBy?: SortBy;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * The number of items per page.
+   */
   size?: number;
+  /**
+   * \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   */
   from?: Date;
+  /**
+   * \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
+   */
   to?: Date;
+  /**
+   * Filter by topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   topic?: Array<string>;
+  /**
+   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles. More ➜
+   */
   category?: Array<string>;
+  /**
+   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
+   */
   taxonomy?: Array<string>;
+  /**
+   * Filter stories by sources that wrote articles belonging to this story. At least 1 article is required for story to match. Multiple parameters could be passed.
+   */
   source?: Array<string>;
+  /**
+   * Filter stories by sources that wrote articles belonging to this story. Source groups are expanded into a list of sources. At least 1 article by the source is required for story to match. Multiple params could be passed.
+   */
   sourceGroup?: Array<string>;
+  /**
+   * Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
+   */
   minUniqueSources?: number;
+  /**
+   * List of person Wikidata IDs for filtering. Filter is applied on topPeople field.
+   */
   personWikidataId?: Array<string>;
+  /**
+   * List of people names. Filtering is applied on topPeople field.
+   */
   personName?: string;
+  /**
+   * List of company IDs for filtering. Filtering is applied to topCompanies field.
+   */
   companyId?: Array<string>;
+  /**
+   * List of company names for filtering. Filtering is applied on topCompanies field.
+   */
   companyName?: string;
+  /**
+   * List of company domains for filtering. Filtering is applied on topCompanies field.
+   */
   companyDomain?: Array<string>;
+  /**
+   * List of company tickers for filtering. Filtering is applied on topCompanies field.
+   */
   companySymbol?: Array<string>;
+  /**
+   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
   country?: Array<string>;
+  /**
+   * Filter local news by state. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   */
   state?: Array<string>;
+  /**
+   * Filter local news by city. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   */
   city?: Array<string>;
+  /**
+   * Filter local news by area. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   */
   area?: Array<string>;
+  /**
+   * Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
+   */
   minClusterSize?: number;
+  /**
+   * Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
+   */
   maxClusterSize?: number;
+  /**
+   * Returns stories with name assigned. Defaults to true.
+   */
   nameExists?: boolean;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   positiveSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   positiveSentimentTo?: number;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
+   */
   neutralSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   neutralSentimentTo?: number;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   negativeSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   negativeSentimentTo?: number;
+  /**
+   * \&#39;initializedFrom\&#39; filter, will search stories that became available after provided date
+   */
   initializedFrom?: Date;
+  /**
+   * \&#39;initializedTo\&#39; filter, will search stories that became available before provided date
+   */
   initializedTo?: Date;
+  /**
+   * Will return stories with \&#39;updatedAt\&#39; &gt;&#x3D; \&#39;updatedFrom\&#39;.
+   */
   updatedFrom?: Date;
+  /**
+   * Will return stories with \&#39;updatedAt\&#39; &lt;&#x3D; \&#39;updatedTo\&#39;.
+   */
   updatedTo?: Date;
+  /**
+   * Parameter showStoryPageInfo
+   */
   showStoryPageInfo?: boolean;
+  /**
+   * Show total number of results. By default set to false, will cap result count at 10000.
+   */
   showNumResults?: boolean;
+  /**
+   * Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
+   */
   showDuplicates?: boolean;
+  /**
+   * Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
+   */
   excludeClusterId?: Array<string>;
 }
 
 export interface SearchSummarizerRequest {
+  /**
+   * Parameter summaryBody
+   * @required
+   */
   summaryBody: SummaryBody;
+  /**
+   * Search query, each article will be scored and ranked against it. Articles are searched on the title, description, and content fields.
+   */
   q?: string;
+  /**
+   * Search article headlines/title field. Semantic similar to q parameter.
+   */
   title?: string;
+  /**
+   * Search query on the description field. Semantic similar to q parameter.
+   */
   desc?: string;
+  /**
+   * Search query on the article\&#39;s body of content field. Semantic similar to q parameter.
+   */
   content?: string;
+  /**
+   * Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   */
   url?: string;
+  /**
+   * Article ID will search for a news article by the ID of the article. If several parameters are passed, all matched articles will be returned.
+   */
   articleId?: Array<string>;
+  /**
+   * Search for related content using a cluster ID. Passing a cluster ID will filter results to only the content found within the cluster.
+   */
   clusterId?: Array<string>;
+  /**
+   * \&#39;relevance\&#39; to sort by relevance to the query, \&#39;date\&#39; to sort by the publication date (desc), \&#39;pubDate\&#39; is a synonym to \&#39;date\&#39;, \&#39;addDate\&#39; to sort by \&#39;addDate\&#39; field (desc), \&#39;refreshDate\&#39; to sort by \&#39;refreshDate\&#39; field (desc). Defaults to \&#39;relevance\&#39;
+   */
   sortBy?: AllEndpointSortBy;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * The number of items per page.
+   */
   size?: number;
+  /**
+   * \&#39;from\&#39; filter, will search articles published after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   */
   from?: Date;
+  /**
+   * \&#39;to\&#39; filter, will search articles published before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   */
   to?: Date;
+  /**
+   * \&#39;addDateFrom\&#39; filter, will search articles added after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   */
   addDateFrom?: Date;
+  /**
+   * \&#39;addDateTo\&#39; filter, will search articles added before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   */
   addDateTo?: Date;
+  /**
+   * Will search articles that were refreshed after the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   */
   refreshDateFrom?: Date;
+  /**
+   * Will search articles that were refreshed before the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   */
   refreshDateTo?: Date;
+  /**
+   * Medium will filter out news articles medium, which could be \&#39;Video\&#39; or \&#39;Article\&#39;. If several parameters are passed, all matched articles will be returned.
+   */
   medium?: Array<string>;
+  /**
+   * Publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   */
   source?: Array<string>;
+  /**
+   * One of the supported source groups. Find Source Groups in the guided part of our documentation...
+   */
   sourceGroup?: Array<string>;
+  /**
+   * A list of built-in source group names to exclude from the results. The Perigon API categorizes sources into groups (for example, “top10” or “top100”) based on type or popularity. Using this filter allows you to remove articles coming from any source that belongs to one or more of the specified groups.
+   */
   excludeSourceGroup?: Array<string>;
+  /**
+   * The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   */
   excludeSource?: Array<string>;
+  /**
+   * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
+   */
   paywall?: boolean;
+  /**
+   * Author names to filter by. Article author bylines are used as a source field. If multiple parameters are passed, they will be applied as OR operations.
+   */
   byline?: Array<string>;
+  /**
+   * A list of author names to include. Only articles written by any of the specified authors are returned. This is ideal when you wish to focus on content from particular voices or experts.
+   */
   author?: Array<string>;
+  /**
+   *  A list of author names to exclude from the search results. Any article written by an author whose name matches one in this list will be omitted, which helps to avoid content from certain individuals.
+   */
   excludeAuthor?: Array<string>;
+  /**
+   * Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
+   */
   journalistId?: Array<string>;
+  /**
+   * A list of journalist (or reporter) identifiers to exclude. If an article is written by a journalist whose ID matches any in this list, it will not be part of the result set.
+   */
   excludeJournalistId?: Array<string>;
+  /**
+   * Language code to filter by language. If multiple parameters are passed, they will be applied as OR operations.
+   */
   language?: Array<string>;
+  /**
+   *  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
+   */
   excludeLanguage?: Array<string>;
+  /**
+   * Expand a query to search the translation, translatedTitle, and translatedDescription fields for non-English articles.
+   */
   searchTranslation?: boolean;
+  /**
+   * Labels to filter by, could be \&#39;Opinion\&#39;, \&#39;Paid-news\&#39;, \&#39;Non-news\&#39;, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   label?: Array<string>;
+  /**
+   * Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
+   */
   excludeLabel?: Array<string>;
+  /**
+   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   */
   category?: Array<string>;
+  /**
+   * A list of article categories to be omitted. If an article is tagged with any category present in this list (such as “Polotics”, “Tech”, “Sports”, etc.), it will not appear in the search results.
+   */
   excludeCategory?: Array<string>;
+  /**
+   * Filters results to include only articles with the specified topics. Topics are more specific classifications than categories, with an article potentially having multiple topics assigned. Perigon uses both human and machine curation to maintain an evolving list of available topics. Common examples include \&#39;Markets\&#39;, \&#39;Crime\&#39;, \&#39;Cryptocurrency\&#39;, \&#39;Social Issues\&#39;, \&#39;College Sports\&#39;, etc. See the Topics page in Docs for a complete list of available topics.
+   */
   topic?: Array<string>;
+  /**
+   * Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   */
   excludeTopic?: Array<string>;
+  /**
+   * Returns only articles that point to specified links (as determined by the \&#39;links\&#39; field in the article response).
+   */
   linkTo?: string;
+  /**
+   * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is \&#39;true\&#39;.
+   */
   showReprints?: boolean;
+  /**
+   * Shows all articles belonging to the same reprint group. A reprint group includes one original article (the first one processed by the API) and all its known reprints.
+   */
   reprintGroupId?: string;
+  /**
+   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   city?: Array<string>;
+  /**
+   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+   */
   excludeCity?: Array<string>;
+  /**
+   * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   area?: Array<string>;
+  /**
+   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   state?: Array<string>;
+  /**
+   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+   */
   excludeState?: Array<string>;
+  /**
+   * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
+   */
   county?: Array<string>;
+  /**
+   * Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   */
   excludeCounty?: Array<string>;
+  /**
+   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
   locationsCountry?: Array<string>;
+  /**
+   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
   country?: Array<string>;
+  /**
+   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+   */
   excludeLocationsCountry?: Array<string>;
+  /**
+   * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   */
   location?: Array<string>;
+  /**
+   * Latitude of the center point to search places
+   */
   lat?: number;
+  /**
+   * Longitude of the center point to search places
+   */
   lon?: number;
+  /**
+   * Maximum distance (in km) from starting point to search articles by tagged places
+   */
   maxDistance?: number;
+  /**
+   * Find articles published by sources that are located within a given city.
+   */
   sourceCity?: Array<string>;
+  /**
+   * Find articles published by sources that are located within a given county.
+   */
   sourceCounty?: Array<string>;
+  /**
+   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+   */
   sourceCountry?: Array<string>;
+  /**
+   * Find articles published by sources that are located within a given state.
+   */
   sourceState?: Array<string>;
+  /**
+   * Latitude of the center point to search articles created by local publications.
+   */
   sourceLat?: number;
+  /**
+   * Latitude of the center point to search articles created by local publications.
+   */
   sourceLon?: number;
+  /**
+   * Maximum distance from starting point to search articles created by local publications.
+   */
   sourceMaxDistance?: number;
+  /**
+   * List of person Wikidata IDs for filtering.
+   */
   personWikidataId?: Array<string>;
+  /**
+   * A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
+   */
   excludePersonWikidataId?: Array<string>;
+  /**
+   * List of person names for exact matches. Boolean and complex logic is not supported on this paramter.
+   */
   personName?: Array<string>;
+  /**
+   * A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
+   */
   excludePersonName?: Array<string>;
+  /**
+   * List of company IDs to filter by.
+   */
   companyId?: Array<string>;
+  /**
+   * A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
+   */
   excludeCompanyId?: Array<string>;
+  /**
+   * Search by company name.
+   */
   companyName?: string;
+  /**
+   * Search by company domains for filtering. E.g. companyDomain&#x3D;apple.com.
+   */
   companyDomain?: Array<string>;
+  /**
+   * A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, “example.com”), it will not be returned in the results.
+   */
   excludeCompanyDomain?: Array<string>;
+  /**
+   * Search by company symbols.
+   */
   companySymbol?: Array<string>;
+  /**
+   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+   */
   excludeCompanySymbol?: Array<string>;
+  /**
+   * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
+   */
   showNumResults?: boolean;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   positiveSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   positiveSentimentTo?: number;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
+   */
   neutralSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   neutralSentimentTo?: number;
+  /**
+   * Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   negativeSentimentFrom?: number;
+  /**
+   * Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   */
   negativeSentimentTo?: number;
+  /**
+   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
+   */
   taxonomy?: Array<string>;
+  /**
+   * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   */
   prefixTaxonomy?: string;
 }
 
 export interface SearchTopicsRequest {
+  /**
+   * Search by name.
+   */
   name?: string;
+  /**
+   * Search by category.
+   */
   category?: string;
+  /**
+   * Search by subcategory.
+   */
   subcategory?: string;
+  /**
+   * The page number to retrieve.
+   */
   page?: number;
+  /**
+   * The number of items per page.
+   */
   size?: number;
 }
 
 export interface VectorSearchArticlesRequest {
+  /**
+   * Parameter articleSearchParams
+   * @required
+   */
   articleSearchParams: ArticleSearchParams;
 }
 
@@ -385,8 +1198,9 @@ export interface V1ApiInterface {
   /**
    * Find additional details on a journalist by using the journalist ID found in an article response object.
    * @summary Journalists ID
-   * @param {string} id
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<Journalist>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -407,87 +1221,9 @@ export interface V1ApiInterface {
   /**
    * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
    * @summary Articles
-   * @param {string} [q] Search query, each article will be scored and ranked against it. Articles are searched on the title, description, and content fields.
-   * @param {string} [title] Search article headlines/title field. Semantic similar to q parameter.
-   * @param {string} [desc] Search query on the description field. Semantic similar to q parameter.
-   * @param {string} [content] Search query on the article\&#39;s body of content field. Semantic similar to q parameter.
-   * @param {string} [url] Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
-   * @param {Array<string>} [articleId] Article ID will search for a news article by the ID of the article. If several parameters are passed, all matched articles will be returned.
-   * @param {Array<string>} [clusterId] Search for related content using a cluster ID. Passing a cluster ID will filter results to only the content found within the cluster.
-   * @param {AllEndpointSortBy} [sortBy] \&#39;relevance\&#39; to sort by relevance to the query, \&#39;date\&#39; to sort by the publication date (desc), \&#39;pubDate\&#39; is a synonym to \&#39;date\&#39;, \&#39;addDate\&#39; to sort by \&#39;addDate\&#39; field (desc), \&#39;refreshDate\&#39; to sort by \&#39;refreshDate\&#39; field (desc). Defaults to \&#39;relevance\&#39;
-   * @param {number} [page] The page number to retrieve.
-   * @param {number} [size] The number of items per page.
-   * @param {Date} [from] \&#39;from\&#39; filter, will search articles published after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
-   * @param {Date} [to] \&#39;to\&#39; filter, will search articles published before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
-   * @param {Date} [addDateFrom] \&#39;addDateFrom\&#39; filter, will search articles added after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
-   * @param {Date} [addDateTo] \&#39;addDateTo\&#39; filter, will search articles added before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
-   * @param {Date} [refreshDateFrom] Will search articles that were refreshed after the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
-   * @param {Date} [refreshDateTo] Will search articles that were refreshed before the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
-   * @param {Array<string>} [medium] Medium will filter out news articles medium, which could be \&#39;Video\&#39; or \&#39;Article\&#39;. If several parameters are passed, all matched articles will be returned.
-   * @param {Array<string>} [source] Publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
-   * @param {Array<string>} [sourceGroup] One of the supported source groups. Find Source Groups in the guided part of our documentation...
-   * @param {Array<string>} [excludeSourceGroup] A list of built-in source group names to exclude from the results. The Perigon API categorizes sources into groups (for example, “top10” or “top100”) based on type or popularity. Using this filter allows you to remove articles coming from any source that belongs to one or more of the specified groups.
-   * @param {Array<string>} [excludeSource] The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
-   * @param {boolean} [paywall] Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
-   * @param {Array<string>} [byline] Author names to filter by. Article author bylines are used as a source field. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [author] A list of author names to include. Only articles written by any of the specified authors are returned. This is ideal when you wish to focus on content from particular voices or experts.
-   * @param {Array<string>} [excludeAuthor]  A list of author names to exclude from the search results. Any article written by an author whose name matches one in this list will be omitted, which helps to avoid content from certain individuals.
-   * @param {Array<string>} [journalistId] Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
-   * @param {Array<string>} [excludeJournalistId] A list of journalist (or reporter) identifiers to exclude. If an article is written by a journalist whose ID matches any in this list, it will not be part of the result set.
-   * @param {Array<string>} [language] Language code to filter by language. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeLanguage]  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
-   * @param {boolean} [searchTranslation] Expand a query to search the translation, translatedTitle, and translatedDescription fields for non-English articles.
-   * @param {Array<string>} [label] Labels to filter by, could be \&#39;Opinion\&#39;, \&#39;Paid-news\&#39;, \&#39;Non-news\&#39;, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeLabel] Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
-   * @param {Array<string>} [category] Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
-   * @param {Array<string>} [excludeCategory] A list of article categories to be omitted. If an article is tagged with any category present in this list (such as “Polotics”, “Tech”, “Sports”, etc.), it will not appear in the search results.
-   * @param {Array<string>} [topic] Filters results to include only articles with the specified topics. Topics are more specific classifications than categories, with an article potentially having multiple topics assigned. Perigon uses both human and machine curation to maintain an evolving list of available topics. Common examples include \&#39;Markets\&#39;, \&#39;Crime\&#39;, \&#39;Cryptocurrency\&#39;, \&#39;Social Issues\&#39;, \&#39;College Sports\&#39;, etc. See the Topics page in Docs for a complete list of available topics.
-   * @param {Array<string>} [excludeTopic] Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {string} [linkTo] Returns only articles that point to specified links (as determined by the \&#39;links\&#39; field in the article response).
-   * @param {boolean} [showReprints] Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is \&#39;true\&#39;.
-   * @param {string} [reprintGroupId] Shows all articles belonging to the same reprint group. A reprint group includes one original article (the first one processed by the API) and all its known reprints.
-   * @param {Array<string>} [city] Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeCity] A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
-   * @param {Array<string>} [area] Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [state] Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeState] A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
-   * @param {Array<string>} [county] A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
-   * @param {Array<string>} [excludeCounty] Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
-   * @param {Array<string>} [locationsCountry] Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [country] Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeLocationsCountry] Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
-   * @param {Array<string>} [location] Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
-   * @param {number} [lat] Latitude of the center point to search places
-   * @param {number} [lon] Longitude of the center point to search places
-   * @param {number} [maxDistance] Maximum distance (in km) from starting point to search articles by tagged places
-   * @param {Array<string>} [sourceCity] Find articles published by sources that are located within a given city.
-   * @param {Array<string>} [sourceCounty] Find articles published by sources that are located within a given county.
-   * @param {Array<string>} [sourceCountry] Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
-   * @param {Array<string>} [sourceState] Find articles published by sources that are located within a given state.
-   * @param {number} [sourceLat] Latitude of the center point to search articles created by local publications.
-   * @param {number} [sourceLon] Latitude of the center point to search articles created by local publications.
-   * @param {number} [sourceMaxDistance] Maximum distance from starting point to search articles created by local publications.
-   * @param {Array<string>} [personWikidataId] List of person Wikidata IDs for filtering.
-   * @param {Array<string>} [excludePersonWikidataId] A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
-   * @param {Array<string>} [personName] List of person names for exact matches. Boolean and complex logic is not supported on this paramter.
-   * @param {Array<string>} [excludePersonName] A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
-   * @param {Array<string>} [companyId] List of company IDs to filter by.
-   * @param {Array<string>} [excludeCompanyId] A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
-   * @param {string} [companyName] Search by company name.
-   * @param {Array<string>} [companyDomain] Search by company domains for filtering. E.g. companyDomain&#x3D;apple.com.
-   * @param {Array<string>} [excludeCompanyDomain] A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, “example.com”), it will not be returned in the results.
-   * @param {Array<string>} [companySymbol] Search by company symbols.
-   * @param {Array<string>} [excludeCompanySymbol] A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
-   * @param {boolean} [showNumResults] Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
-   * @param {number} [positiveSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [positiveSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [neutralSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
-   * @param {number} [neutralSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [negativeSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [negativeSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {Array<string>} [taxonomy] Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
-   * @param {string} [prefixTaxonomy] Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<QuerySearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -508,22 +1244,9 @@ export interface V1ApiInterface {
   /**
    * Browse or search for companies Perigon tracks using name, domain, ticker symbol, industry, and more. Supports Boolean search logic and filtering by metadata such as country, exchange, employee count, and IPO date.
    * @summary Companies
-   * @param {Array<string>} [id] Search by company id.
-   * @param {Array<string>} [symbol] Search by ticker symbol.
-   * @param {Array<string>} [domain] Search by company domain.
-   * @param {Array<string>} [country] Search by company country.
-   * @param {Array<string>} [exchange] Search by exchange name.
-   * @param {number} [numEmployeesFrom] Minimum number of employees.
-   * @param {number} [numEmployeesTo] Maximum number of employees.
-   * @param {Date} [ipoFrom] Starting IPO date.
-   * @param {Date} [ipoTo] Ending IPO date.
-   * @param {string} [q] Search companies over \&#39;name\&#39;, \&#39;altNames\&#39;, \&#39;domains\&#39; and \&#39;symbols.symbol\&#39; fields. Boolean operators and logic are supported.
-   * @param {string} [name] Search by company name. Boolean operators and logic are supported.
-   * @param {string} [industry] Search by industry. Boolean operators and logic are supported.
-   * @param {string} [sector] Search by sector. Boolean operators and logic are supported.
-   * @param {number} [size] The number of items per page.
-   * @param {number} [page] The page number to retrieve.
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<CompanySearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -544,23 +1267,9 @@ export interface V1ApiInterface {
   /**
    * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
    * @summary Journalists
-   * @param {Array<string>} [id] Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
-   * @param {string} [q] Searches through name, title, twitterBio fields with priority given to the name, then to the title, then to the twitter bio. Returns results sorted by relevance.
-   * @param {string} [name] Searches through journalist names, scores and ranks them, returns results sorted by relevance.
-   * @param {string} [twitter] Searches for journalists by (exact match) twitter handle.
-   * @param {number} [size] The number of items per page.
-   * @param {number} [page] The page number to retrieve.
-   * @param {Array<string>} [source] Search for journalist by the publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
-   * @param {Array<string>} [topic] Searches for journalists by topic.
-   * @param {Array<string>} [category] Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [label] Filter journalists by label. For example, searching \&#39;Opinion\&#39; will return the journalists where \&#39;Opinion\&#39;-type articles is one of the top labels for the articles they publish.
-   * @param {number} [minMonthlyPosts] Returns the journalists with the minimum indicated number of average monthly posts.
-   * @param {number} [maxMonthlyPosts] Returns the journalist with the maximum indicated number of average monthly posts.
-   * @param {Array<string>} [country] Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Date} [updatedAtFrom] Starting date when the record was last updated.
-   * @param {Date} [updatedAtTo] Ending date when the record was last updated.
-   * @param {boolean} [showNumResults] If \&#39;true\&#39;, shows accurate number of results matched by the query. By default, the counter is accurate only up to 10,000 results due performance reasons.
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<JournalistSearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -581,13 +1290,9 @@ export interface V1ApiInterface {
   /**
    * Search and retrieve additional information on known persons that exist within Perigon\'s entity database and as referenced in any article response object. Our database contains over 650,000 people from around the world and is refreshed frequently. People data is derived from Wikidata and includes a wikidataId field that can be used to lookup even more information on Wikidata\'s website.
    * @summary People
-   * @param {string} [name] Search by name of the person. Supports exact matching with quotes (\&quot;\&quot;) and Boolean operators (AND, OR, NOT).
-   * @param {Array<string>} [wikidataId] Filter by Wikidata entity ID(s). Use this to find specific people by their Wikidata identifiers.
-   * @param {Array<string>} [occupationId] Filter by Wikidata occupation ID(s). Use this to find people with specific occupations.
-   * @param {string} [occupationLabel] Search by occupation name. Supports exact matching with quotes (\&quot;\&quot;) and Boolean operators (AND, OR, NOT).
-   * @param {number} [page] The page number to retrieve.
-   * @param {number} [size] The number of items per page.
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<PeopleSearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -608,31 +1313,9 @@ export interface V1ApiInterface {
   /**
    * Search and filter the 142,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
    * @summary Sources
-   * @param {Array<string>} [domain] Domain name for the media source to lookup. This parameter supports wildcard queries, ie. \&quot;*.cnn.com\&quot; will match all subdomains for cnn.com.
-   * @param {string} [name] Search by name of source. This parameter supports complex boolean search operators, and also searches the altNames field for alternative names of the source.
-   * @param {string} [sourceGroup] Find all sources within a sourceGroup. Find Source Groups in the guided part of our documentation...
-   * @param {SortBy} [sortBy] Use \&#39;relevance\&#39; to sort by relevance to the query, \&#39;globalRank\&#39; for top ranked sources based on popularity, \&#39;monthlyVisits\&#39; for sources with the largest audience, \&#39;avgMonthlyPosts\&#39; for sources with the highest publishing frequency. Defaults to \&#39;relevance\&#39;.
-   * @param {number} [page] The page number to retrieve.
-   * @param {number} [size] The number of items per page.
-   * @param {number} [minMonthlyVisits] Filter by popularity. Enter a minimum number of monthly visits that the source must have in order to match your query.
-   * @param {number} [maxMonthlyVisits] Enter a maximum number of monthly visits that the source must have in order to match your query.
-   * @param {number} [minMonthlyPosts] Returns the sources that have at least this number of average monthly posts.
-   * @param {number} [maxMonthlyPosts] Returns the sources that have at most this number of average monthly posts.
-   * @param {Array<string>} [country] Country code to filter sources by the countries in which they most commonly cover. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [sourceCountry] Find all local publications that are located within a given country.
-   * @param {Array<string>} [sourceState] Find all local publications that are located within a given state.
-   * @param {Array<string>} [sourceCounty] Find all local publications that are located within a given county.
-   * @param {Array<string>} [sourceCity] Find all local publications that are located within a given city.
-   * @param {number} [sourceLat] Latitude of the center point to search local publications.
-   * @param {number} [sourceLon] Longitude of the center point to search local publications.
-   * @param {number} [sourceMaxDistance] Maximum distance from starting point to search local publications.
-   * @param {Array<string>} [category] Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [topic] Find sources by topic. For example, searching \&#39;Markets\&#39; will return the sources where \&#39;Markets\&#39; is one of the top 10 topics that they cover.
-   * @param {Array<string>} [label] Filter sources by label. For example, searching \&#39;Opinion\&#39; will return the sources where \&#39;Opinion\&#39;-type articles is one of the top labels for the articles they publish.
-   * @param {boolean} [paywall] Use \&#39;true\&#39; to find only sources known to have a paywall, or use \&#39;false\&#39; to filter for only sources that do not have a paywall.
-   * @param {boolean} [showSubdomains] Controls whether subdomains are included in the response. When set to true (default), all relevant subdomains of media sources will be returned as separate results. Set to false to consolidate results to parent domains only.
-   * @param {boolean} [showNumResults] If \&#39;true\&#39;, shows accurate number of results matched by the query. By default, the counter is accurate only up to 10,000 results due performance reasons.
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<SourceSearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -653,48 +1336,9 @@ export interface V1ApiInterface {
   /**
    * Search and filter all news stories available via the Perigon API. Each story aggregates key information across related articles, including AI-generated names, summaries, and key points.
    * @summary Stories
-   * @param {string} [q] Search story by name, summary and key points. Preference is given to the name field. Supports complex query syntax, same way as q parameter from /all endpoint.
-   * @param {string} [name] Search story by name. Supports complex query syntax, same way as q parameter from /all endpoint.
-   * @param {Array<string>} [clusterId] Filter to specific story. Passing a cluster ID will filter results to only the content found within the cluster. Multiple params could be passed.
-   * @param {SortBy} [sortBy] Sort stories by count (\&#39;count\&#39;), total count (\&#39;totalCount\&#39;), creation date (\&#39;createdAt\&#39;), last updated date (\&#39;updatedAt\&#39;), or relevance (\&#39;relevance\&#39;). By default is sorted by \&#39;createdAt\&#39;
-   * @param {number} [page] The page number to retrieve.
-   * @param {number} [size] The number of items per page.
-   * @param {Date} [from] \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
-   * @param {Date} [to] \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
-   * @param {Array<string>} [topic] Filter by topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [category] Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles. More ➜
-   * @param {Array<string>} [taxonomy] Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
-   * @param {Array<string>} [source] Filter stories by sources that wrote articles belonging to this story. At least 1 article is required for story to match. Multiple parameters could be passed.
-   * @param {Array<string>} [sourceGroup] Filter stories by sources that wrote articles belonging to this story. Source groups are expanded into a list of sources. At least 1 article by the source is required for story to match. Multiple params could be passed.
-   * @param {number} [minUniqueSources] Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
-   * @param {Array<string>} [personWikidataId] List of person Wikidata IDs for filtering. Filter is applied on topPeople field.
-   * @param {string} [personName] List of people names. Filtering is applied on topPeople field.
-   * @param {Array<string>} [companyId] List of company IDs for filtering. Filtering is applied to topCompanies field.
-   * @param {string} [companyName] List of company names for filtering. Filtering is applied on topCompanies field.
-   * @param {Array<string>} [companyDomain] List of company domains for filtering. Filtering is applied on topCompanies field.
-   * @param {Array<string>} [companySymbol] List of company tickers for filtering. Filtering is applied on topCompanies field.
-   * @param {Array<string>} [country] Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [state] Filter local news by state. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [city] Filter local news by city. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [area] Filter local news by area. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {number} [minClusterSize] Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
-   * @param {number} [maxClusterSize] Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
-   * @param {boolean} [nameExists] Returns stories with name assigned. Defaults to true.
-   * @param {number} [positiveSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [positiveSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [neutralSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
-   * @param {number} [neutralSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [negativeSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [negativeSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {Date} [initializedFrom] \&#39;initializedFrom\&#39; filter, will search stories that became available after provided date
-   * @param {Date} [initializedTo] \&#39;initializedTo\&#39; filter, will search stories that became available before provided date
-   * @param {Date} [updatedFrom] Will return stories with \&#39;updatedAt\&#39; &gt;&#x3D; \&#39;updatedFrom\&#39;.
-   * @param {Date} [updatedTo] Will return stories with \&#39;updatedAt\&#39; &lt;&#x3D; \&#39;updatedTo\&#39;.
-   * @param {boolean} [showStoryPageInfo]
-   * @param {boolean} [showNumResults] Show total number of results. By default set to false, will cap result count at 10000.
-   * @param {boolean} [showDuplicates] Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
-   * @param {Array<string>} [excludeClusterId] Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<StorySearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -715,88 +1359,9 @@ export interface V1ApiInterface {
   /**
    * Produce a single, concise summary over the full corpus of articles matching your filters, using your prompt to guide which insights to highlight.
    * @summary Search Summarizer
-   * @param {SummaryBody} summaryBody
-   * @param {string} [q] Search query, each article will be scored and ranked against it. Articles are searched on the title, description, and content fields.
-   * @param {string} [title] Search article headlines/title field. Semantic similar to q parameter.
-   * @param {string} [desc] Search query on the description field. Semantic similar to q parameter.
-   * @param {string} [content] Search query on the article\&#39;s body of content field. Semantic similar to q parameter.
-   * @param {string} [url] Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
-   * @param {Array<string>} [articleId] Article ID will search for a news article by the ID of the article. If several parameters are passed, all matched articles will be returned.
-   * @param {Array<string>} [clusterId] Search for related content using a cluster ID. Passing a cluster ID will filter results to only the content found within the cluster.
-   * @param {AllEndpointSortBy} [sortBy] \&#39;relevance\&#39; to sort by relevance to the query, \&#39;date\&#39; to sort by the publication date (desc), \&#39;pubDate\&#39; is a synonym to \&#39;date\&#39;, \&#39;addDate\&#39; to sort by \&#39;addDate\&#39; field (desc), \&#39;refreshDate\&#39; to sort by \&#39;refreshDate\&#39; field (desc). Defaults to \&#39;relevance\&#39;
-   * @param {number} [page] The page number to retrieve.
-   * @param {number} [size] The number of items per page.
-   * @param {Date} [from] \&#39;from\&#39; filter, will search articles published after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
-   * @param {Date} [to] \&#39;to\&#39; filter, will search articles published before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
-   * @param {Date} [addDateFrom] \&#39;addDateFrom\&#39; filter, will search articles added after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
-   * @param {Date} [addDateTo] \&#39;addDateTo\&#39; filter, will search articles added before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
-   * @param {Date} [refreshDateFrom] Will search articles that were refreshed after the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
-   * @param {Date} [refreshDateTo] Will search articles that were refreshed before the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
-   * @param {Array<string>} [medium] Medium will filter out news articles medium, which could be \&#39;Video\&#39; or \&#39;Article\&#39;. If several parameters are passed, all matched articles will be returned.
-   * @param {Array<string>} [source] Publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
-   * @param {Array<string>} [sourceGroup] One of the supported source groups. Find Source Groups in the guided part of our documentation...
-   * @param {Array<string>} [excludeSourceGroup] A list of built-in source group names to exclude from the results. The Perigon API categorizes sources into groups (for example, “top10” or “top100”) based on type or popularity. Using this filter allows you to remove articles coming from any source that belongs to one or more of the specified groups.
-   * @param {Array<string>} [excludeSource] The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
-   * @param {boolean} [paywall] Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
-   * @param {Array<string>} [byline] Author names to filter by. Article author bylines are used as a source field. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [author] A list of author names to include. Only articles written by any of the specified authors are returned. This is ideal when you wish to focus on content from particular voices or experts.
-   * @param {Array<string>} [excludeAuthor]  A list of author names to exclude from the search results. Any article written by an author whose name matches one in this list will be omitted, which helps to avoid content from certain individuals.
-   * @param {Array<string>} [journalistId] Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
-   * @param {Array<string>} [excludeJournalistId] A list of journalist (or reporter) identifiers to exclude. If an article is written by a journalist whose ID matches any in this list, it will not be part of the result set.
-   * @param {Array<string>} [language] Language code to filter by language. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeLanguage]  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
-   * @param {boolean} [searchTranslation] Expand a query to search the translation, translatedTitle, and translatedDescription fields for non-English articles.
-   * @param {Array<string>} [label] Labels to filter by, could be \&#39;Opinion\&#39;, \&#39;Paid-news\&#39;, \&#39;Non-news\&#39;, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeLabel] Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
-   * @param {Array<string>} [category] Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
-   * @param {Array<string>} [excludeCategory] A list of article categories to be omitted. If an article is tagged with any category present in this list (such as “Polotics”, “Tech”, “Sports”, etc.), it will not appear in the search results.
-   * @param {Array<string>} [topic] Filters results to include only articles with the specified topics. Topics are more specific classifications than categories, with an article potentially having multiple topics assigned. Perigon uses both human and machine curation to maintain an evolving list of available topics. Common examples include \&#39;Markets\&#39;, \&#39;Crime\&#39;, \&#39;Cryptocurrency\&#39;, \&#39;Social Issues\&#39;, \&#39;College Sports\&#39;, etc. See the Topics page in Docs for a complete list of available topics.
-   * @param {Array<string>} [excludeTopic] Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {string} [linkTo] Returns only articles that point to specified links (as determined by the \&#39;links\&#39; field in the article response).
-   * @param {boolean} [showReprints] Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is \&#39;true\&#39;.
-   * @param {string} [reprintGroupId] Shows all articles belonging to the same reprint group. A reprint group includes one original article (the first one processed by the API) and all its known reprints.
-   * @param {Array<string>} [city] Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeCity] A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
-   * @param {Array<string>} [area] Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [state] Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeState] A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
-   * @param {Array<string>} [county] A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
-   * @param {Array<string>} [excludeCounty] Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
-   * @param {Array<string>} [locationsCountry] Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [country] Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
-   * @param {Array<string>} [excludeLocationsCountry] Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
-   * @param {Array<string>} [location] Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
-   * @param {number} [lat] Latitude of the center point to search places
-   * @param {number} [lon] Longitude of the center point to search places
-   * @param {number} [maxDistance] Maximum distance (in km) from starting point to search articles by tagged places
-   * @param {Array<string>} [sourceCity] Find articles published by sources that are located within a given city.
-   * @param {Array<string>} [sourceCounty] Find articles published by sources that are located within a given county.
-   * @param {Array<string>} [sourceCountry] Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
-   * @param {Array<string>} [sourceState] Find articles published by sources that are located within a given state.
-   * @param {number} [sourceLat] Latitude of the center point to search articles created by local publications.
-   * @param {number} [sourceLon] Latitude of the center point to search articles created by local publications.
-   * @param {number} [sourceMaxDistance] Maximum distance from starting point to search articles created by local publications.
-   * @param {Array<string>} [personWikidataId] List of person Wikidata IDs for filtering.
-   * @param {Array<string>} [excludePersonWikidataId] A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
-   * @param {Array<string>} [personName] List of person names for exact matches. Boolean and complex logic is not supported on this paramter.
-   * @param {Array<string>} [excludePersonName] A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
-   * @param {Array<string>} [companyId] List of company IDs to filter by.
-   * @param {Array<string>} [excludeCompanyId] A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
-   * @param {string} [companyName] Search by company name.
-   * @param {Array<string>} [companyDomain] Search by company domains for filtering. E.g. companyDomain&#x3D;apple.com.
-   * @param {Array<string>} [excludeCompanyDomain] A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, “example.com”), it will not be returned in the results.
-   * @param {Array<string>} [companySymbol] Search by company symbols.
-   * @param {Array<string>} [excludeCompanySymbol] A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
-   * @param {boolean} [showNumResults] Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
-   * @param {number} [positiveSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [positiveSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [neutralSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
-   * @param {number} [neutralSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [negativeSentimentFrom] Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {number} [negativeSentimentTo] Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
-   * @param {Array<string>} [taxonomy] Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
-   * @param {string} [prefixTaxonomy] Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<SummarySearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -817,12 +1382,9 @@ export interface V1ApiInterface {
   /**
    * Search through all available Topics that exist within the Perigon Database.
    * @summary Topics
-   * @param {string} [name] Search by name.
-   * @param {string} [category] Search by category.
-   * @param {string} [subcategory] Search by subcategory.
-   * @param {number} [page] The page number to retrieve.
-   * @param {number} [size] The number of items per page.
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<TopicSearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
@@ -843,8 +1405,9 @@ export interface V1ApiInterface {
   /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
    * @summary Vector
-   * @param {ArticleSearchParams} articleSearchParams
-   * @param {*} [options] Override http request option.
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<VectorSearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
