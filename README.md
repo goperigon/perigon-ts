@@ -37,8 +37,6 @@ A fully-typed, promise-based SDK generated from the official Perigon OpenAPI spe
 - [📦 Installation](#-installation)
 - [🚀 Quick start](#-quick-start)
 - [🧑‍💻 Endpoint snippets](#-endpoint-snippets)
-- [🧪 Running integration tests](#-running-integration-tests)
-- [🤝 Contributing](#-contributing)
 - [🪪 License](#-license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -67,27 +65,20 @@ npm install @goperigon/perigon-ts
 
 ## 🚀 Quick start
 
-### 1. Export your API key
-
-```bash
-# .env
-PERIGON_API_KEY=your_key_here
-```
-
-### 2. Instantiate the client
+### 1. Instantiate the client
 
 ```ts
 import { Configuration, V1Api } from "@goperigon/perigon-ts";
 
 const perigon = new V1Api(
   new Configuration({
-    apiKey: process.env.PERIGON_API_KEY!, // or () => 'your_key'
+    apiKey: "YOUR_API_KEY", // or () => 'your_key'
     // basePath: 'https://api.perigon.io',      // override for proxy / dev
   }),
 );
 ```
 
-### 3. Make calls
+### 2. Make calls
 
 ```ts
 // 🔍 Search recent news articles
@@ -211,31 +202,6 @@ await perigon.searchTopics({ size: 10 });
 | Summarize any query                     | `await perigon.searchSummarizer({ q: 'renewable energy', size: 20 })`                                   |
 | Semantic / vector search                | `await perigon.vectorSearchArticles({ articleSearchParams: { prompt: 'advancements in AI', size: 5 }})` |
 | Retrieve available taxonomic **topics** | `await perigon.searchTopics({ size: 10 })`                                                              |
-
----
-
-## 🧪 Running integration tests
-
-The repository ships with Jest tests that hit the live API.
-
-```bash
-# 1. export your key
-echo "PERIGON_API_KEY=..." > .env
-
-# 2. run the suite (15–30 s)
-npm test
-```
-
-Set `PERIGON_API_KEY` in your CI to keep tests green.
-
----
-
-## 🤝 Contributing
-
-1. `pnpm install`
-2. Make your changes
-3. Run `pnpm test`
-4. Open a pull request – happy to review!
 
 ---
 

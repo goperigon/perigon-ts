@@ -1,5 +1,4 @@
 .gitignore
-.npmignore
 README.md
 package.json
 src/apis/V1Api.ts
@@ -70,5 +69,4 @@ src/models/WikidataPoliticalPartyHolder.ts
 src/models/WikidataPositionHolder.ts
 src/models/index.ts
 src/runtime.ts
-tsconfig.esm.json
 tsconfig.json
