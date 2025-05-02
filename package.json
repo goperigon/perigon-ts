@@ -1,36 +1,75 @@
 {
   "name": "@goperigon/perigon-ts",
   "version": "0.1.0",
-  "description": "OpenAPI client for @goperigon/perigon-ts",
-  "author": "OpenAPI-Generator",
+  "description": "Typescript client for Perigon API",
+  "author": "Perigon",
   "repository": {
     "type": "git",
     "url": "https://github.com/goperigon/perigon-ts"
   },
   "license": "MIT",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
-  "module": "./dist/esm/index.js",
-  "sideEffects": false,
+  "keywords": [
+    "perigon",
+    "perigon-sdk",
+    "perigon-api",
+    "news-api",
+    "news-data",
+    "real-time-news",
+    "ai-enriched",
+    "ai-news",
+    "vector-search",
+    "story-clustering",
+    "media-monitoring",
+    "content-intelligence",
+    "headline-search",
+    "article-search",
+    "global-news",
+    "web-search",
+    "web-content",
+    "local-news",
+    "typescript",
+    "sdk",
+    "entity-extraction",
+    "sentiment-analysis",
+    "geo-filtering",
+    "company-data",
+    "journalist-data",
+    "json-api",
+    "rest-client"
+  ],
   "files": [
-    "dist",
+    "dist/index.js",
+    "dist/index.cjs",
+    "dist/index.d.ts",
     "README.md",
     "LICENSE"
   ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
   "scripts": {
-    "build": "tsc && tsc -p tsconfig.esm.json",
-    "test": "jest --coverage",
-    "test:integration": "jest tests/integration --runInBand --testTimeout=30000",
-    "test:unit": "jest tests/unit",
-    "prepare": "npm run build"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest --coverage"
+  },
+  "peerDependencies": {
+    "undici": ">=5"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.0",
-    "dotenv": "^16.0.3",
-    "jest": "^29.5.0",
-    "ts-jest": "^29.1.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.0 || ^5.0"
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "@types/jest": "^29.5.9",
+    "@types/node": "^20.4.0",
+    "@openapitools/openapi-generator-cli": "^2.20.0"
   }
 }
