@@ -5,10 +5,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
+    "rootDir": "src",
     "typeRoots": ["node_modules/@types"],
     "esModuleInterop": true,
     "strict": true,
     "declarationMap": true
   },
+  "include": ["src/**/*"], // Explicitly include source files,
   "exclude": ["dist", "node_modules"]
 }

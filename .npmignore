@@ -1,5 +1,6 @@
 # ignore everything by default
 *
+dist/tests/
 
 # but include these files/folders
 !dist/
