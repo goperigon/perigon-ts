@@ -6,7 +6,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
     "rootDir": "src",
     "sourceMap": true,
     "declaration": true,
