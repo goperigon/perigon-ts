@@ -13,27 +13,27 @@
  */
 
 import { mapValues } from "../runtime";
-import type { InternalErrorExceptionSuppressedInner } from "./InternalErrorExceptionSuppressedInner";
+import type { TooManyRequestsExceptionCause } from "./TooManyRequestsExceptionCause";
 import {
-  InternalErrorExceptionSuppressedInnerFromJSON,
-  InternalErrorExceptionSuppressedInnerFromJSONTyped,
-  InternalErrorExceptionSuppressedInnerToJSON,
-  InternalErrorExceptionSuppressedInnerToJSONTyped,
-} from "./InternalErrorExceptionSuppressedInner";
-import type { InternalErrorExceptionCauseStackTraceInner } from "./InternalErrorExceptionCauseStackTraceInner";
+  TooManyRequestsExceptionCauseFromJSON,
+  TooManyRequestsExceptionCauseFromJSONTyped,
+  TooManyRequestsExceptionCauseToJSON,
+  TooManyRequestsExceptionCauseToJSONTyped,
+} from "./TooManyRequestsExceptionCause";
+import type { TooManyRequestsExceptionCauseStackTraceInner } from "./TooManyRequestsExceptionCauseStackTraceInner";
 import {
-  InternalErrorExceptionCauseStackTraceInnerFromJSON,
-  InternalErrorExceptionCauseStackTraceInnerFromJSONTyped,
-  InternalErrorExceptionCauseStackTraceInnerToJSON,
-  InternalErrorExceptionCauseStackTraceInnerToJSONTyped,
-} from "./InternalErrorExceptionCauseStackTraceInner";
-import type { InternalErrorExceptionCause } from "./InternalErrorExceptionCause";
+  TooManyRequestsExceptionCauseStackTraceInnerFromJSON,
+  TooManyRequestsExceptionCauseStackTraceInnerFromJSONTyped,
+  TooManyRequestsExceptionCauseStackTraceInnerToJSON,
+  TooManyRequestsExceptionCauseStackTraceInnerToJSONTyped,
+} from "./TooManyRequestsExceptionCauseStackTraceInner";
+import type { TooManyRequestsExceptionSuppressedInner } from "./TooManyRequestsExceptionSuppressedInner";
 import {
-  InternalErrorExceptionCauseFromJSON,
-  InternalErrorExceptionCauseFromJSONTyped,
-  InternalErrorExceptionCauseToJSON,
-  InternalErrorExceptionCauseToJSONTyped,
-} from "./InternalErrorExceptionCause";
+  TooManyRequestsExceptionSuppressedInnerFromJSON,
+  TooManyRequestsExceptionSuppressedInnerFromJSONTyped,
+  TooManyRequestsExceptionSuppressedInnerToJSON,
+  TooManyRequestsExceptionSuppressedInnerToJSONTyped,
+} from "./TooManyRequestsExceptionSuppressedInner";
 
 /**
  *
@@ -43,16 +43,16 @@ import {
 export interface IllegalParameterException {
   /**
    *
-   * @type {InternalErrorExceptionCause}
+   * @type {TooManyRequestsExceptionCause}
    * @memberof IllegalParameterException
    */
-  cause?: InternalErrorExceptionCause | null;
+  cause?: TooManyRequestsExceptionCause | null;
   /**
    *
-   * @type {Array<InternalErrorExceptionCauseStackTraceInner>}
+   * @type {Array<TooManyRequestsExceptionCauseStackTraceInner>}
    * @memberof IllegalParameterException
    */
-  stackTrace?: Array<InternalErrorExceptionCauseStackTraceInner> | null;
+  stackTrace?: Array<TooManyRequestsExceptionCauseStackTraceInner> | null;
   /**
    *
    * @type {string}
@@ -61,10 +61,10 @@ export interface IllegalParameterException {
   message?: string | null;
   /**
    *
-   * @type {Array<InternalErrorExceptionSuppressedInner>}
+   * @type {Array<TooManyRequestsExceptionSuppressedInner>}
    * @memberof IllegalParameterException
    */
-  suppressed?: Array<InternalErrorExceptionSuppressedInner> | null;
+  suppressed?: Array<TooManyRequestsExceptionSuppressedInner> | null;
   /**
    *
    * @type {string}
@@ -99,19 +99,19 @@ export function IllegalParameterExceptionFromJSONTyped(
     cause:
       json["cause"] == null
         ? undefined
-        : InternalErrorExceptionCauseFromJSON(json["cause"]),
+        : TooManyRequestsExceptionCauseFromJSON(json["cause"]),
     stackTrace:
       json["stackTrace"] == null
         ? undefined
         : (json["stackTrace"] as Array<any>).map(
-            InternalErrorExceptionCauseStackTraceInnerFromJSON,
+            TooManyRequestsExceptionCauseStackTraceInnerFromJSON,
           ),
     message: json["message"] == null ? undefined : json["message"],
     suppressed:
       json["suppressed"] == null
         ? undefined
         : (json["suppressed"] as Array<any>).map(
-            InternalErrorExceptionSuppressedInnerFromJSON,
+            TooManyRequestsExceptionSuppressedInnerFromJSON,
           ),
     localizedMessage:
       json["localizedMessage"] == null ? undefined : json["localizedMessage"],
@@ -133,19 +133,19 @@ export function IllegalParameterExceptionToJSONTyped(
   }
 
   return {
-    cause: InternalErrorExceptionCauseToJSON(value["cause"]),
+    cause: TooManyRequestsExceptionCauseToJSON(value["cause"]),
     stackTrace:
       value["stackTrace"] == null
         ? undefined
         : (value["stackTrace"] as Array<any>).map(
-            InternalErrorExceptionCauseStackTraceInnerToJSON,
+            TooManyRequestsExceptionCauseStackTraceInnerToJSON,
           ),
     message: value["message"],
     suppressed:
       value["suppressed"] == null
         ? undefined
         : (value["suppressed"] as Array<any>).map(
-            InternalErrorExceptionSuppressedInnerToJSON,
+            TooManyRequestsExceptionSuppressedInnerToJSON,
           ),
     localizedMessage: value["localizedMessage"],
   };

@@ -32,13 +32,13 @@ export interface VectorSearchResult {
    * @type {number}
    * @memberof VectorSearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {Array<ScoredArticle>}
    * @memberof VectorSearchResult
    */
-  results?: Array<ScoredArticle> | null;
+  results: Array<ScoredArticle>;
 }
 
 /**
@@ -47,6 +47,8 @@ export interface VectorSearchResult {
 export function instanceOfVectorSearchResult(
   value: object,
 ): value is VectorSearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -62,11 +64,8 @@ export function VectorSearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(ScoredArticleFromJSON),
+    status: json["status"],
+    results: (json["results"] as Array<any>).map(ScoredArticleFromJSON),
   };
 }
 
@@ -84,9 +83,6 @@ export function VectorSearchResultToJSONTyped(
 
   return {
     status: value["status"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(ScoredArticleToJSON),
+    results: (value["results"] as Array<any>).map(ScoredArticleToJSON),
   };
 }

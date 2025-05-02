@@ -62,9 +62,11 @@ describeWithApiKey("Perigon API Integration Tests", () => {
 
       // Verify dates are within range
       result.articles.forEach((article) => {
-        const pubDate = new Date(article.pubDate);
-        expect(pubDate.getTime()).toBeGreaterThanOrEqual(fromDate.getTime());
-        expect(pubDate.getTime()).toBeLessThanOrEqual(toDate.getTime());
+        if (article.pubDate) {
+          const pubDate = new Date(article.pubDate);
+          expect(pubDate.getTime()).toBeGreaterThanOrEqual(fromDate.getTime());
+          expect(pubDate.getTime()).toBeLessThanOrEqual(toDate.getTime());
+        }
       });
     }, 15000);
 
@@ -80,7 +82,7 @@ describeWithApiKey("Perigon API Integration Tests", () => {
       // Verify articles are from the requested source
       expect(result.articles.length).toBeGreaterThan(0);
       result.articles.forEach((article) => {
-        expect(article.source.domain).toBe(testSource);
+        expect(article.source?.domain).toBe(testSource);
       });
     }, 15000);
   });
@@ -118,7 +120,7 @@ describeWithApiKey("Perigon API Integration Tests", () => {
       }
 
       // Get the ID from the first journalist
-      const journalistId = searchResult.results[0]["id"];
+      const journalistId = searchResult.results[0]["id"]!;
 
       // Now retrieve the specific journalist
       const journalist = await api.getJournalistById({ id: journalistId });

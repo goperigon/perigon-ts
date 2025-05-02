@@ -32,25 +32,25 @@ export interface SummarySearchResult {
    * @type {number}
    * @memberof SummarySearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof SummarySearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {string}
    * @memberof SummarySearchResult
    */
-  summary?: string | null;
+  summary: string;
   /**
    *
    * @type {Array<Article>}
    * @memberof SummarySearchResult
    */
-  results?: Array<Article> | null;
+  results: Array<Article>;
 }
 
 /**
@@ -59,6 +59,11 @@ export interface SummarySearchResult {
 export function instanceOfSummarySearchResult(
   value: object,
 ): value is SummarySearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("summary" in value) || value["summary"] === undefined) return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -74,13 +79,10 @@ export function SummarySearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    summary: json["summary"] == null ? undefined : json["summary"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(ArticleFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    summary: json["summary"],
+    results: (json["results"] as Array<any>).map(ArticleFromJSON),
   };
 }
 
@@ -100,9 +102,6 @@ export function SummarySearchResultToJSONTyped(
     status: value["status"],
     numResults: value["numResults"],
     summary: value["summary"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(ArticleToJSON),
+    results: (value["results"] as Array<any>).map(ArticleToJSON),
   };
 }

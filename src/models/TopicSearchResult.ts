@@ -32,13 +32,13 @@ export interface TopicSearchResult {
    * @type {number}
    * @memberof TopicSearchResult
    */
-  total?: number | null;
+  total: number;
   /**
    *
    * @type {Array<TopicDto>}
    * @memberof TopicSearchResult
    */
-  data?: Array<TopicDto> | null;
+  data: Array<TopicDto>;
 }
 
 /**
@@ -47,6 +47,8 @@ export interface TopicSearchResult {
 export function instanceOfTopicSearchResult(
   value: object,
 ): value is TopicSearchResult {
+  if (!("total" in value) || value["total"] === undefined) return false;
+  if (!("data" in value) || value["data"] === undefined) return false;
   return true;
 }
 
@@ -62,11 +64,8 @@ export function TopicSearchResultFromJSONTyped(
     return json;
   }
   return {
-    total: json["total"] == null ? undefined : json["total"],
-    data:
-      json["data"] == null
-        ? undefined
-        : (json["data"] as Array<any>).map(TopicDtoFromJSON),
+    total: json["total"],
+    data: (json["data"] as Array<any>).map(TopicDtoFromJSON),
   };
 }
 
@@ -84,9 +83,6 @@ export function TopicSearchResultToJSONTyped(
 
   return {
     total: value["total"],
-    data:
-      value["data"] == null
-        ? undefined
-        : (value["data"] as Array<any>).map(TopicDtoToJSON),
+    data: (value["data"] as Array<any>).map(TopicDtoToJSON),
   };
 }

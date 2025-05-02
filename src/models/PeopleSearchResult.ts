@@ -32,19 +32,19 @@ export interface PeopleSearchResult {
    * @type {number}
    * @memberof PeopleSearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof PeopleSearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {Array<Person>}
    * @memberof PeopleSearchResult
    */
-  results?: Array<Person> | null;
+  results: Array<Person>;
 }
 
 /**
@@ -53,6 +53,10 @@ export interface PeopleSearchResult {
 export function instanceOfPeopleSearchResult(
   value: object,
 ): value is PeopleSearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -68,12 +72,9 @@ export function PeopleSearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(PersonFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    results: (json["results"] as Array<any>).map(PersonFromJSON),
   };
 }
 
@@ -92,9 +93,6 @@ export function PeopleSearchResultToJSONTyped(
   return {
     status: value["status"],
     numResults: value["numResults"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(PersonToJSON),
+    results: (value["results"] as Array<any>).map(PersonToJSON),
   };
 }

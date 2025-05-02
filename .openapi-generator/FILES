@@ -24,9 +24,6 @@ src/models/IdNameHolder.ts
 src/models/IllegalParameterException.ts
 src/models/ImageHolder.ts
 src/models/InternalErrorException.ts
-src/models/InternalErrorExceptionCause.ts
-src/models/InternalErrorExceptionCauseStackTraceInner.ts
-src/models/InternalErrorExceptionSuppressedInner.ts
 src/models/Journalist.ts
 src/models/JournalistSearchResult.ts
 src/models/KeyPoint.ts
@@ -58,6 +55,9 @@ src/models/SummaryBody.ts
 src/models/SummarySearchResult.ts
 src/models/SymbolHolder.ts
 src/models/TooManyRequestsException.ts
+src/models/TooManyRequestsExceptionCause.ts
+src/models/TooManyRequestsExceptionCauseStackTraceInner.ts
+src/models/TooManyRequestsExceptionSuppressedInner.ts
 src/models/TopicDto.ts
 src/models/TopicHolder.ts
 src/models/TopicLabels.ts

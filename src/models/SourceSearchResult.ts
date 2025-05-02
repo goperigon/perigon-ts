@@ -32,19 +32,19 @@ export interface SourceSearchResult {
    * @type {number}
    * @memberof SourceSearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof SourceSearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {Array<Source>}
    * @memberof SourceSearchResult
    */
-  results?: Array<Source> | null;
+  results: Array<Source>;
 }
 
 /**
@@ -53,6 +53,10 @@ export interface SourceSearchResult {
 export function instanceOfSourceSearchResult(
   value: object,
 ): value is SourceSearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -68,12 +72,9 @@ export function SourceSearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(SourceFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    results: (json["results"] as Array<any>).map(SourceFromJSON),
   };
 }
 
@@ -92,9 +93,6 @@ export function SourceSearchResultToJSONTyped(
   return {
     status: value["status"],
     numResults: value["numResults"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(SourceToJSON),
+    results: (value["results"] as Array<any>).map(SourceToJSON),
   };
 }

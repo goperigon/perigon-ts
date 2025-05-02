@@ -32,19 +32,19 @@ export interface CompanySearchResult {
    * @type {number}
    * @memberof CompanySearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof CompanySearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {Array<Company>}
    * @memberof CompanySearchResult
    */
-  results?: Array<Company> | null;
+  results: Array<Company>;
 }
 
 /**
@@ -53,6 +53,10 @@ export interface CompanySearchResult {
 export function instanceOfCompanySearchResult(
   value: object,
 ): value is CompanySearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -68,12 +72,9 @@ export function CompanySearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(CompanyFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    results: (json["results"] as Array<any>).map(CompanyFromJSON),
   };
 }
 
@@ -92,9 +93,6 @@ export function CompanySearchResultToJSONTyped(
   return {
     status: value["status"],
     numResults: value["numResults"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(CompanyToJSON),
+    results: (value["results"] as Array<any>).map(CompanyToJSON),
   };
 }

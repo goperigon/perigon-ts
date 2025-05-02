@@ -32,19 +32,19 @@ export interface QuerySearchResult {
    * @type {number}
    * @memberof QuerySearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof QuerySearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {Array<Article>}
    * @memberof QuerySearchResult
    */
-  articles?: Array<Article> | null;
+  articles: Array<Article>;
 }
 
 /**
@@ -53,6 +53,10 @@ export interface QuerySearchResult {
 export function instanceOfQuerySearchResult(
   value: object,
 ): value is QuerySearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("articles" in value) || value["articles"] === undefined) return false;
   return true;
 }
 
@@ -68,12 +72,9 @@ export function QuerySearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    articles:
-      json["articles"] == null
-        ? undefined
-        : (json["articles"] as Array<any>).map(ArticleFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    articles: (json["articles"] as Array<any>).map(ArticleFromJSON),
   };
 }
 
@@ -92,9 +93,6 @@ export function QuerySearchResultToJSONTyped(
   return {
     status: value["status"],
     numResults: value["numResults"],
-    articles:
-      value["articles"] == null
-        ? undefined
-        : (value["articles"] as Array<any>).map(ArticleToJSON),
+    articles: (value["articles"] as Array<any>).map(ArticleToJSON),
   };
 }

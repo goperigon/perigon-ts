@@ -32,19 +32,19 @@ export interface StorySearchResult {
    * @type {number}
    * @memberof StorySearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof StorySearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {Array<NewsCluster>}
    * @memberof StorySearchResult
    */
-  results?: Array<NewsCluster> | null;
+  results: Array<NewsCluster>;
 }
 
 /**
@@ -53,6 +53,10 @@ export interface StorySearchResult {
 export function instanceOfStorySearchResult(
   value: object,
 ): value is StorySearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -68,12 +72,9 @@ export function StorySearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(NewsClusterFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    results: (json["results"] as Array<any>).map(NewsClusterFromJSON),
   };
 }
 
@@ -92,9 +93,6 @@ export function StorySearchResultToJSONTyped(
   return {
     status: value["status"],
     numResults: value["numResults"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(NewsClusterToJSON),
+    results: (value["results"] as Array<any>).map(NewsClusterToJSON),
   };
 }

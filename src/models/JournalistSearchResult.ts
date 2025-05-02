@@ -32,19 +32,19 @@ export interface JournalistSearchResult {
    * @type {number}
    * @memberof JournalistSearchResult
    */
-  status?: number | null;
+  status: number;
   /**
    *
    * @type {number}
    * @memberof JournalistSearchResult
    */
-  numResults?: number | null;
+  numResults: number;
   /**
    *
    * @type {Array<Journalist>}
    * @memberof JournalistSearchResult
    */
-  results?: Array<Journalist> | null;
+  results: Array<Journalist>;
 }
 
 /**
@@ -53,6 +53,10 @@ export interface JournalistSearchResult {
 export function instanceOfJournalistSearchResult(
   value: object,
 ): value is JournalistSearchResult {
+  if (!("status" in value) || value["status"] === undefined) return false;
+  if (!("numResults" in value) || value["numResults"] === undefined)
+    return false;
+  if (!("results" in value) || value["results"] === undefined) return false;
   return true;
 }
 
@@ -70,12 +74,9 @@ export function JournalistSearchResultFromJSONTyped(
     return json;
   }
   return {
-    status: json["status"] == null ? undefined : json["status"],
-    numResults: json["numResults"] == null ? undefined : json["numResults"],
-    results:
-      json["results"] == null
-        ? undefined
-        : (json["results"] as Array<any>).map(JournalistFromJSON),
+    status: json["status"],
+    numResults: json["numResults"],
+    results: (json["results"] as Array<any>).map(JournalistFromJSON),
   };
 }
 
@@ -96,9 +97,6 @@ export function JournalistSearchResultToJSONTyped(
   return {
     status: value["status"],
     numResults: value["numResults"],
-    results:
-      value["results"] == null
-        ? undefined
-        : (value["results"] as Array<any>).map(JournalistToJSON),
+    results: (value["results"] as Array<any>).map(JournalistToJSON),
   };
 }
