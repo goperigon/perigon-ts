@@ -69,24 +69,6 @@ export interface ArticleSearchParams {
    * @memberof ArticleSearchParams
    */
   page?: number | null;
-  /**
-   *
-   * @type {Date}
-   * @memberof ArticleSearchParams
-   */
-  addDateFrom?: Date | null;
-  /**
-   *
-   * @type {Date}
-   * @memberof ArticleSearchParams
-   */
-  addDateTo?: Date | null;
-  /**
-   *
-   * @type {number}
-   * @memberof ArticleSearchParams
-   */
-  scoreThreshold?: number | null;
 }
 
 /**
@@ -124,12 +106,6 @@ export function ArticleSearchParamsFromJSONTyped(
       json["showReprints"] == null ? undefined : json["showReprints"],
     size: json["size"] == null ? undefined : json["size"],
     page: json["page"] == null ? undefined : json["page"],
-    addDateFrom:
-      json["addDateFrom"] == null ? undefined : new Date(json["addDateFrom"]),
-    addDateTo:
-      json["addDateTo"] == null ? undefined : new Date(json["addDateTo"]),
-    scoreThreshold:
-      json["scoreThreshold"] == null ? undefined : json["scoreThreshold"],
   };
 }
 
@@ -159,14 +135,5 @@ export function ArticleSearchParamsToJSONTyped(
     showReprints: value["showReprints"],
     size: value["size"],
     page: value["page"],
-    addDateFrom:
-      value["addDateFrom"] == null
-        ? undefined
-        : (value["addDateFrom"] as any).toISOString(),
-    addDateTo:
-      value["addDateTo"] == null
-        ? undefined
-        : (value["addDateTo"] as any).toISOString(),
-    scoreThreshold: value["scoreThreshold"],
   };
 }

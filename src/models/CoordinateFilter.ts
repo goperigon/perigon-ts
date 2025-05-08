@@ -14,7 +14,7 @@
 
 import { mapValues } from "../runtime";
 /**
- * Filter using sources that are located on specific coordinates using Lat, lon and radius.
+ * Filter articles from publishers based at specific geographic locations. Uses latitude, longitude, and radius parameters to define a circular search area for publisher locations.
  * @export
  * @interface CoordinateFilter
  */

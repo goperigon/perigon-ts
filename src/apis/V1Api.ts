@@ -85,87 +85,87 @@ export interface GetJournalistByIdRequest {
 
 export interface SearchArticlesRequest {
   /**
-   * Search query, each article will be scored and ranked against it. Articles are searched on the title, description, and content fields.
+   * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q?: string;
   /**
-   * Search article headlines/title field. Semantic similar to q parameter.
+   * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   title?: string;
   /**
-   * Search query on the description field. Semantic similar to q parameter.
+   * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
    */
   desc?: string;
   /**
-   * Search query on the article\&#39;s body of content field. Semantic similar to q parameter.
+   * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
    */
   content?: string;
   /**
-   * Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
    */
   url?: string;
   /**
-   * Article ID will search for a news article by the ID of the article. If several parameters are passed, all matched articles will be returned.
+   * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
    */
   articleId?: Array<string>;
   /**
-   * Search for related content using a cluster ID. Passing a cluster ID will filter results to only the content found within the cluster.
+   * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
    */
   clusterId?: Array<string>;
   /**
-   * \&#39;relevance\&#39; to sort by relevance to the query, \&#39;date\&#39; to sort by the publication date (desc), \&#39;pubDate\&#39; is a synonym to \&#39;date\&#39;, \&#39;addDate\&#39; to sort by \&#39;addDate\&#39; field (desc), \&#39;refreshDate\&#39; to sort by \&#39;refreshDate\&#39; field (desc). Defaults to \&#39;relevance\&#39;
+   * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
   sortBy?: AllEndpointSortBy;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * The number of items per page.
+   * The number of articles to return per page in the paginated response.
    */
   size?: number;
   /**
-   * \&#39;from\&#39; filter, will search articles published after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   from?: Date;
   /**
-   * \&#39;to\&#39; filter, will search articles published before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   to?: Date;
   /**
-   * \&#39;addDateFrom\&#39; filter, will search articles added after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom?: Date;
   /**
-   * \&#39;addDateTo\&#39; filter, will search articles added before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo?: Date;
   /**
-   * Will search articles that were refreshed after the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom?: Date;
   /**
-   * Will search articles that were refreshed before the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo?: Date;
   /**
-   * Medium will filter out news articles medium, which could be \&#39;Video\&#39; or \&#39;Article\&#39;. If several parameters are passed, all matched articles will be returned.
+   * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
    */
   medium?: Array<string>;
   /**
-   * Publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
   source?: Array<string>;
   /**
-   * One of the supported source groups. Find Source Groups in the guided part of our documentation...
+   * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
    */
   sourceGroup?: Array<string>;
   /**
-   * A list of built-in source group names to exclude from the results. The Perigon API categorizes sources into groups (for example, “top10” or “top100”) based on type or popularity. Using this filter allows you to remove articles coming from any source that belongs to one or more of the specified groups.
+   * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
    */
   excludeSourceGroup?: Array<string>;
   /**
-   * The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
    */
   excludeSource?: Array<string>;
   /**
@@ -173,71 +173,71 @@ export interface SearchArticlesRequest {
    */
   paywall?: boolean;
   /**
-   * Author names to filter by. Article author bylines are used as a source field. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
    */
   byline?: Array<string>;
   /**
-   * A list of author names to include. Only articles written by any of the specified authors are returned. This is ideal when you wish to focus on content from particular voices or experts.
+   * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
    */
   author?: Array<string>;
   /**
-   *  A list of author names to exclude from the search results. Any article written by an author whose name matches one in this list will be omitted, which helps to avoid content from certain individuals.
+   * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
    */
   excludeAuthor?: Array<string>;
   /**
-   * Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
+   * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
    */
   journalistId?: Array<string>;
   /**
-   * A list of journalist (or reporter) identifiers to exclude. If an article is written by a journalist whose ID matches any in this list, it will not be part of the result set.
+   * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
    */
   excludeJournalistId?: Array<string>;
   /**
-   * Language code to filter by language. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
    */
   language?: Array<string>;
   /**
-   *  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
+   * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
    */
   excludeLanguage?: Array<string>;
   /**
-   * Expand a query to search the translation, translatedTitle, and translatedDescription fields for non-English articles.
+   * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
    */
   searchTranslation?: boolean;
   /**
-   * Labels to filter by, could be \&#39;Opinion\&#39;, \&#39;Paid-news\&#39;, \&#39;Non-news\&#39;, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
    */
   label?: Array<string>;
   /**
-   * Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
+   * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
    */
   excludeLabel?: Array<string>;
   /**
-   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
    */
   category?: Array<string>;
   /**
-   * A list of article categories to be omitted. If an article is tagged with any category present in this list (such as “Polotics”, “Tech”, “Sports”, etc.), it will not appear in the search results.
+   * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
    */
   excludeCategory?: Array<string>;
   /**
-   * Filters results to include only articles with the specified topics. Topics are more specific classifications than categories, with an article potentially having multiple topics assigned. Perigon uses both human and machine curation to maintain an evolving list of available topics. Common examples include \&#39;Markets\&#39;, \&#39;Crime\&#39;, \&#39;Cryptocurrency\&#39;, \&#39;Social Issues\&#39;, \&#39;College Sports\&#39;, etc. See the Topics page in Docs for a complete list of available topics.
+   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
   topic?: Array<string>;
   /**
-   * Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
    */
   excludeTopic?: Array<string>;
   /**
-   * Returns only articles that point to specified links (as determined by the \&#39;links\&#39; field in the article response).
+   * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
    */
   linkTo?: string;
   /**
-   * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is \&#39;true\&#39;.
+   * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
    */
   showReprints?: boolean;
   /**
-   * Shows all articles belonging to the same reprint group. A reprint group includes one original article (the first one processed by the API) and all its known reprints.
+   * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
    */
   reprintGroupId?: string;
   /**
@@ -325,43 +325,43 @@ export interface SearchArticlesRequest {
    */
   sourceMaxDistance?: number;
   /**
-   * List of person Wikidata IDs for filtering.
+   * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
    */
   personWikidataId?: Array<string>;
   /**
-   * A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
+   * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
    */
   excludePersonWikidataId?: Array<string>;
   /**
-   * List of person names for exact matches. Boolean and complex logic is not supported on this paramter.
+   * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
   personName?: Array<string>;
   /**
-   * A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
+   * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
    */
   excludePersonName?: Array<string>;
   /**
-   * List of company IDs to filter by.
+   * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
    */
   companyId?: Array<string>;
   /**
-   * A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
+   * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
    */
   excludeCompanyId?: Array<string>;
   /**
-   * Search by company name.
+   * Filter articles by company name mentions. Performs an exact match on company names.
    */
   companyName?: string;
   /**
-   * Search by company domains for filtering. E.g. companyDomain&#x3D;apple.com.
+   * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
    */
   companyDomain?: Array<string>;
   /**
-   * A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, “example.com”), it will not be returned in the results.
+   * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
    */
   excludeCompanyDomain?: Array<string>;
   /**
-   * Search by company symbols.
+   * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
    */
   companySymbol?: Array<string>;
   /**
@@ -373,31 +373,31 @@ export interface SearchArticlesRequest {
    */
   showNumResults?: boolean;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo?: number;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
+   * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo?: number;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo?: number;
   /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
+   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
    */
   taxonomy?: Array<string>;
   /**
@@ -408,283 +408,287 @@ export interface SearchArticlesRequest {
 
 export interface SearchCompaniesRequest {
   /**
-   * Search by company id.
+   * Filter by unique company identifiers. Multiple values create an OR filter.
    */
   id?: Array<string>;
   /**
-   * Search by ticker symbol.
+   * Filter by company stock ticker symbols (e.g., AAPL, MSFT, GOOGL). Multiple values create an OR filter.
    */
   symbol?: Array<string>;
   /**
-   * Search by company domain.
+   * Filter by company domains or websites (e.g., apple.com, microsoft.com). Multiple values create an OR filter.
    */
   domain?: Array<string>;
   /**
-   * Search by company country.
+   * Filter by company headquarters country. Multiple values create an OR filter.
    */
   country?: Array<string>;
   /**
-   * Search by exchange name.
+   * Filter by stock exchange where companies are listed (e.g., NASDAQ, NYSE). Multiple values create an OR filter.
    */
   exchange?: Array<string>;
   /**
-   * Minimum number of employees.
+   * Filter for companies with at least this many employees.
    */
   numEmployeesFrom?: number;
   /**
-   * Maximum number of employees.
+   * Filter for companies with no more than this many employees.
    */
   numEmployeesTo?: number;
   /**
-   * Starting IPO date.
+   * Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
    */
   ipoFrom?: Date;
   /**
-   * Ending IPO date.
+   * Filter for companies that went public on or before this date. Accepts ISO 8601 format (e.g., 2023-12-31T23:59:59) or yyyy-mm-dd format.
    */
   ipoTo?: Date;
   /**
-   * Search companies over \&#39;name\&#39;, \&#39;altNames\&#39;, \&#39;domains\&#39; and \&#39;symbols.symbol\&#39; fields. Boolean operators and logic are supported.
+   * Primary search query for filtering companies across name, alternative names, domains, and ticker symbols. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q?: string;
   /**
-   * Search by company name. Boolean operators and logic are supported.
+   * Search within company names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name?: string;
   /**
-   * Search by industry. Boolean operators and logic are supported.
+   * Filter by company industry classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   industry?: string;
   /**
-   * Search by sector. Boolean operators and logic are supported.
+   * Filter by company sector classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   sector?: string;
   /**
-   * The number of items per page.
+   * The number of companies to return per page in the paginated response.
    */
   size?: number;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
 }
 
-export interface SearchJournalists1Request {
+export interface SearchJournalistsRequest {
   /**
-   * Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
+   * Filter by unique journalist identifiers. Multiple values create an OR filter to find journalists matching any of the specified IDs.
    */
   id?: Array<string>;
   /**
-   * Searches through name, title, twitterBio fields with priority given to the name, then to the title, then to the twitter bio. Returns results sorted by relevance.
+   * Primary search query for filtering journalists based on their name, title, and Twitter bio. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q?: string;
   /**
-   * Searches through journalist names, scores and ranks them, returns results sorted by relevance.
+   * Search specifically within journalist names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name?: string;
   /**
-   * Searches for journalists by (exact match) twitter handle.
+   * Filter journalists by their exact Twitter handle, without the @ symbol.
    */
   twitter?: string;
   /**
-   * The number of items per page.
+   * The number of journalists to return per page in the paginated response.
    */
   size?: number;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * Search for journalist by the publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   * Filter journalists by the publisher domains they write for. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
   source?: Array<string>;
   /**
-   * Searches for journalists by topic.
+   * Filter journalists by the topics they frequently cover. Multiple values create an OR filter to find journalists covering any of the specified topics.
    */
   topic?: Array<string>;
   /**
-   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter journalists by the content categories they typically write about (e.g., Politics, Tech, Sports, Business). Multiple values create an OR filter.
    */
   category?: Array<string>;
   /**
-   * Filter journalists by label. For example, searching \&#39;Opinion\&#39; will return the journalists where \&#39;Opinion\&#39;-type articles is one of the top labels for the articles they publish.
+   * Filter journalists by the type of content they typically produce (e.g., Opinion, Paid-news, Non-news). Multiple values create an OR filter.
    */
   label?: Array<string>;
   /**
-   * Returns the journalists with the minimum indicated number of average monthly posts.
+   * Filter for journalists who publish at least this many articles per month. Used to identify more active journalists.
    */
   minMonthlyPosts?: number;
   /**
-   * Returns the journalist with the maximum indicated number of average monthly posts.
+   * Filter for journalists who publish no more than this many articles per month.
    */
   maxMonthlyPosts?: number;
   /**
-   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter journalists by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). Multiple values create an OR filter.
    */
   country?: Array<string>;
   /**
-   * Starting date when the record was last updated.
+   * Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   updatedAtFrom?: Date;
   /**
-   * Ending date when the record was last updated.
+   * Filter for journalist profiles updated on or before this date. Accepts ISO 8601 format (e.g., 2023-03-01T23:59:59) or yyyy-mm-dd format.
    */
   updatedAtTo?: Date;
   /**
-   * If \&#39;true\&#39;, shows accurate number of results matched by the query. By default, the counter is accurate only up to 10,000 results due performance reasons.
+   * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
   showNumResults?: boolean;
 }
 
 export interface SearchPeopleRequest {
   /**
-   * Search by name of the person. Supports exact matching with quotes (\&quot;\&quot;) and Boolean operators (AND, OR, NOT).
+   * Search by person\&#39;s name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name?: string;
   /**
-   * Filter by Wikidata entity ID(s). Use this to find specific people by their Wikidata identifiers.
+   * Filter by Wikidata entity IDs (e.g., Q7747, Q937). These are unique identifiers from Wikidata.org that precisely identify public figures and eliminate name ambiguity. Multiple values create an OR filter.
    */
   wikidataId?: Array<string>;
   /**
-   * Filter by Wikidata occupation ID(s). Use this to find people with specific occupations.
+   * Filter by Wikidata occupation IDs (e.g., Q82955 for politician, Q33999 for actor, Q19546 for businessman). Finds people with specific professions. Multiple values create an OR filter.
    */
   occupationId?: Array<string>;
   /**
-   * Search by occupation name. Supports exact matching with quotes (\&quot;\&quot;) and Boolean operators (AND, OR, NOT).
+   * Search by occupation name (e.g., politician, actor, CEO, athlete). Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   occupationLabel?: string;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * The number of items per page.
+   * The number of people to return per page in the paginated response.
    */
   size?: number;
 }
 
 export interface SearchSourcesRequest {
   /**
-   * Domain name for the media source to lookup. This parameter supports wildcard queries, ie. \&quot;*.cnn.com\&quot; will match all subdomains for cnn.com.
+   * Filter by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com, us?.nytimes.com). Multiple values create an OR filter.
    */
   domain?: Array<string>;
   /**
-   * Search by name of source. This parameter supports complex boolean search operators, and also searches the altNames field for alternative names of the source.
+   * Search by source name or alternative names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name?: string;
   /**
-   * Find all sources within a sourceGroup. Find Source Groups in the guided part of our documentation...
+   * Filter by predefined publisher bundles (e.g., top100, top50tech). Returns all sources within the specified group. See documentation for available source groups.
    */
   sourceGroup?: string;
   /**
-   * Use \&#39;relevance\&#39; to sort by relevance to the query, \&#39;globalRank\&#39; for top ranked sources based on popularity, \&#39;monthlyVisits\&#39; for sources with the largest audience, \&#39;avgMonthlyPosts\&#39; for sources with the highest publishing frequency. Defaults to \&#39;relevance\&#39;.
+   * Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
    */
   sortBy?: SortBy;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * The number of items per page.
+   * The number of sources to return per page in the paginated response.
    */
   size?: number;
   /**
-   * Filter by popularity. Enter a minimum number of monthly visits that the source must have in order to match your query.
+   * Filter for sources with at least this many monthly visitors. Used to target publishers by audience size.
    */
   minMonthlyVisits?: number;
   /**
-   * Enter a maximum number of monthly visits that the source must have in order to match your query.
+   * Filter for sources with no more than this many monthly visitors. Used to target publishers by audience size.
    */
   maxMonthlyVisits?: number;
   /**
-   * Returns the sources that have at least this number of average monthly posts.
+   * Filter for sources that publish at least this many articles per month. Used to target publishers by content volume.
    */
   minMonthlyPosts?: number;
   /**
-   * Returns the sources that have at most this number of average monthly posts.
+   * Filter for sources that publish no more than this many articles per month. Used to target publishers by content volume.
    */
   maxMonthlyPosts?: number;
   /**
-   * Country code to filter sources by the countries in which they most commonly cover. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter sources by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
   country?: Array<string>;
   /**
-   * Find all local publications that are located within a given country.
+   * Filter for local publications based in specific countries. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
   sourceCountry?: Array<string>;
   /**
-   * Find all local publications that are located within a given state.
+   * Filter for local publications based in specific states or regions. Uses standard two-letter state codes in lowercase (e.g., ca, ny, tx). See documentation for supported state codes. Multiple values create an OR filter.
    */
   sourceState?: Array<string>;
   /**
-   * Find all local publications that are located within a given county.
+   * Filter for local publications based in specific counties. Multiple values create an OR filter.
    */
   sourceCounty?: Array<string>;
   /**
-   * Find all local publications that are located within a given city.
+   * Filter for local publications based in specific cities. Multiple values create an OR filter.
    */
   sourceCity?: Array<string>;
   /**
-   * Latitude of the center point to search local publications.
+   * Latitude coordinate for filtering local publications by geographic proximity. Used with sourceLon and sourceMaxDistance for radius search.
    */
   sourceLat?: number;
   /**
-   * Longitude of the center point to search local publications.
+   * Longitude coordinate for filtering local publications by geographic proximity. Used with sourceLat and sourceMaxDistance for radius search.
    */
   sourceLon?: number;
   /**
-   * Maximum distance from starting point to search local publications.
+   * Maximum distance in kilometers from the coordinates defined by sourceLat and sourceLon. Defines the radius for local publication searches.
    */
   sourceMaxDistance?: number;
   /**
-   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter sources by their primary content categories such as Politics, Tech, Sports, Business, or Finance. Returns sources that frequently cover these topics. Multiple values create an OR filter.
    */
   category?: Array<string>;
   /**
-   * Find sources by topic. For example, searching \&#39;Markets\&#39; will return the sources where \&#39;Markets\&#39; is one of the top 10 topics that they cover.
+   * Filter sources by their frequently covered topics (e.g., Markets, Cryptocurrency, Climate Change). Returns sources where the specified topic is among their top 10 covered areas. Multiple values create an OR filter.
    */
   topic?: Array<string>;
   /**
-   * Filter sources by label. For example, searching \&#39;Opinion\&#39; will return the sources where \&#39;Opinion\&#39;-type articles is one of the top labels for the articles they publish.
+   * Filter sources by their content label patterns (e.g., Opinion, Paid-news, Non-news). Returns sources where the specified label is common in their published content. See documentation for all available labels. Multiple values create an OR filter.
    */
   label?: Array<string>;
   /**
-   * Use \&#39;true\&#39; to find only sources known to have a paywall, or use \&#39;false\&#39; to filter for only sources that do not have a paywall.
+   * Filter by paywall status. Set to true to find sources with paywalls, or false to find sources without paywalls.
    */
   paywall?: boolean;
   /**
-   * Controls whether subdomains are included in the response. When set to true (default), all relevant subdomains of media sources will be returned as separate results. Set to false to consolidate results to parent domains only.
+   * Controls whether subdomains are included as separate results. When true (default), subdomains appear as distinct sources. When false, results are consolidated to parent domains only.
    */
   showSubdomains?: boolean;
   /**
-   * If \&#39;true\&#39;, shows accurate number of results matched by the query. By default, the counter is accurate only up to 10,000 results due performance reasons.
+   * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
   showNumResults?: boolean;
 }
 
 export interface SearchStoriesRequest {
   /**
-   * Search story by name, summary and key points. Preference is given to the name field. Supports complex query syntax, same way as q parameter from /all endpoint.
+   * Primary search query for filtering stories based on their name, summary, and key points. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q?: string;
   /**
-   * Search story by name. Supports complex query syntax, same way as q parameter from /all endpoint.
+   * Search specifically within story names. Supports Boolean operators, exact phrases with quotes, and wildcards for matching name variations.
    */
   name?: string;
   /**
-   * Filter to specific story. Passing a cluster ID will filter results to only the content found within the cluster. Multiple params could be passed.
+   * Filter to specific stories using their unique identifiers. Each clusterId represents a distinct story that groups related articles. Multiple values create an OR filter.
    */
   clusterId?: Array<string>;
   /**
-   * Sort stories by count (\&#39;count\&#39;), total count (\&#39;totalCount\&#39;), creation date (\&#39;createdAt\&#39;), last updated date (\&#39;updatedAt\&#39;), or relevance (\&#39;relevance\&#39;). By default is sorted by \&#39;createdAt\&#39;
+   * Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
+   */
+  excludeClusterId?: Array<string>;
+  /**
+   * Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
   sortBy?: SortBy;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * The number of items per page.
+   * The number of articles to return per page in the paginated response.
    */
   size?: number;
   /**
@@ -696,23 +700,39 @@ export interface SearchStoriesRequest {
    */
   to?: Date;
   /**
-   * Filter by topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter for stories created after this date. Alternative parameter for filtering by story creation date.
+   */
+  initializedFrom?: Date;
+  /**
+   * Filter for stories created before this date. Alternative parameter for filtering by story creation date.
+   */
+  initializedTo?: Date;
+  /**
+   * Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
+   */
+  updatedFrom?: Date;
+  /**
+   * Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
+   */
+  updatedTo?: Date;
+  /**
+   * Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
   topic?: Array<string>;
   /**
-   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles. More ➜
+   * Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
    */
   category?: Array<string>;
   /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
+   * Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
    */
   taxonomy?: Array<string>;
   /**
-   * Filter stories by sources that wrote articles belonging to this story. At least 1 article is required for story to match. Multiple parameters could be passed.
+   * Filter stories that contain articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). A story will match if it contains at least one article from any of the specified sources. Multiple values create an OR filter.
    */
   source?: Array<string>;
   /**
-   * Filter stories by sources that wrote articles belonging to this story. Source groups are expanded into a list of sources. At least 1 article by the source is required for story to match. Multiple params could be passed.
+   * Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
    */
   sourceGroup?: Array<string>;
   /**
@@ -720,27 +740,27 @@ export interface SearchStoriesRequest {
    */
   minUniqueSources?: number;
   /**
-   * List of person Wikidata IDs for filtering. Filter is applied on topPeople field.
+   * Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
    */
   personWikidataId?: Array<string>;
   /**
-   * List of people names. Filtering is applied on topPeople field.
+   * Filter stories by exact name matches of top mentioned people. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
   personName?: string;
   /**
-   * List of company IDs for filtering. Filtering is applied to topCompanies field.
+   * Filter stories by identifiers of top mentioned companies. Returns stories where these companies appear prominently. For a complete list of tracked companies, refer to the /companies endpoint.
    */
   companyId?: Array<string>;
   /**
-   * List of company names for filtering. Filtering is applied on topCompanies field.
+   * Filter stories by names of top mentioned companies. Performs an exact match on company names in the topCompanies field.
    */
   companyName?: string;
   /**
-   * List of company domains for filtering. Filtering is applied on topCompanies field.
+   * Filter stories by domains of top mentioned companies (e.g., apple.com). Returns stories where companies with these domains appear prominently. For available company entities, consult the /companies endpoint.
    */
   companyDomain?: Array<string>;
   /**
-   * List of company tickers for filtering. Filtering is applied on topCompanies field.
+   * Filter stories by stock symbols of top mentioned companies. Returns stories where companies with these symbols appear prominently. For available company entities and their symbols, consult the /companies endpoint.
    */
   companySymbol?: Array<string>;
   /**
@@ -768,49 +788,33 @@ export interface SearchStoriesRequest {
    */
   maxClusterSize?: number;
   /**
-   * Returns stories with name assigned. Defaults to true.
+   * Filter to only include stories that have been assigned names. Defaults to true. Note that stories only receive names after they contain at least 5 unique articles.
    */
   nameExists?: boolean;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo?: number;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
+   * Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo?: number;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo?: number;
-  /**
-   * \&#39;initializedFrom\&#39; filter, will search stories that became available after provided date
-   */
-  initializedFrom?: Date;
-  /**
-   * \&#39;initializedTo\&#39; filter, will search stories that became available before provided date
-   */
-  initializedTo?: Date;
-  /**
-   * Will return stories with \&#39;updatedAt\&#39; &gt;&#x3D; \&#39;updatedFrom\&#39;.
-   */
-  updatedFrom?: Date;
-  /**
-   * Will return stories with \&#39;updatedAt\&#39; &lt;&#x3D; \&#39;updatedTo\&#39;.
-   */
-  updatedTo?: Date;
   /**
    * Parameter showStoryPageInfo
    */
@@ -823,10 +827,6 @@ export interface SearchStoriesRequest {
    * Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
    */
   showDuplicates?: boolean;
-  /**
-   * Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
-   */
-  excludeClusterId?: Array<string>;
 }
 
 export interface SearchSummarizerRequest {
@@ -836,87 +836,87 @@ export interface SearchSummarizerRequest {
    */
   summaryBody: SummaryBody;
   /**
-   * Search query, each article will be scored and ranked against it. Articles are searched on the title, description, and content fields.
+   * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q?: string;
   /**
-   * Search article headlines/title field. Semantic similar to q parameter.
+   * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   title?: string;
   /**
-   * Search query on the description field. Semantic similar to q parameter.
+   * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
    */
   desc?: string;
   /**
-   * Search query on the article\&#39;s body of content field. Semantic similar to q parameter.
+   * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
    */
   content?: string;
   /**
-   * Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
    */
   url?: string;
   /**
-   * Article ID will search for a news article by the ID of the article. If several parameters are passed, all matched articles will be returned.
+   * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
    */
   articleId?: Array<string>;
   /**
-   * Search for related content using a cluster ID. Passing a cluster ID will filter results to only the content found within the cluster.
+   * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
    */
   clusterId?: Array<string>;
   /**
-   * \&#39;relevance\&#39; to sort by relevance to the query, \&#39;date\&#39; to sort by the publication date (desc), \&#39;pubDate\&#39; is a synonym to \&#39;date\&#39;, \&#39;addDate\&#39; to sort by \&#39;addDate\&#39; field (desc), \&#39;refreshDate\&#39; to sort by \&#39;refreshDate\&#39; field (desc). Defaults to \&#39;relevance\&#39;
+   * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
   sortBy?: AllEndpointSortBy;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * The number of items per page.
+   * The number of articles to return per page in the paginated response.
    */
   size?: number;
   /**
-   * \&#39;from\&#39; filter, will search articles published after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   from?: Date;
   /**
-   * \&#39;to\&#39; filter, will search articles published before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   to?: Date;
   /**
-   * \&#39;addDateFrom\&#39; filter, will search articles added after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom?: Date;
   /**
-   * \&#39;addDateTo\&#39; filter, will search articles added before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo?: Date;
   /**
-   * Will search articles that were refreshed after the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T00:00:00
+   * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom?: Date;
   /**
-   * Will search articles that were refreshed before the specified date. The date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2022-02-01T23:59:59
+   * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo?: Date;
   /**
-   * Medium will filter out news articles medium, which could be \&#39;Video\&#39; or \&#39;Article\&#39;. If several parameters are passed, all matched articles will be returned.
+   * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
    */
   medium?: Array<string>;
   /**
-   * Publisher\&#39;s domain can include a subdomain. If multiple parameters are passed, they will be applied as OR operations. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
   source?: Array<string>;
   /**
-   * One of the supported source groups. Find Source Groups in the guided part of our documentation...
+   * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
    */
   sourceGroup?: Array<string>;
   /**
-   * A list of built-in source group names to exclude from the results. The Perigon API categorizes sources into groups (for example, “top10” or “top100”) based on type or popularity. Using this filter allows you to remove articles coming from any source that belongs to one or more of the specified groups.
+   * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
    */
   excludeSourceGroup?: Array<string>;
   /**
-   * The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
    */
   excludeSource?: Array<string>;
   /**
@@ -924,71 +924,71 @@ export interface SearchSummarizerRequest {
    */
   paywall?: boolean;
   /**
-   * Author names to filter by. Article author bylines are used as a source field. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
    */
   byline?: Array<string>;
   /**
-   * A list of author names to include. Only articles written by any of the specified authors are returned. This is ideal when you wish to focus on content from particular voices or experts.
+   * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
    */
   author?: Array<string>;
   /**
-   *  A list of author names to exclude from the search results. Any article written by an author whose name matches one in this list will be omitted, which helps to avoid content from certain individuals.
+   * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
    */
   excludeAuthor?: Array<string>;
   /**
-   * Filter by journalist ID. Journalist IDs are unique journalist identifiers which can be found through the Journalist API, or in the matchedAuthors field.
+   * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
    */
   journalistId?: Array<string>;
   /**
-   * A list of journalist (or reporter) identifiers to exclude. If an article is written by a journalist whose ID matches any in this list, it will not be part of the result set.
+   * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
    */
   excludeJournalistId?: Array<string>;
   /**
-   * Language code to filter by language. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
    */
   language?: Array<string>;
   /**
-   *  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
+   * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
    */
   excludeLanguage?: Array<string>;
   /**
-   * Expand a query to search the translation, translatedTitle, and translatedDescription fields for non-English articles.
+   * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
    */
   searchTranslation?: boolean;
   /**
-   * Labels to filter by, could be \&#39;Opinion\&#39;, \&#39;Paid-news\&#39;, \&#39;Non-news\&#39;, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
    */
   label?: Array<string>;
   /**
-   * Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
+   * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
    */
   excludeLabel?: Array<string>;
   /**
-   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
    */
   category?: Array<string>;
   /**
-   * A list of article categories to be omitted. If an article is tagged with any category present in this list (such as “Polotics”, “Tech”, “Sports”, etc.), it will not appear in the search results.
+   * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
    */
   excludeCategory?: Array<string>;
   /**
-   * Filters results to include only articles with the specified topics. Topics are more specific classifications than categories, with an article potentially having multiple topics assigned. Perigon uses both human and machine curation to maintain an evolving list of available topics. Common examples include \&#39;Markets\&#39;, \&#39;Crime\&#39;, \&#39;Cryptocurrency\&#39;, \&#39;Social Issues\&#39;, \&#39;College Sports\&#39;, etc. See the Topics page in Docs for a complete list of available topics.
+   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
   topic?: Array<string>;
   /**
-   * Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
    */
   excludeTopic?: Array<string>;
   /**
-   * Returns only articles that point to specified links (as determined by the \&#39;links\&#39; field in the article response).
+   * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
    */
   linkTo?: string;
   /**
-   * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is \&#39;true\&#39;.
+   * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
    */
   showReprints?: boolean;
   /**
-   * Shows all articles belonging to the same reprint group. A reprint group includes one original article (the first one processed by the API) and all its known reprints.
+   * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
    */
   reprintGroupId?: string;
   /**
@@ -1076,43 +1076,43 @@ export interface SearchSummarizerRequest {
    */
   sourceMaxDistance?: number;
   /**
-   * List of person Wikidata IDs for filtering.
+   * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
    */
   personWikidataId?: Array<string>;
   /**
-   * A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
+   * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
    */
   excludePersonWikidataId?: Array<string>;
   /**
-   * List of person names for exact matches. Boolean and complex logic is not supported on this paramter.
+   * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
   personName?: Array<string>;
   /**
-   * A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
+   * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
    */
   excludePersonName?: Array<string>;
   /**
-   * List of company IDs to filter by.
+   * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
    */
   companyId?: Array<string>;
   /**
-   * A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
+   * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
    */
   excludeCompanyId?: Array<string>;
   /**
-   * Search by company name.
+   * Filter articles by company name mentions. Performs an exact match on company names.
    */
   companyName?: string;
   /**
-   * Search by company domains for filtering. E.g. companyDomain&#x3D;apple.com.
+   * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
    */
   companyDomain?: Array<string>;
   /**
-   * A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, “example.com”), it will not be returned in the results.
+   * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
    */
   excludeCompanyDomain?: Array<string>;
   /**
-   * Search by company symbols.
+   * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
    */
   companySymbol?: Array<string>;
   /**
@@ -1124,31 +1124,31 @@ export interface SearchSummarizerRequest {
    */
   showNumResults?: boolean;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating positive sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo?: number;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating neutral sentiment. Explanation of sentimental values can be found in Docs under the Article Data section.
+   * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating neutral sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo?: number;
   /**
-   * Filters results with a sentiment score greater than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom?: number;
   /**
-   * Filters results with a sentiment score less than or equal to the specified value, indicating negative sentiment. See the Article Data section in Docs for an explanation of scores.
+   * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo?: number;
   /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds
+   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
    */
   taxonomy?: Array<string>;
   /**
@@ -1159,23 +1159,23 @@ export interface SearchSummarizerRequest {
 
 export interface SearchTopicsRequest {
   /**
-   * Search by name.
+   * Search for topics by exact name or partial text match. Does not support wildcards. Examples include Markets, Cryptocurrency, Climate Change, etc.
    */
   name?: string;
   /**
-   * Search by category.
+   * Filter topics by broad article categories such as Politics, Tech, Sports, Business, Finance, Entertainment, etc.
    */
   category?: string;
   /**
-   * Search by subcategory.
+   * Filter topics by their specific subcategory. Subcategories provide more granular classification beyond the main category, such as TV or Event.
    */
   subcategory?: string;
   /**
-   * The page number to retrieve.
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page?: number;
   /**
-   * The number of items per page.
+   * The number of topics to return per page in the paginated response.
    */
   size?: number;
 }
@@ -1273,8 +1273,8 @@ export interface V1ApiInterface {
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
-  searchJournalists1Raw(
-    requestParameters: SearchJournalists1Request,
+  searchJournalistsRaw(
+    requestParameters: SearchJournalistsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<JournalistSearchResult>>;
 
@@ -1282,8 +1282,8 @@ export interface V1ApiInterface {
    * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
    * Journalists
    */
-  searchJournalists1(
-    requestParameters: SearchJournalists1Request,
+  searchJournalists(
+    requestParameters: SearchJournalistsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<JournalistSearchResult>;
 
@@ -2007,8 +2007,8 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
    * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
    * Journalists
    */
-  async searchJournalists1Raw(
-    requestParameters: SearchJournalists1Request,
+  async searchJournalistsRaw(
+    requestParameters: SearchJournalistsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<JournalistSearchResult>> {
     const queryParameters: any = {};
@@ -2110,11 +2110,11 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
    * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
    * Journalists
    */
-  async searchJournalists1(
-    requestParameters: SearchJournalists1Request = {},
+  async searchJournalists(
+    requestParameters: SearchJournalistsRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<JournalistSearchResult> {
-    const response = await this.searchJournalists1Raw(
+    const response = await this.searchJournalistsRaw(
       requestParameters,
       initOverrides,
     );
@@ -2366,6 +2366,11 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       queryParameters["clusterId"] = requestParameters["clusterId"];
     }
 
+    if (requestParameters["excludeClusterId"] != null) {
+      queryParameters["excludeClusterId"] =
+        requestParameters["excludeClusterId"];
+    }
+
     if (requestParameters["sortBy"] != null) {
       queryParameters["sortBy"] = requestParameters["sortBy"];
     }
@@ -2386,6 +2391,30 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
 
     if (requestParameters["to"] != null) {
       queryParameters["to"] = (requestParameters["to"] as any).toISOString();
+    }
+
+    if (requestParameters["initializedFrom"] != null) {
+      queryParameters["initializedFrom"] = (
+        requestParameters["initializedFrom"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["initializedTo"] != null) {
+      queryParameters["initializedTo"] = (
+        requestParameters["initializedTo"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["updatedFrom"] != null) {
+      queryParameters["updatedFrom"] = (
+        requestParameters["updatedFrom"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["updatedTo"] != null) {
+      queryParameters["updatedTo"] = (
+        requestParameters["updatedTo"] as any
+      ).toISOString();
     }
 
     if (requestParameters["topic"] != null) {
@@ -2496,30 +2525,6 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
         requestParameters["negativeSentimentTo"];
     }
 
-    if (requestParameters["initializedFrom"] != null) {
-      queryParameters["initializedFrom"] = (
-        requestParameters["initializedFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["initializedTo"] != null) {
-      queryParameters["initializedTo"] = (
-        requestParameters["initializedTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["updatedFrom"] != null) {
-      queryParameters["updatedFrom"] = (
-        requestParameters["updatedFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["updatedTo"] != null) {
-      queryParameters["updatedTo"] = (
-        requestParameters["updatedTo"] as any
-      ).toISOString();
-    }
-
     if (requestParameters["showStoryPageInfo"] != null) {
       queryParameters["showStoryPageInfo"] =
         requestParameters["showStoryPageInfo"];
@@ -2531,11 +2536,6 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
 
     if (requestParameters["showDuplicates"] != null) {
       queryParameters["showDuplicates"] = requestParameters["showDuplicates"];
-    }
-
-    if (requestParameters["excludeClusterId"] != null) {
-      queryParameters["excludeClusterId"] =
-        requestParameters["excludeClusterId"];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};

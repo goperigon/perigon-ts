@@ -22,169 +22,169 @@ import {
 } from "./CoordinateFilter";
 
 /**
- * A versatile filter object to refine search results based on articles, clusters, sources, languages, categories, locations, companies, and people. Supports logical operators (AND, OR, NOT) for complex queries. Accepts single values or arrays, with arrays applied as OR operations.
+ * Complex filter structure for article searches that supports nested logical operations (AND, OR, NOT) and multiple filtering criteria.
  * @export
  * @interface ArticleSearchFilter
  */
 export interface ArticleSearchFilter {
   /**
-   * Filter by specific article(s). Array of article IDs. For convenience, a single string ID is also accepted.
+   * Filter by specific article identifiers. Accepts either a single ID or an array of IDs. Returns only articles matching these IDs.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   articleId?: Array<string> | null;
   /**
-   * Filter by specific cluster(s). Accepts either a single string or an array of strings.
+   * Filter by specific story identifiers. Accepts either a single ID or an array of IDs. Returns only articles belonging to these stories.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   clusterId?: Array<string> | null;
   /**
-   * Filter by specific source(s). Accepts either a single string or an array of strings.
+   * Filter articles by specific publisher domains or subdomains. Accepts either a single domain or an array of domains. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   source?: Array<string> | null;
   /**
-   * The domain of the website, which should be excluded from the search. Multiple parameters could be provided. Wildcards (* and ?) are suported (e.g. *.cnn.com).
+   * Exclude articles from specific publisher domains or subdomains. Accepts either a single domain or an array of domains. Multiple values create an AND-exclude filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeSource?: Array<string> | null;
   /**
-   * Filter by specific source group, for example: 'top100'. Accepts either a single string or an array of strings.
+   * Filter articles using Perigon's curated publisher bundles (e.g., top100, top25tech). Accepts either a single source group or an array. Multiple values create an OR filter to include articles from any of the specified bundles.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   sourceGroup?: Array<string> | null;
   /**
-   * Language code to filter by language. If an array parameters are passed, they will be applied as OR operations. For example: ['en', 'es']. Language ISO codes must be provided.
+   * Filter articles by their language using ISO-639 two-letter codes in lowercase (e.g., en, es, fr). Accepts either a single language code or an array. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   language?: Array<string> | null;
   /**
-   *  A list of languages to be excluded. Any article published in one of the languages provided in this filter will not be returned. This is useful when you are interested only in news published in specific languages.
+   * Exclude articles in specific languages using ISO-639 two-letter codes in lowercase. Accepts either a single language code or an array. Multiple values create an AND-exclude filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeLanguage?: Array<string> | null;
   /**
-   * Labels to filter by, could be 'Opinion', 'Paid-news', 'Non-news', etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. View our docs for an exhaustive list of labels. Accepts either a single label or an array. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   label?: Array<string> | null;
   /**
-   * Exclude results that include specific labels (Opinion, Non-news, Paid News, etc.). You can filter multiple by repeating the parameter.
+   * Exclude articles with specific editorial labels. Accepts either a single label or an array. Multiple values create an AND-exclude filter, removing all content with any of these labels.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeLabel?: Array<string> | null;
   /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy=/Finance/Banking/Other, /Finance/Investing/Funds
+   * Filter by Google Content Categories. Must pass the full hierarchical path of the category. Accepts either a single path or an array. Example: taxonomy=/Finance/Banking/Other,/Finance/Investing/Funds. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   taxonomy?: Array<string> | null;
   /**
-   * Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use 'none' to search uncategorized articles.
+   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Accepts either a single category or an array. Use none to find uncategorized articles. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   category?: Array<string> | null;
   /**
-   * Filter by topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Accepts either a single topic or an array. Topics are more granular than categories, and articles can have multiple topics. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   topic?: Array<string> | null;
   /**
-   * Filter by excluding topics. Each topic is some kind of entity that the article is about. Examples of topics: Markets, Joe Biden, Green Energy, Climate Change, Cryptocurrency, etc. If multiple parameters are passed, they will be applied as OR operations.
+   * Exclude articles with specific topics. Accepts either a single topic or an array. Multiple values create an AND-exclude filter, removing all content with any of these topics.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeTopic?: Array<string> | null;
   /**
-   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations. Only accepts country ISO codes.
+   * Filter articles by countries they mention using two-letter country codes in lowercase (e.g., us, gb, jp). Accepts either a single country code or an array. Multiple values create an OR filter. See documentation for supported country codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   country?: Array<string> | null;
   /**
-   * Excludes articles from specific countries in the vector search results. Accepts a list of country codes (e.g., 'US', 'UK', 'CA'). Use this parameter to filter out articles published in countries you don't want to include in your search results. See the Country and Language Support section in the documentation for a full list of supported country codes.
+   * Exclude articles from specific countries using two-letter country codes in lowercase. Accepts either a single country code or an array. Multiple values create an AND-exclude filter. See documentation for supported country codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeCountry?: Array<string> | null;
   /**
-   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations. Only accepts country ISO codes.
+   * Filter articles where specified countries play a central role in the content, not just mentioned. Uses two-letter country codes in lowercase. Accepts either a single country code or an array. Multiple values create an OR filter. See documentation for supported country codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   locationsCountry?: Array<string> | null;
   /**
-   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+   * Exclude articles where specified countries play a central role in the content. Accepts either a single country code or an array. Multiple values create an AND-exclude filter, removing articles focused on any of these countries. See documentation for supported country codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeLocationsCountry?: Array<string> | null;
   /**
-   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations. Only accepts state ISO codes.
+   * Filter articles where specified states play a central role in the content. Accepts either a single state code or an array. Multiple values create an OR filter. Uses two-letter state codes in lowercase. See documentation for supported state codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   state?: Array<string> | null;
   /**
-   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+   * Exclude articles where specified states play a central role. Accepts either a single state code or an array. Multiple values create an AND-exclude filter, removing articles focused on any of these states. See documentation for supported state codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeState?: Array<string> | null;
   /**
-   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles that mention or are related to specific counties. Accepts either a single county name or an array. Multiple values create an OR filter. County names typically include the word 'County' (e.g., Los Angeles County).
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   county?: Array<string> | null;
   /**
-   * Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., 'Los Angeles County', 'Cook County'). This parameter allows for more granular geographic filter
+   * Exclude articles that mention or are related to specific counties. Accepts either a single county name or an array. Multiple values create an AND-exclude filter. County names should match the format in article metadata (e.g., Los Angeles County, Cook County).
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeCounty?: Array<string> | null;
   /**
-   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+   * Filter articles that mention or are related to specific cities. Accepts either a single city name or an array. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   city?: Array<string> | null;
   /**
-   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+   * Exclude articles that mention or are related to specific cities. Accepts either a single city name or an array. Multiple values create an AND-exclude filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeCity?: Array<string> | null;
   /**
-   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+   * Filter for articles from publishers based in specific countries. Accepts either a single country code or an array. Uses two-letter country codes in lowercase (e.g., us, gb). See documentation for supported country codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   sourceCountry?: Array<string> | null;
   /**
-   * Find articles published by sources that are located within a given state.
+   * Filter for articles from publishers based in specific states or regions. Accepts either a single state code or an array. Uses two-letter state codes in lowercase. See documentation for supported state codes.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   sourceState?: Array<string> | null;
   /**
-   * Find articles published by sources that are located within a given county.
+   * Filter for articles from publishers based in specific counties. Accepts either a single county name or an array. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   sourceCounty?: Array<string> | null;
   /**
-   * Find articles published by sources that are located within a given city.
+   * Filter for articles from publishers based in specific cities. Accepts either a single city name or an array. Multiple values create an OR filter.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
@@ -202,67 +202,67 @@ export interface ArticleSearchFilter {
    */
   sourceCoordinates?: CoordinateFilter;
   /**
-   * List of company IDs to filter by.
+   * Filter articles by company identifiers. Accepts either a single ID or an array. Multiple values create an OR filter. For a complete list of tracked companies and their IDs, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   companyId?: Array<string> | null;
   /**
-   * A list of company identifiers. Articles associated with companies that have any of these unique IDs will be filtered out from the returned results, ensuring that certain companies or corporate entities are not included.
+   * Exclude articles mentioning companies with specific identifiers. Accepts either a single ID or an array. Multiple values create an AND-exclude filter. For a complete list of tracked companies and their IDs, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeCompanyId?: Array<string> | null;
   /**
-   * Search by company domains for filtering. E.g. companyDomain=apple.com.
+   * Filter articles by company domains (e.g., apple.com). Accepts either a single domain or an array. Multiple values create an OR filter. For a complete list of tracked companies and their domains, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   companyDomain?: Array<string> | null;
   /**
-   * A list of company domains to exclude. If an article is related to a company that uses one of the specified domains (for instance, "example.com"), it will not be returned in the results.
+   * Exclude articles related to companies with specific domains. Accepts either a single domain or an array. Multiple values create an AND-exclude filter. For a complete list of tracked companies and their domains, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeCompanyDomain?: Array<string> | null;
   /**
-   * Search by company symbols.
+   * Filter articles by company stock symbols (e.g., AAPL, MSFT). Accepts either a single symbol or an array. Multiple values create an OR filter. For a complete list of tracked companies and their symbols, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   companySymbol?: Array<string> | null;
   /**
-   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+   * Exclude articles related to companies with specific stock symbols. Accepts either a single symbol or an array. Multiple values create an AND-exclude filter. For a complete list of tracked companies and their symbols, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludeCompanySymbol?: Array<string> | null;
   /**
-   * Search by company name.
+   * Filter articles by company name mentions. Accepts either a single name or an array. Performs exact matching on company names. Multiple values create an OR filter. For a complete list of tracked companies and their names, refer to the /companies endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   companyName?: Array<string> | null;
   /**
-   * List of person Wikidata IDs for filtering.
+   * Filter articles by Wikidata IDs of mentioned people. Accepts either a single ID or an array. Multiple values create an OR filter. For a complete list of tracked individuals and their Wikidata IDs, refer to the /people endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   personWikidataId?: Array<string> | null;
   /**
-   * A list of Wikidata identifiers for individuals. Articles mentioning persons with any of these Wikidata IDs will be filtered out. This is particularly helpful when using a unique identifier to prevent ambiguity in names.
+   * Exclude articles mentioning people with specific Wikidata IDs. Accepts either a single ID or an array. Multiple values create an AND-exclude filter. For a complete list of tracked individuals and their Wikidata IDs, refer to the /people endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   excludePersonWikidataId?: Array<string> | null;
   /**
-   * List of person names for exact matches. Boolean and complex logic is not supported on this filter.
+   * Filter articles by exact person name matches. Accepts either a single name or an array. Does not support Boolean operators or wildcards. Multiple values create an OR filter. For a complete list of tracked individuals and their names, refer to the /people endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
   personName?: Array<string> | null;
   /**
-   * A list of person names that, when associated with the content, cause the article to be excluded. This filter removes articles related to any individuals whose names match those on the list.
+   * Exclude articles mentioning specific people by name. Accepts either a single name or an array. Multiple values create an AND-exclude filter. For a complete list of tracked individuals and their names, refer to the /people endpoint.
    * @type {Array<string>}
    * @memberof ArticleSearchFilter
    */
