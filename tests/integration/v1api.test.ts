@@ -108,7 +108,7 @@ describeWithApiKey("Perigon API Integration Tests", () => {
   describe("Journalist API", () => {
     it("should retrieve journalist information by ID", async () => {
       // First, search for journalists to get an ID
-      const searchResult = await api.searchJournalists1({
+      const searchResult = await api.searchJournalists({
         name: "Kevin",
         size: 1,
       });
