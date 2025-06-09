@@ -1,0 +1,25 @@
+{
+  "name": "perigon-sdk-examples",
+  "version": "1.0.0",
+  "description": "Examples for using the Perigon TypeScript SDK",
+  "type": "module",
+  "scripts": {
+    "basic": "node basic-usage.js",
+    "advanced": "node advanced-usage.js",
+    "setup": "npm install && echo 'Please set your PERIGON_API_KEY environment variable'",
+    "help": "echo 'Available commands: npm run basic, npm run advanced, npm run setup'"
+  },
+  "dependencies": {
+    "@goperigon/perigon-ts": "file:../",
+    "dotenv": "^16.5.0"
+  },
+  "keywords": [
+    "perigon",
+    "news-api",
+    "examples",
+    "typescript",
+    "sdk"
+  ],
+  "author": "Perigon",
+  "license": "MIT"
+} 
