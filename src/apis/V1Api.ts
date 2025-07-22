@@ -16,6 +16,7 @@ import * as runtime from "../runtime";
 import type {
   AllEndpointSortBy,
   ArticleSearchParams,
+  ArticlesVectorSearchResult,
   AuthException,
   CompanySearchResult,
   IllegalParameterException,
@@ -32,13 +33,17 @@ import type {
   SummarySearchResult,
   TooManyRequestsException,
   TopicSearchResult,
-  VectorSearchResult,
+  WikipediaSearchParams,
+  WikipediaSearchResult,
+  WikipediaVectorSearchResult,
 } from "../models/index";
 import {
   AllEndpointSortByFromJSON,
   AllEndpointSortByToJSON,
   ArticleSearchParamsFromJSON,
   ArticleSearchParamsToJSON,
+  ArticlesVectorSearchResultFromJSON,
+  ArticlesVectorSearchResultToJSON,
   AuthExceptionFromJSON,
   AuthExceptionToJSON,
   CompanySearchResultFromJSON,
@@ -71,8 +76,12 @@ import {
   TooManyRequestsExceptionToJSON,
   TopicSearchResultFromJSON,
   TopicSearchResultToJSON,
-  VectorSearchResultFromJSON,
-  VectorSearchResultToJSON,
+  WikipediaSearchParamsFromJSON,
+  WikipediaSearchParamsToJSON,
+  WikipediaSearchResultFromJSON,
+  WikipediaSearchResultToJSON,
+  WikipediaVectorSearchResultFromJSON,
+  WikipediaVectorSearchResultToJSON,
 } from "../models/index";
 
 export interface GetJournalistByIdRequest {
@@ -265,7 +274,7 @@ export interface SearchArticlesRequest {
    */
   county?: Array<string>;
   /**
-   * Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
    */
   excludeCounty?: Array<string>;
   /**
@@ -404,6 +413,30 @@ export interface SearchArticlesRequest {
    * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
    */
   prefixTaxonomy?: string;
+  /**
+   * When set to true, enables text highlighting in search results.
+   */
+  showHighlighting?: boolean;
+  /**
+   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   */
+  highlightFragmentSize?: number;
+  /**
+   * Controls the maximum number of highlighted fragments to return per field.
+   */
+  highlightNumFragments?: number;
+  /**
+   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   */
+  highlightPreTag?: string;
+  /**
+   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   */
+  highlightPostTag?: string;
+  /**
+   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   */
+  highlightQ?: string;
 }
 
 export interface SearchCompaniesRequest {
@@ -827,6 +860,30 @@ export interface SearchStoriesRequest {
    * Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
    */
   showDuplicates?: boolean;
+  /**
+   * When set to true, enables text highlighting in search results.
+   */
+  showHighlighting?: boolean;
+  /**
+   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   */
+  highlightFragmentSize?: number;
+  /**
+   * Controls the maximum number of highlighted fragments to return per field.
+   */
+  highlightNumFragments?: number;
+  /**
+   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   */
+  highlightPreTag?: string;
+  /**
+   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   */
+  highlightPostTag?: string;
+  /**
+   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   */
+  highlightQ?: string;
 }
 
 export interface SearchSummarizerRequest {
@@ -1016,7 +1073,7 @@ export interface SearchSummarizerRequest {
    */
   county?: Array<string>;
   /**
-   * Excludes articles from specific counties or administrative divisions in the vector search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
    */
   excludeCounty?: Array<string>;
   /**
@@ -1155,6 +1212,30 @@ export interface SearchSummarizerRequest {
    * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
    */
   prefixTaxonomy?: string;
+  /**
+   * When set to true, enables text highlighting in search results.
+   */
+  showHighlighting?: boolean;
+  /**
+   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   */
+  highlightFragmentSize?: number;
+  /**
+   * Controls the maximum number of highlighted fragments to return per field.
+   */
+  highlightNumFragments?: number;
+  /**
+   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   */
+  highlightPreTag?: string;
+  /**
+   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   */
+  highlightPostTag?: string;
+  /**
+   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   */
+  highlightQ?: string;
 }
 
 export interface SearchTopicsRequest {
@@ -1180,12 +1261,127 @@ export interface SearchTopicsRequest {
   size?: number;
 }
 
+export interface SearchWikipediaRequest {
+  /**
+   * Primary search query for filtering pages based on their title, summary, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   */
+  q?: string;
+  /**
+   * Search specifically within page titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   */
+  title?: string;
+  /**
+   * Search specifically within page summary. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   */
+  summary?: string;
+  /**
+   * Search specifically within the page\&#39;s content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   */
+  text?: string;
+  /**
+   * Search specifically across page\&#39;s references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   */
+  reference?: string;
+  /**
+   * Retrieve specific pages by their unique Perigon identifiers. Multiple IDs can be provided to return a collection of specific pages.
+   */
+  id?: Array<string>;
+  /**
+   * Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages.
+   */
+  wikiPageId?: Array<number>;
+  /**
+   * Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
+   */
+  wikiRevisionId?: Array<number>;
+  /**
+   * Retrieve pages only from specified wiki projects. Currently, the only accepted value is &#x60;enwiki&#x60;.
+   */
+  wikiCode?: Array<string>;
+  /**
+   * Retrieve pages only from specified wiki namespace. Currently, only the main namespace (0) is available.
+   */
+  wikiNamespace?: Array<number>;
+  /**
+   * Retrieve pages by the ids corresponding to their Wikidata entities.
+   */
+  wikidataId?: Array<string>;
+  /**
+   * Retrieve all pages whose Wikidata entities are instances of these provided ids.
+   */
+  wikidataInstanceOfId?: Array<string>;
+  /**
+   * Retrieve all pages whose Wikidata entities are instances of these ids (provided as labels).
+   */
+  wikidataInstanceOfLabel?: Array<string>;
+  /**
+   * Retrieve all pages for specified categories.
+   */
+  category?: Array<string>;
+  /**
+   * Retrieve pages containing provided section ids. Each section ID is unique.
+   */
+  sectionId?: Array<string>;
+  /**
+   * Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   */
+  wikiRevisionFrom?: Date;
+  /**
+   * Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   */
+  wikiRevisionTo?: Date;
+  /**
+   * Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   */
+  scrapedAtFrom?: Date;
+  /**
+   * Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   */
+  scrapedAtTo?: Date;
+  /**
+   * Retrieve pages with the average number of views per day higher than the provided value.
+   */
+  pageviewsFrom?: number;
+  /**
+   * Retrieve pages with the average number of views per day lower than the provided value.
+   */
+  pageviewsTo?: number;
+  /**
+   * Retrieve pages that have any viewership statistics available for them. If &#x60;false&#x60; (the default) - return all pages.
+   */
+  withPageviews?: boolean;
+  /**
+   * Whether to show the total number of all matched pages. Default value is false which makes queries a bit more efficient but also counts up to 10000 pages.
+   */
+  showNumResults?: boolean;
+  /**
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   */
+  page?: number;
+  /**
+   * The number of articles to return per page in the paginated response.
+   */
+  size?: number;
+  /**
+   * Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
+   */
+  sortBy?: SortBy;
+}
+
 export interface VectorSearchArticlesRequest {
   /**
    * Parameter articleSearchParams
    * @required
    */
   articleSearchParams: ArticleSearchParams;
+}
+
+export interface VectorSearchWikipediaRequest {
+  /**
+   * Parameter wikipediaSearchParams
+   * @required
+   */
+  wikipediaSearchParams: WikipediaSearchParams;
 }
 
 /**
@@ -1403,18 +1599,41 @@ export interface V1ApiInterface {
   ): Promise<TopicSearchResult>;
 
   /**
+   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
+   * @summary Wikipedia
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<WikipediaSearchResult>}} Raw API response
+   * @throws {RequiredError}
+   * @memberof V1ApiInterface
+   */
+  searchWikipediaRaw(
+    requestParameters: SearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<WikipediaSearchResult>>;
+
+  /**
+   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
+   * Wikipedia
+   */
+  searchWikipedia(
+    requestParameters: SearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<WikipediaSearchResult>;
+
+  /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
    * @summary Vector
    * @param requestParameters - Request parameters (see interface for details)
    * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<VectorSearchResult>}} Raw API response
+   * @returns {Promise<runtime.ApiResponse<ArticlesVectorSearchResult>}} Raw API response
    * @throws {RequiredError}
    * @memberof V1ApiInterface
    */
   vectorSearchArticlesRaw(
     requestParameters: VectorSearchArticlesRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<VectorSearchResult>>;
+  ): Promise<runtime.ApiResponse<ArticlesVectorSearchResult>>;
 
   /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
@@ -1423,7 +1642,30 @@ export interface V1ApiInterface {
   vectorSearchArticles(
     requestParameters: VectorSearchArticlesRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<VectorSearchResult>;
+  ): Promise<ArticlesVectorSearchResult>;
+
+  /**
+   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
+   * @summary Vector
+   * @param requestParameters - Request parameters (see interface for details)
+   * @param initOverrides - Override the default HTTP request configuration
+   * @returns {Promise<runtime.ApiResponse<WikipediaVectorSearchResult>}} Raw API response
+   * @throws {RequiredError}
+   * @memberof V1ApiInterface
+   */
+  vectorSearchWikipediaRaw(
+    requestParameters: VectorSearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<WikipediaVectorSearchResult>>;
+
+  /**
+   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
+   * Vector
+   */
+  vectorSearchWikipedia(
+    requestParameters: VectorSearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<WikipediaVectorSearchResult>;
 }
 
 /**
@@ -1848,6 +2090,34 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       queryParameters["prefixTaxonomy"] = requestParameters["prefixTaxonomy"];
     }
 
+    if (requestParameters["showHighlighting"] != null) {
+      queryParameters["showHighlighting"] =
+        requestParameters["showHighlighting"];
+    }
+
+    if (requestParameters["highlightFragmentSize"] != null) {
+      queryParameters["highlightFragmentSize"] =
+        requestParameters["highlightFragmentSize"];
+    }
+
+    if (requestParameters["highlightNumFragments"] != null) {
+      queryParameters["highlightNumFragments"] =
+        requestParameters["highlightNumFragments"];
+    }
+
+    if (requestParameters["highlightPreTag"] != null) {
+      queryParameters["highlightPreTag"] = requestParameters["highlightPreTag"];
+    }
+
+    if (requestParameters["highlightPostTag"] != null) {
+      queryParameters["highlightPostTag"] =
+        requestParameters["highlightPostTag"];
+    }
+
+    if (requestParameters["highlightQ"] != null) {
+      queryParameters["highlightQ"] = requestParameters["highlightQ"];
+    }
+
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
@@ -1860,7 +2130,7 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     }
     const response = await this.request(
       {
-        path: `/v1/all`,
+        path: `/v1/articles/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -2538,6 +2808,34 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       queryParameters["showDuplicates"] = requestParameters["showDuplicates"];
     }
 
+    if (requestParameters["showHighlighting"] != null) {
+      queryParameters["showHighlighting"] =
+        requestParameters["showHighlighting"];
+    }
+
+    if (requestParameters["highlightFragmentSize"] != null) {
+      queryParameters["highlightFragmentSize"] =
+        requestParameters["highlightFragmentSize"];
+    }
+
+    if (requestParameters["highlightNumFragments"] != null) {
+      queryParameters["highlightNumFragments"] =
+        requestParameters["highlightNumFragments"];
+    }
+
+    if (requestParameters["highlightPreTag"] != null) {
+      queryParameters["highlightPreTag"] = requestParameters["highlightPreTag"];
+    }
+
+    if (requestParameters["highlightPostTag"] != null) {
+      queryParameters["highlightPostTag"] =
+        requestParameters["highlightPostTag"];
+    }
+
+    if (requestParameters["highlightQ"] != null) {
+      queryParameters["highlightQ"] = requestParameters["highlightQ"];
+    }
+
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
@@ -2943,6 +3241,34 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       queryParameters["prefixTaxonomy"] = requestParameters["prefixTaxonomy"];
     }
 
+    if (requestParameters["showHighlighting"] != null) {
+      queryParameters["showHighlighting"] =
+        requestParameters["showHighlighting"];
+    }
+
+    if (requestParameters["highlightFragmentSize"] != null) {
+      queryParameters["highlightFragmentSize"] =
+        requestParameters["highlightFragmentSize"];
+    }
+
+    if (requestParameters["highlightNumFragments"] != null) {
+      queryParameters["highlightNumFragments"] =
+        requestParameters["highlightNumFragments"];
+    }
+
+    if (requestParameters["highlightPreTag"] != null) {
+      queryParameters["highlightPreTag"] = requestParameters["highlightPreTag"];
+    }
+
+    if (requestParameters["highlightPostTag"] != null) {
+      queryParameters["highlightPostTag"] =
+        requestParameters["highlightPostTag"];
+    }
+
+    if (requestParameters["highlightQ"] != null) {
+      queryParameters["highlightQ"] = requestParameters["highlightQ"];
+    }
+
     const headerParameters: runtime.HTTPHeaders = {};
 
     headerParameters["Content-Type"] = "application/json";
@@ -3057,13 +3383,177 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
   }
 
   /**
+   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
+   * Wikipedia
+   */
+  async searchWikipediaRaw(
+    requestParameters: SearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<WikipediaSearchResult>> {
+    const queryParameters: any = {};
+
+    if (requestParameters["q"] != null) {
+      queryParameters["q"] = requestParameters["q"];
+    }
+
+    if (requestParameters["title"] != null) {
+      queryParameters["title"] = requestParameters["title"];
+    }
+
+    if (requestParameters["summary"] != null) {
+      queryParameters["summary"] = requestParameters["summary"];
+    }
+
+    if (requestParameters["text"] != null) {
+      queryParameters["text"] = requestParameters["text"];
+    }
+
+    if (requestParameters["reference"] != null) {
+      queryParameters["reference"] = requestParameters["reference"];
+    }
+
+    if (requestParameters["id"] != null) {
+      queryParameters["id"] = requestParameters["id"];
+    }
+
+    if (requestParameters["wikiPageId"] != null) {
+      queryParameters["wikiPageId"] = requestParameters["wikiPageId"];
+    }
+
+    if (requestParameters["wikiRevisionId"] != null) {
+      queryParameters["wikiRevisionId"] = requestParameters["wikiRevisionId"];
+    }
+
+    if (requestParameters["wikiCode"] != null) {
+      queryParameters["wikiCode"] = requestParameters["wikiCode"];
+    }
+
+    if (requestParameters["wikiNamespace"] != null) {
+      queryParameters["wikiNamespace"] = requestParameters["wikiNamespace"];
+    }
+
+    if (requestParameters["wikidataId"] != null) {
+      queryParameters["wikidataId"] = requestParameters["wikidataId"];
+    }
+
+    if (requestParameters["wikidataInstanceOfId"] != null) {
+      queryParameters["wikidataInstanceOfId"] =
+        requestParameters["wikidataInstanceOfId"];
+    }
+
+    if (requestParameters["wikidataInstanceOfLabel"] != null) {
+      queryParameters["wikidataInstanceOfLabel"] =
+        requestParameters["wikidataInstanceOfLabel"];
+    }
+
+    if (requestParameters["category"] != null) {
+      queryParameters["category"] = requestParameters["category"];
+    }
+
+    if (requestParameters["sectionId"] != null) {
+      queryParameters["sectionId"] = requestParameters["sectionId"];
+    }
+
+    if (requestParameters["wikiRevisionFrom"] != null) {
+      queryParameters["wikiRevisionFrom"] = (
+        requestParameters["wikiRevisionFrom"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["wikiRevisionTo"] != null) {
+      queryParameters["wikiRevisionTo"] = (
+        requestParameters["wikiRevisionTo"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["scrapedAtFrom"] != null) {
+      queryParameters["scrapedAtFrom"] = (
+        requestParameters["scrapedAtFrom"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["scrapedAtTo"] != null) {
+      queryParameters["scrapedAtTo"] = (
+        requestParameters["scrapedAtTo"] as any
+      ).toISOString();
+    }
+
+    if (requestParameters["pageviewsFrom"] != null) {
+      queryParameters["pageviewsFrom"] = requestParameters["pageviewsFrom"];
+    }
+
+    if (requestParameters["pageviewsTo"] != null) {
+      queryParameters["pageviewsTo"] = requestParameters["pageviewsTo"];
+    }
+
+    if (requestParameters["withPageviews"] != null) {
+      queryParameters["withPageviews"] = requestParameters["withPageviews"];
+    }
+
+    if (requestParameters["showNumResults"] != null) {
+      queryParameters["showNumResults"] = requestParameters["showNumResults"];
+    }
+
+    if (requestParameters["page"] != null) {
+      queryParameters["page"] = requestParameters["page"];
+    }
+
+    if (requestParameters["size"] != null) {
+      queryParameters["size"] = requestParameters["size"];
+    }
+
+    if (requestParameters["sortBy"] != null) {
+      queryParameters["sortBy"] = requestParameters["sortBy"];
+    }
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+    const response = await this.request(
+      {
+        path: `/v1/wikipedia/all`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) =>
+      WikipediaSearchResultFromJSON(jsonValue),
+    );
+  }
+
+  /**
+   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
+   * Wikipedia
+   */
+  async searchWikipedia(
+    requestParameters: SearchWikipediaRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<WikipediaSearchResult> {
+    const response = await this.searchWikipediaRaw(
+      requestParameters,
+      initOverrides,
+    );
+    return await response.value();
+  }
+
+  /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
    * Vector
    */
   async vectorSearchArticlesRaw(
     requestParameters: VectorSearchArticlesRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<VectorSearchResult>> {
+  ): Promise<runtime.ApiResponse<ArticlesVectorSearchResult>> {
     if (requestParameters["articleSearchParams"] == null) {
       throw new runtime.RequiredError(
         "articleSearchParams",
@@ -3099,7 +3589,7 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     );
 
     return new runtime.JSONApiResponse(response, (jsonValue) =>
-      VectorSearchResultFromJSON(jsonValue),
+      ArticlesVectorSearchResultFromJSON(jsonValue),
     );
   }
 
@@ -3110,8 +3600,70 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
   async vectorSearchArticles(
     requestParameters: VectorSearchArticlesRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<VectorSearchResult> {
+  ): Promise<ArticlesVectorSearchResult> {
     const response = await this.vectorSearchArticlesRaw(
+      requestParameters,
+      initOverrides,
+    );
+    return await response.value();
+  }
+
+  /**
+   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
+   * Vector
+   */
+  async vectorSearchWikipediaRaw(
+    requestParameters: VectorSearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<runtime.ApiResponse<WikipediaVectorSearchResult>> {
+    if (requestParameters["wikipediaSearchParams"] == null) {
+      throw new runtime.RequiredError(
+        "wikipediaSearchParams",
+        'Required parameter "wikipediaSearchParams" was null or undefined when calling vectorSearchWikipedia().',
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+    const response = await this.request(
+      {
+        path: `/v1/vector/wikipedia/all`,
+        method: "POST",
+        headers: headerParameters,
+        query: queryParameters,
+        body: WikipediaSearchParamsToJSON(
+          requestParameters["wikipediaSearchParams"],
+        ),
+      },
+      initOverrides,
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) =>
+      WikipediaVectorSearchResultFromJSON(jsonValue),
+    );
+  }
+
+  /**
+   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
+   * Vector
+   */
+  async vectorSearchWikipedia(
+    requestParameters: VectorSearchWikipediaRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<WikipediaVectorSearchResult> {
+    const response = await this.vectorSearchWikipediaRaw(
       requestParameters,
       initOverrides,
     );

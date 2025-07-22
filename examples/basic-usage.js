@@ -33,7 +33,7 @@ async function main() {
     // Example 1: Basic article search
     console.log("📰 Example 1: Basic Article Search");
     console.log(
-      'Searching for recent articles about "artificial intelligence"...\n'
+      'Searching for recent articles about "artificial intelligence"...\n',
     );
 
     const articlesResult = await perigon.searchArticles({
@@ -43,21 +43,21 @@ async function main() {
     });
 
     console.log(
-      `Found ${articlesResult.numResults} articles total, showing first ${articlesResult.articles.length}:`
+      `Found ${articlesResult.numResults} articles total, showing first ${articlesResult.articles.length}:`,
     );
     articlesResult.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
       console.log(
         `     Source: ${article.source?.name || "Unknown"} (${
           article.source?.domain || "N/A"
-        })`
+        })`,
       );
       console.log(
         `     Published: ${
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }`
+        }`,
       );
       console.log(`     URL: ${article.url}\n`);
     });
@@ -65,7 +65,7 @@ async function main() {
     // Example 2: Filter articles by source and date range
     console.log("📰 Example 2: Filtered Article Search");
     console.log(
-      "Searching for business articles from major sources in the last 3 days...\n"
+      "Searching for business articles from major sources in the last 3 days...\n",
     );
 
     const fromDate = new Date();
@@ -80,7 +80,7 @@ async function main() {
     });
 
     console.log(
-      `Found ${filteredArticles.numResults} filtered articles, showing first ${filteredArticles.articles.length}:`
+      `Found ${filteredArticles.numResults} filtered articles, showing first ${filteredArticles.articles.length}:`,
     );
     filteredArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
@@ -90,7 +90,7 @@ async function main() {
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }\n`
+        }\n`,
       );
     });
 
@@ -112,7 +112,7 @@ async function main() {
     }
 
     console.log(
-      `Found ${storiesResult.numResults} stories total, showing first ${storiesResult.results.length}:`
+      `Found ${storiesResult.numResults} stories total, showing first ${storiesResult.results.length}:`,
     );
     storiesResult.results.forEach((story, index) => {
       console.log(`  ${index + 1}. ${story.name}`);
@@ -124,14 +124,14 @@ async function main() {
           story.createdAt
             ? new Date(story.createdAt).toLocaleDateString()
             : "Unknown"
-        }`
+        }`,
       );
       console.log(
         `     Updated: ${
           story.updatedAt
             ? new Date(story.updatedAt).toLocaleDateString()
             : "Unknown"
-        }\n`
+        }\n`,
       );
     });
 
@@ -146,7 +146,7 @@ async function main() {
     });
 
     console.log(
-      `Found ${companyArticles.numResults} articles mentioning Apple, showing first ${companyArticles.articles.length}:`
+      `Found ${companyArticles.numResults} articles mentioning Apple, showing first ${companyArticles.articles.length}:`,
     );
     companyArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
@@ -156,7 +156,7 @@ async function main() {
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }\n`
+        }\n`,
       );
     });
 
@@ -175,17 +175,17 @@ async function main() {
     console.log("   - Try different sorting options (relevance, date, etc.)");
     console.log("   - Use filters like category, topic, or sentiment");
     console.log(
-      "   - Check out the summarizer endpoint for AI-generated summaries"
+      "   - Check out the summarizer endpoint for AI-generated summaries",
     );
   } catch (error) {
     console.error("❌ Error occurred:", error);
 
     if (error.name === "ResponseError") {
       console.error(
-        `HTTP ${error.response.status}: ${error.response.statusText}`
+        `HTTP ${error.response.status}: ${error.response.statusText}`,
       );
       console.error(
-        "This might indicate an authentication issue or API limit reached."
+        "This might indicate an authentication issue or API limit reached.",
       );
     } else if (error.name === "RequiredError") {
       console.error("Missing required parameter:", error.field);
@@ -197,7 +197,7 @@ async function main() {
 
     console.log("\n🔧 Troubleshooting:");
     console.log(
-      "   1. Make sure you have set PERIGON_API_KEY environment variable"
+      "   1. Make sure you have set PERIGON_API_KEY environment variable",
     );
     console.log("   2. Verify your API key is valid and has sufficient quota");
     console.log("   3. Check your internet connection");
