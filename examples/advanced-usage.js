@@ -7,6 +7,7 @@
  * 3. Sentiment analysis filtering
  * 4. Middleware for logging and error handling
  * 5. Vector/semantic search capabilities
+ * 6. Vector-based Wikipedia search for semantic exploration
  *
  * Before running: Set PERIGON_API_KEY environment variable
  * Run: node examples/advanced-usage.js
@@ -22,13 +23,13 @@ dotenv.config();
 const createLoggingMiddleware = () => ({
   pre: async (context) => {
     console.log(
-      `🌐 Making request to: ${context.init.method || "GET"} ${context.url}`,
+      `🌐 Making request to: ${context.init.method || "GET"} ${context.url}`
     );
     return undefined;
   },
   post: async (context) => {
     console.log(
-      `✅ Request completed: ${context.response.status} ${context.response.statusText}`,
+      `✅ Request completed: ${context.response.status} ${context.response.statusText}`
     );
     return undefined;
   },
@@ -101,14 +102,14 @@ async function main() {
       console.log(`  ${index + 1}. ${article.title}`);
       console.log(`     Source: ${article.source?.name || "Unknown"}`);
       console.log(
-        `     Sentiment: Positive ${article.sentiment?.positive || "N/A"}`,
+        `     Sentiment: Positive ${article.sentiment?.positive || "N/A"}`
       );
       console.log(
         `     Published: ${
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }\n`,
+        }\n`
       );
     });
 
@@ -130,41 +131,41 @@ async function main() {
       console.log(`     Source: ${article.source?.name || "Unknown"}`);
       console.log(`     Country: ${article.source?.country || "N/A"}`);
       console.log(
-        `     Categories: ${article.categories?.join(", ") || "N/A"}\n`,
+        `     Categories: ${article.categories?.join(", ") || "N/A"}\n`
       );
     });
 
     // Example 5: Topic-based Story Discovery
     console.log("📚 Example 5: Topic-based Story Discovery");
     console.log(
-      "Finding stories about artificial intelligence with high engagement...\n",
+      "Finding stories about artificial intelligence with high engagement...\n"
     );
 
     const aiStories = await perigon.searchStories({
-      q: "artificial intelligence machine learning",
+      q: "artificial intelligence",
       topic: ["Tech", "Business"],
-      minUniqueSources: 5, // Stories covered by at least 5 different sources
+      minUniqueSources: 2, // Stories covered by at least 5 different sources
       size: 2,
       sortBy: "count", // Sort by article count
     });
 
     console.log(`Found ${aiStories.numResults} high-engagement stories:`);
-    aiStories.stories.forEach((story, index) => {
+    aiStories.stories?.forEach((story, index) => {
       console.log(`  ${index + 1}. ${story.name}`);
       console.log(`     Summary: ${story.summary || "No summary available"}`);
       console.log(
-        `     Articles: ${story.articleCount} from ${story.uniqueSourceCount} sources`,
+        `     Articles: ${story.articleCount} from ${story.uniqueSourceCount} sources`
       );
       console.log(`     Topics: ${story.topics?.join(", ") || "N/A"}`);
       console.log(
-        `     Key Points: ${story.keyPoints?.slice(0, 2).join("; ") || "N/A"}\n`,
+        `     Key Points: ${story.keyPoints?.slice(0, 2).join("; ") || "N/A"}\n`
       );
     });
 
     // Example 6: Multi-parameter Advanced Search
     console.log("🔍 Example 6: Complex Multi-parameter Search");
     console.log(
-      "Advanced search: Tech articles from last week, excluding opinion pieces...\n",
+      "Advanced search: Tech articles from last week, excluding opinion pieces...\n"
     );
 
     const fromDate = new Date();
@@ -182,13 +183,13 @@ async function main() {
     });
 
     console.log(
-      `Found ${complexSearch.numResults} high-quality tech articles:`,
+      `Found ${complexSearch.numResults} high-quality tech articles:`
     );
     complexSearch.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
       console.log(`     Source: ${article.source?.name || "Unknown"}`);
       console.log(
-        `     Categories: ${article.categories?.join(", ") || "N/A"}`,
+        `     Categories: ${article.categories?.join(", ") || "N/A"}`
       );
       console.log(`     Labels: ${article.labels?.join(", ") || "None"}`);
       console.log(
@@ -196,8 +197,41 @@ async function main() {
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }\n`,
+        }\n`
       );
+    });
+
+    // Example 7: Vector Wikipedia Search
+    console.log("🧠 Example 7: Vector-based Wikipedia Search");
+    console.log(
+      "Using semantic search to find Wikipedia pages related to artificial intelligence...\n"
+    );
+
+    const vectorWikipediaResult = await perigon.vectorSearchWikipedia({
+      wikipediaSearchParams: {
+        prompt: "artificial intelligence and neural networks in computing",
+        size: 3,
+        pageviewsFrom: 100, // Only pages with significant viewership
+      },
+    });
+
+    console.log(
+      `Found ${vectorWikipediaResult.results.length} semantically related Wikipedia pages:`
+    );
+    vectorWikipediaResult.results.forEach((result, index) => {
+      const page = result.data;
+      console.log(`  ${index + 1}. ${page?.wikiTitle || "Untitled"}`);
+      console.log(`     Relevance Score: ${(result.score * 100).toFixed(1)}%`);
+      console.log(`     URL: ${page?.url || "N/A"}`);
+      console.log(
+        `     Summary: ${
+          page?.summary
+            ? page.summary.substring(0, 200) + "..."
+            : "No summary available"
+        }`
+      );
+      console.log(`     Views per day: ${page?.pageviews || "N/A"}`);
+      console.log(`     Wikidata ID: ${page?.wikidataId || "N/A"}\n`);
     });
 
     console.log("🎉 Advanced examples completed successfully!");
@@ -206,6 +240,7 @@ async function main() {
     console.log("   - Use sentiment analysis for brand monitoring");
     console.log("   - Leverage story clustering for trend analysis");
     console.log("   - Geographic filtering helps with local news monitoring");
+    console.log("   - Vector search provides semantic Wikipedia exploration");
     console.log("   - AI summarization saves time on content analysis");
   } catch (error) {
     console.error("\n❌ Error in advanced example:", error);
@@ -226,7 +261,7 @@ async function main() {
       console.error(`📋 Missing required parameter: ${error.field}`);
     } else {
       console.error(
-        `❓ ${error.name || "Unknown error"}: ${error.message || error}`,
+        `❓ ${error.name || "Unknown error"}: ${error.message || error}`
       );
     }
 
@@ -235,7 +270,7 @@ async function main() {
     console.log("   - Some features may require higher-tier subscriptions");
     console.log("   - Verify parameter combinations are valid");
     console.log(
-      "   - Consider reducing request frequency if hitting rate limits",
+      "   - Consider reducing request frequency if hitting rate limits"
     );
   }
 }

@@ -4,7 +4,8 @@
  * This example demonstrates how to use the Perigon TypeScript SDK to:
  * 1. Search for news articles with various filters
  * 2. Search for news stories (clustered articles)
- * 3. Handle errors properly
+ * 3. Search Wikipedia pages with filtering options
+ * 4. Handle errors properly
  *
  * Before running this example:
  * 1. Install the SDK: npm install @goperigon/perigon-ts
@@ -33,7 +34,7 @@ async function main() {
     // Example 1: Basic article search
     console.log("📰 Example 1: Basic Article Search");
     console.log(
-      'Searching for recent articles about "artificial intelligence"...\n',
+      'Searching for recent articles about "artificial intelligence"...\n'
     );
 
     const articlesResult = await perigon.searchArticles({
@@ -43,21 +44,21 @@ async function main() {
     });
 
     console.log(
-      `Found ${articlesResult.numResults} articles total, showing first ${articlesResult.articles.length}:`,
+      `Found ${articlesResult.numResults} articles total, showing first ${articlesResult.articles.length}:`
     );
     articlesResult.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
       console.log(
         `     Source: ${article.source?.name || "Unknown"} (${
           article.source?.domain || "N/A"
-        })`,
+        })`
       );
       console.log(
         `     Published: ${
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }`,
+        }`
       );
       console.log(`     URL: ${article.url}\n`);
     });
@@ -65,7 +66,7 @@ async function main() {
     // Example 2: Filter articles by source and date range
     console.log("📰 Example 2: Filtered Article Search");
     console.log(
-      "Searching for business articles from major sources in the last 3 days...\n",
+      "Searching for business articles from major sources in the last 3 days...\n"
     );
 
     const fromDate = new Date();
@@ -80,7 +81,7 @@ async function main() {
     });
 
     console.log(
-      `Found ${filteredArticles.numResults} filtered articles, showing first ${filteredArticles.articles.length}:`,
+      `Found ${filteredArticles.numResults} filtered articles, showing first ${filteredArticles.articles.length}:`
     );
     filteredArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
@@ -90,7 +91,7 @@ async function main() {
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }\n`,
+        }\n`
       );
     });
 
@@ -112,7 +113,7 @@ async function main() {
     }
 
     console.log(
-      `Found ${storiesResult.numResults} stories total, showing first ${storiesResult.results.length}:`,
+      `Found ${storiesResult.numResults} stories total, showing first ${storiesResult.results.length}:`
     );
     storiesResult.results.forEach((story, index) => {
       console.log(`  ${index + 1}. ${story.name}`);
@@ -124,14 +125,14 @@ async function main() {
           story.createdAt
             ? new Date(story.createdAt).toLocaleDateString()
             : "Unknown"
-        }`,
+        }`
       );
       console.log(
         `     Updated: ${
           story.updatedAt
             ? new Date(story.updatedAt).toLocaleDateString()
             : "Unknown"
-        }\n`,
+        }\n`
       );
     });
 
@@ -146,7 +147,7 @@ async function main() {
     });
 
     console.log(
-      `Found ${companyArticles.numResults} articles mentioning Apple, showing first ${companyArticles.articles.length}:`,
+      `Found ${companyArticles.numResults} articles mentioning Apple, showing first ${companyArticles.articles.length}:`
     );
     companyArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
@@ -156,7 +157,7 @@ async function main() {
           article.pubDate
             ? new Date(article.pubDate).toLocaleDateString()
             : "Unknown"
-        }\n`,
+        }\n`
       );
     });
 
@@ -169,23 +170,55 @@ async function main() {
 
     console.log("No Journalists found: ", journalists);
 
+    // Example 6: Wikipedia Search
+    console.log("📚 Example 6: Wikipedia Search");
+    console.log('Searching Wikipedia pages about "machine learning"...\n');
+
+    const wikipediaResult = await perigon.searchWikipedia({
+      q: "machine learning",
+      size: 3,
+      sortBy: "relevance",
+    });
+
+    console.log(`Found ${wikipediaResult.numResults} Wikipedia pages:`);
+    wikipediaResult.results.forEach((page, index) => {
+      console.log(`  ${index + 1}. ${page.wikiTitle || "Untitled"}`);
+      console.log(`     URL: ${page.url || "N/A"}`);
+      console.log(
+        `     Summary: ${
+          page.summary
+            ? page.summary.substring(0, 150) + "..."
+            : "No summary available"
+        }`
+      );
+      console.log(`     Views per day: ${page.pageviews || "N/A"}`);
+      console.log(
+        `     Last modified: ${
+          page.wikiRevisionTs
+            ? new Date(page.wikiRevisionTs).toLocaleDateString()
+            : "Unknown"
+        }\n`
+      );
+    });
+
     console.log("✅ Example completed successfully!");
     console.log("\n💡 Next steps:");
     console.log("   - Explore more search parameters in the documentation");
     console.log("   - Try different sorting options (relevance, date, etc.)");
     console.log("   - Use filters like category, topic, or sentiment");
+    console.log("   - Search Wikipedia with advanced filters like pageviews");
     console.log(
-      "   - Check out the summarizer endpoint for AI-generated summaries",
+      "   - Check out the summarizer endpoint for AI-generated summaries"
     );
   } catch (error) {
     console.error("❌ Error occurred:", error);
 
     if (error.name === "ResponseError") {
       console.error(
-        `HTTP ${error.response.status}: ${error.response.statusText}`,
+        `HTTP ${error.response.status}: ${error.response.statusText}`
       );
       console.error(
-        "This might indicate an authentication issue or API limit reached.",
+        "This might indicate an authentication issue or API limit reached."
       );
     } else if (error.name === "RequiredError") {
       console.error("Missing required parameter:", error.field);
@@ -197,7 +230,7 @@ async function main() {
 
     console.log("\n🔧 Troubleshooting:");
     console.log(
-      "   1. Make sure you have set PERIGON_API_KEY environment variable",
+      "   1. Make sure you have set PERIGON_API_KEY environment variable"
     );
     console.log("   2. Verify your API key is valid and has sufficient quota");
     console.log("   3. Check your internet connection");
