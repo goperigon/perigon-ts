@@ -7,6 +7,7 @@
  * 3. Sentiment analysis filtering
  * 4. Middleware for logging and error handling
  * 5. Vector/semantic search capabilities
+ * 6. Vector-based Wikipedia search for semantic exploration
  *
  * Before running: Set PERIGON_API_KEY environment variable
  * Run: node examples/advanced-usage.js
@@ -141,15 +142,15 @@ async function main() {
     );
 
     const aiStories = await perigon.searchStories({
-      q: "artificial intelligence machine learning",
+      q: "artificial intelligence",
       topic: ["Tech", "Business"],
-      minUniqueSources: 5, // Stories covered by at least 5 different sources
+      minUniqueSources: 2, // Stories covered by at least 5 different sources
       size: 2,
       sortBy: "count", // Sort by article count
     });
 
     console.log(`Found ${aiStories.numResults} high-engagement stories:`);
-    aiStories.stories.forEach((story, index) => {
+    aiStories.stories?.forEach((story, index) => {
       console.log(`  ${index + 1}. ${story.name}`);
       console.log(`     Summary: ${story.summary || "No summary available"}`);
       console.log(
@@ -200,12 +201,46 @@ async function main() {
       );
     });
 
+    // Example 7: Vector Wikipedia Search
+    console.log("🧠 Example 7: Vector-based Wikipedia Search");
+    console.log(
+      "Using semantic search to find Wikipedia pages related to artificial intelligence...\n"
+    );
+
+    const vectorWikipediaResult = await perigon.vectorSearchWikipedia({
+      wikipediaSearchParams: {
+        prompt: "artificial intelligence and neural networks in computing",
+        size: 3,
+        pageviewsFrom: 100, // Only pages with significant viewership
+      },
+    });
+
+    console.log(
+      `Found ${vectorWikipediaResult.results.length} semantically related Wikipedia pages:`
+    );
+    vectorWikipediaResult.results.forEach((result, index) => {
+      const page = result.data;
+      console.log(`  ${index + 1}. ${page?.wikiTitle || "Untitled"}`);
+      console.log(`     Relevance Score: ${(result.score * 100).toFixed(1)}%`);
+      console.log(`     URL: ${page?.url || "N/A"}`);
+      console.log(
+        `     Summary: ${
+          page?.summary
+            ? page.summary.substring(0, 200) + "..."
+            : "No summary available"
+        }`
+      );
+      console.log(`     Views per day: ${page?.pageviews || "N/A"}`);
+      console.log(`     Wikidata ID: ${page?.wikidataId || "N/A"}\n`);
+    });
+
     console.log("🎉 Advanced examples completed successfully!");
     console.log("\n💡 Pro Tips:");
     console.log("   - Combine multiple filters for more precise results");
     console.log("   - Use sentiment analysis for brand monitoring");
     console.log("   - Leverage story clustering for trend analysis");
     console.log("   - Geographic filtering helps with local news monitoring");
+    console.log("   - Vector search provides semantic Wikipedia exploration");
     console.log("   - AI summarization saves time on content analysis");
   } catch (error) {
     console.error("\n❌ Error in advanced example:", error);

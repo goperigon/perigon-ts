@@ -4,7 +4,8 @@
  * This example demonstrates how to use the Perigon TypeScript SDK to:
  * 1. Search for news articles with various filters
  * 2. Search for news stories (clustered articles)
- * 3. Handle errors properly
+ * 3. Search Wikipedia pages with filtering options
+ * 4. Handle errors properly
  *
  * Before running this example:
  * 1. Install the SDK: npm install @goperigon/perigon-ts
@@ -169,11 +170,43 @@ async function main() {
 
     console.log("No Journalists found: ", journalists);
 
+    // Example 6: Wikipedia Search
+    console.log("📚 Example 6: Wikipedia Search");
+    console.log('Searching Wikipedia pages about "machine learning"...\n');
+
+    const wikipediaResult = await perigon.searchWikipedia({
+      q: "machine learning",
+      size: 3,
+      sortBy: "relevance",
+    });
+
+    console.log(`Found ${wikipediaResult.numResults} Wikipedia pages:`);
+    wikipediaResult.results.forEach((page, index) => {
+      console.log(`  ${index + 1}. ${page.wikiTitle || "Untitled"}`);
+      console.log(`     URL: ${page.url || "N/A"}`);
+      console.log(
+        `     Summary: ${
+          page.summary
+            ? page.summary.substring(0, 150) + "..."
+            : "No summary available"
+        }`
+      );
+      console.log(`     Views per day: ${page.pageviews || "N/A"}`);
+      console.log(
+        `     Last modified: ${
+          page.wikiRevisionTs
+            ? new Date(page.wikiRevisionTs).toLocaleDateString()
+            : "Unknown"
+        }\n`
+      );
+    });
+
     console.log("✅ Example completed successfully!");
     console.log("\n💡 Next steps:");
     console.log("   - Explore more search parameters in the documentation");
     console.log("   - Try different sorting options (relevance, date, etc.)");
     console.log("   - Use filters like category, topic, or sentiment");
+    console.log("   - Search Wikipedia with advanced filters like pageviews");
     console.log(
       "   - Check out the summarizer endpoint for AI-generated summaries"
     );

@@ -13,27 +13,27 @@
  */
 
 import { mapValues } from "../runtime";
-import type { TooManyRequestsExceptionCause } from "./TooManyRequestsExceptionCause";
+import type { AuthExceptionCauseStackTraceInner } from "./AuthExceptionCauseStackTraceInner";
 import {
-  TooManyRequestsExceptionCauseFromJSON,
-  TooManyRequestsExceptionCauseFromJSONTyped,
-  TooManyRequestsExceptionCauseToJSON,
-  TooManyRequestsExceptionCauseToJSONTyped,
-} from "./TooManyRequestsExceptionCause";
-import type { TooManyRequestsExceptionCauseStackTraceInner } from "./TooManyRequestsExceptionCauseStackTraceInner";
+  AuthExceptionCauseStackTraceInnerFromJSON,
+  AuthExceptionCauseStackTraceInnerFromJSONTyped,
+  AuthExceptionCauseStackTraceInnerToJSON,
+  AuthExceptionCauseStackTraceInnerToJSONTyped,
+} from "./AuthExceptionCauseStackTraceInner";
+import type { AuthExceptionCause } from "./AuthExceptionCause";
 import {
-  TooManyRequestsExceptionCauseStackTraceInnerFromJSON,
-  TooManyRequestsExceptionCauseStackTraceInnerFromJSONTyped,
-  TooManyRequestsExceptionCauseStackTraceInnerToJSON,
-  TooManyRequestsExceptionCauseStackTraceInnerToJSONTyped,
-} from "./TooManyRequestsExceptionCauseStackTraceInner";
-import type { TooManyRequestsExceptionSuppressedInner } from "./TooManyRequestsExceptionSuppressedInner";
+  AuthExceptionCauseFromJSON,
+  AuthExceptionCauseFromJSONTyped,
+  AuthExceptionCauseToJSON,
+  AuthExceptionCauseToJSONTyped,
+} from "./AuthExceptionCause";
+import type { AuthExceptionSuppressedInner } from "./AuthExceptionSuppressedInner";
 import {
-  TooManyRequestsExceptionSuppressedInnerFromJSON,
-  TooManyRequestsExceptionSuppressedInnerFromJSONTyped,
-  TooManyRequestsExceptionSuppressedInnerToJSON,
-  TooManyRequestsExceptionSuppressedInnerToJSONTyped,
-} from "./TooManyRequestsExceptionSuppressedInner";
+  AuthExceptionSuppressedInnerFromJSON,
+  AuthExceptionSuppressedInnerFromJSONTyped,
+  AuthExceptionSuppressedInnerToJSON,
+  AuthExceptionSuppressedInnerToJSONTyped,
+} from "./AuthExceptionSuppressedInner";
 
 /**
  *
@@ -43,16 +43,16 @@ import {
 export interface TooManyRequestsException {
   /**
    *
-   * @type {TooManyRequestsExceptionCause}
+   * @type {AuthExceptionCause}
    * @memberof TooManyRequestsException
    */
-  cause?: TooManyRequestsExceptionCause | null;
+  cause?: AuthExceptionCause | null;
   /**
    *
-   * @type {Array<TooManyRequestsExceptionCauseStackTraceInner>}
+   * @type {Array<AuthExceptionCauseStackTraceInner>}
    * @memberof TooManyRequestsException
    */
-  stackTrace?: Array<TooManyRequestsExceptionCauseStackTraceInner> | null;
+  stackTrace?: Array<AuthExceptionCauseStackTraceInner> | null;
   /**
    *
    * @type {string}
@@ -67,10 +67,10 @@ export interface TooManyRequestsException {
   message?: string | null;
   /**
    *
-   * @type {Array<TooManyRequestsExceptionSuppressedInner>}
+   * @type {Array<AuthExceptionSuppressedInner>}
    * @memberof TooManyRequestsException
    */
-  suppressed?: Array<TooManyRequestsExceptionSuppressedInner> | null;
+  suppressed?: Array<AuthExceptionSuppressedInner> | null;
   /**
    *
    * @type {string}
@@ -181,12 +181,12 @@ export function TooManyRequestsExceptionFromJSONTyped(
     cause:
       json["cause"] == null
         ? undefined
-        : TooManyRequestsExceptionCauseFromJSON(json["cause"]),
+        : AuthExceptionCauseFromJSON(json["cause"]),
     stackTrace:
       json["stackTrace"] == null
         ? undefined
         : (json["stackTrace"] as Array<any>).map(
-            TooManyRequestsExceptionCauseStackTraceInnerFromJSON,
+            AuthExceptionCauseStackTraceInnerFromJSON,
           ),
     status: json["status"] == null ? undefined : json["status"],
     message: json["message"] == null ? undefined : json["message"],
@@ -194,7 +194,7 @@ export function TooManyRequestsExceptionFromJSONTyped(
       json["suppressed"] == null
         ? undefined
         : (json["suppressed"] as Array<any>).map(
-            TooManyRequestsExceptionSuppressedInnerFromJSON,
+            AuthExceptionSuppressedInnerFromJSON,
           ),
     localizedMessage:
       json["localizedMessage"] == null ? undefined : json["localizedMessage"],
@@ -216,12 +216,12 @@ export function TooManyRequestsExceptionToJSONTyped(
   }
 
   return {
-    cause: TooManyRequestsExceptionCauseToJSON(value["cause"]),
+    cause: AuthExceptionCauseToJSON(value["cause"]),
     stackTrace:
       value["stackTrace"] == null
         ? undefined
         : (value["stackTrace"] as Array<any>).map(
-            TooManyRequestsExceptionCauseStackTraceInnerToJSON,
+            AuthExceptionCauseStackTraceInnerToJSON,
           ),
     status: value["status"],
     message: value["message"],
@@ -229,7 +229,7 @@ export function TooManyRequestsExceptionToJSONTyped(
       value["suppressed"] == null
         ? undefined
         : (value["suppressed"] as Array<any>).map(
-            TooManyRequestsExceptionSuppressedInnerToJSON,
+            AuthExceptionSuppressedInnerToJSON,
           ),
     localizedMessage: value["localizedMessage"],
   };

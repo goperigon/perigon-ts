@@ -273,7 +273,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         // Verify error was logged
         expect(errorLogs).toHaveLength(0); // onError middleware only triggers for fetch errors, not response errors
         expect(requestLogs).toHaveLength(1);
-        expect(requestLogs[0].url).toContain("/v1/all");
+        expect(requestLogs[0].url).toContain("/v1/articles/all");
         expect(requestLogs[0].method).toBe("GET");
 
         // Verify console logging
