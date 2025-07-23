@@ -101,7 +101,7 @@ console.log(journalist.name);
 
 ### Articles – search and filter news (`/v1/all`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/overview>
+**Docs →** <https://dev.perigon.io/reference?endpoint=11>
 
 ```ts
 const { articles } = await perigon.searchArticles({
@@ -112,7 +112,7 @@ const { articles } = await perigon.searchArticles({
 
 ### Articles – date range filter<br>
 
-**Docs →** <https://docs.perigon.io/docs/overview>
+**Docs →** <https://dev.perigon.io/reference?endpoint=11>
 
 ```ts
 await perigon.searchArticles({
@@ -124,7 +124,7 @@ await perigon.searchArticles({
 
 ### Articles – restrict to a source<br>
 
-**Docs →** <https://docs.perigon.io/docs/overview>
+**Docs →** <https://dev.perigon.io/reference?endpoint=11>
 
 ```ts
 await perigon.searchArticles({ source: ["nytimes.com"] });
@@ -132,7 +132,7 @@ await perigon.searchArticles({ source: ["nytimes.com"] });
 
 ### Companies – fetch structured company data (`/v1/companies`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/company-data>
+**Docs →** <https://dev.perigon.io/reference?endpoint=2>
 
 ```ts
 const { results } = await perigon.searchCompanies({
@@ -143,7 +143,7 @@ const { results } = await perigon.searchCompanies({
 
 ### Journalists – search and detail look‑up (`/v1/journalists`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/journalist-data>
+**Docs →** <https://dev.perigon.io/reference?endpoint=2>
 
 ```ts
 const { results } = await perigon.searchJournalists1({
@@ -155,7 +155,7 @@ const journalist = await perigon.getJournalistById({ id: results[0].id });
 
 ### Stories – discover related article clusters (`/v1/stories`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/stories-overview>
+**Docs →** <https://dev.perigon.io/reference?endpoint=7>
 
 ```ts
 await perigon.searchStories({ q: "climate change", size: 5 });
@@ -163,7 +163,7 @@ await perigon.searchStories({ q: "climate change", size: 5 });
 
 ### Wikipedia – search Wikipedia pages (`/v1/wikipedia`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/wikipedia-endpoint>
+**Docs →** <https://dev.perigon.io/reference?endpoint=13>
 
 ```ts
 const { pages } = await perigon.searchWikipedia({
@@ -174,7 +174,7 @@ const { pages } = await perigon.searchWikipedia({
 
 ### Vector search – semantic retrieval (`/v1/vector`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/vector-endpoint>
+**Docs →** <https://dev.perigon.io/reference?endpoint=10>
 
 ```ts
 await perigon.vectorSearchArticles({
@@ -187,7 +187,7 @@ await perigon.vectorSearchArticles({
 
 ### Wikipedia vector search – semantic Wikipedia retrieval (`/v1/vector/wikipedia`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/vector-endpoint>
+**Docs →** <https://dev.perigon.io/reference?endpoint=12>
 
 ```ts
 await perigon.vectorSearchWikipedia({
@@ -200,7 +200,7 @@ await perigon.vectorSearchWikipedia({
 
 ### Summarizer – generate an instant summary (`/v1/summarizer`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/search-summarizer>
+**Docs →** <https://dev.perigon.io/reference?endpoint=8>
 
 ```ts
 const { summary } = await perigon.searchSummarizer({
@@ -212,7 +212,7 @@ console.log(summary);
 
 ### Topics – explore taxonomy (`/v1/topics`)<br>
 
-**Docs →** <https://docs.perigon.io/docs/topics>
+**Docs →** <https://dev.perigon.io/reference?endpoint=9>
 
 ```ts
 await perigon.searchTopics({ size: 10 });
