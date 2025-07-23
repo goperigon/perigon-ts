@@ -68,7 +68,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         expect(requiredError.name).toBe("RequiredError");
         expect(requiredError.field).toBe("id");
         expect(requiredError.message).toContain(
-          'Required parameter "id" was null or undefined',
+          'Required parameter "id" was null or undefined'
         );
       }
     });
@@ -84,7 +84,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         expect(requiredError.name).toBe("RequiredError");
         expect(requiredError.field).toBe("summaryBody");
         expect(requiredError.message).toContain(
-          'Required parameter "summaryBody" was null or undefined',
+          'Required parameter "summaryBody" was null or undefined'
         );
       }
     });
@@ -164,7 +164,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         if (anyError instanceof FetchError) {
           expect(anyError.cause).toBeDefined();
           expect(anyError.message).toContain(
-            "The request failed and the interceptors did not return an alternative response",
+            "The request failed and the interceptors did not return an alternative response"
           );
         } else if (anyError.name === "TypeError") {
           expect(anyError.message).toContain("fetch failed");
@@ -227,7 +227,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
           console.log(
             `[SDK] Making request to: ${context.init.method || "GET"} ${
               context.url
-            }`,
+            }`
           );
           return undefined;
         },
@@ -251,7 +251,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         },
         post: async (context) => {
           console.log(
-            `[SDK] Request completed: ${context.response.status} ${context.response.statusText}`,
+            `[SDK] Request completed: ${context.response.status} ${context.response.statusText}`
           );
           return undefined;
         },
@@ -273,7 +273,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         // Verify error was logged
         expect(errorLogs).toHaveLength(0); // onError middleware only triggers for fetch errors, not response errors
         expect(requestLogs).toHaveLength(1);
-        expect(requestLogs[0].url).toContain("/v1/all");
+        expect(requestLogs[0].url).toContain("/v1/articles/all");
         expect(requestLogs[0].method).toBe("GET");
 
         // Verify console logging
@@ -283,9 +283,9 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
             msg.some(
               (arg: any) =>
                 typeof arg === "string" &&
-                arg.includes("[SDK] Making request to"),
-            ),
-          ),
+                arg.includes("[SDK] Making request to")
+            )
+          )
         ).toBe(true);
       }
     }, 15000);
@@ -316,7 +316,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         expect(errorLogs).toHaveLength(1);
         expect(errorLogs[0].context.error).toBeDefined();
         expect(errorLogs[0].context.url).toContain(
-          "invalid-domain-that-does-not-exist.com",
+          "invalid-domain-that-does-not-exist.com"
         );
 
         // Verify error logging
@@ -326,9 +326,9 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
             errorArgs.some(
               (arg: any) =>
                 typeof arg === "string" &&
-                arg.includes("[SDK] Network error occurred"),
-            ),
-          ),
+                arg.includes("[SDK] Network error occurred")
+            )
+          )
         ).toBe(true);
 
         // Error should still be thrown (may be FetchError or raw TypeError)
@@ -355,7 +355,7 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
               status: 200,
               statusText: "OK",
               headers: { "Content-Type": "application/json" },
-            },
+            }
           );
 
           return mockResponse;
@@ -383,9 +383,9 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
           msg.some(
             (arg: any) =>
               typeof arg === "string" &&
-              arg.includes("[SDK] Attempting error recovery"),
-          ),
-        ),
+              arg.includes("[SDK] Attempting error recovery")
+          )
+        )
       ).toBe(true);
     }, 15000);
   });
@@ -432,18 +432,18 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
             msg.some(
               (arg: any) =>
                 typeof arg === "string" &&
-                arg.includes("Middleware 1 handling error"),
-            ),
-          ),
+                arg.includes("Middleware 1 handling error")
+            )
+          )
         ).toBe(true);
         expect(
           loggedMessages.some((msg) =>
             msg.some(
               (arg: any) =>
                 typeof arg === "string" &&
-                arg.includes("Middleware 2 handling error"),
-            ),
-          ),
+                arg.includes("Middleware 2 handling error")
+            )
+          )
         ).toBe(true);
       }
     }, 15000);
