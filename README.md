@@ -161,6 +161,17 @@ const journalist = await perigon.getJournalistById({ id: results[0].id });
 await perigon.searchStories({ q: "climate change", size: 5 });
 ```
 
+### Wikipedia – search Wikipedia pages (`/v1/wikipedia`)<br>
+
+**Docs →** <https://docs.perigon.io/docs/wikipedia-endpoint>
+
+```ts
+const { pages } = await perigon.searchWikipedia({
+  q: "artificial intelligence",
+  size: 5,
+});
+```
+
 ### Vector search – semantic retrieval (`/v1/vector`)<br>
 
 **Docs →** <https://docs.perigon.io/docs/vector-endpoint>
@@ -169,6 +180,19 @@ await perigon.searchStories({ q: "climate change", size: 5 });
 await perigon.vectorSearchArticles({
   articleSearchParams: {
     prompt: "Latest advancements in artificial intelligence",
+    size: 5,
+  },
+});
+```
+
+### Wikipedia vector search – semantic Wikipedia retrieval (`/v1/vector/wikipedia`)<br>
+
+**Docs →** <https://docs.perigon.io/docs/vector-endpoint>
+
+```ts
+await perigon.vectorSearchWikipedia({
+  wikipediaSearchParams: {
+    prompt: "quantum computing breakthroughs",
     size: 5,
   },
 });
@@ -194,14 +218,16 @@ console.log(summary);
 await perigon.searchTopics({ size: 10 });
 ```
 
-| Action                                  | Code Example                                                                                            |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Filter by source                        | `await perigon.searchArticles({ source: ['nytimes.com'] })`                                             |
-| Limit by date range                     | `await perigon.searchArticles({ q: 'business', from: '2025‑04‑01', to: '2025‑04‑08' })`                 |
-| Company lookup                          | `await perigon.searchCompanies({ name: 'Apple', size: 5 })`                                             |
-| Summarize any query                     | `await perigon.searchSummarizer({ q: 'renewable energy', size: 20 })`                                   |
-| Semantic / vector search                | `await perigon.vectorSearchArticles({ articleSearchParams: { prompt: 'advancements in AI', size: 5 }})` |
-| Retrieve available taxonomic **topics** | `await perigon.searchTopics({ size: 10 })`                                                              |
+| Action                                  | Code Example                                                                                                    |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Filter by source                        | `await perigon.searchArticles({ source: ['nytimes.com'] })`                                                     |
+| Limit by date range                     | `await perigon.searchArticles({ q: 'business', from: '2025‑04‑01', to: '2025‑04‑08' })`                         |
+| Company lookup                          | `await perigon.searchCompanies({ name: 'Apple', size: 5 })`                                                     |
+| Wikipedia page search                   | `await perigon.searchWikipedia({ q: 'machine learning', size: 5 })`                                             |
+| Summarize any query                     | `await perigon.searchSummarizer({ q: 'renewable energy', size: 20 })`                                           |
+| Semantic / vector search                | `await perigon.vectorSearchArticles({ articleSearchParams: { prompt: 'advancements in AI', size: 5 }})`        |
+| Wikipedia semantic search               | `await perigon.vectorSearchWikipedia({ wikipediaSearchParams: { prompt: 'quantum physics', size: 5 }})`        |
+| Retrieve available taxonomic **topics** | `await perigon.searchTopics({ size: 10 })`                                                                      |
 
 ---
 
