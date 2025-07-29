@@ -55,13 +55,17 @@
   "sideEffects": false,
 
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "test": "jest --coverage"
+    "build": "bun run tsup",
+    "dev": "bun run tsup --watch",
+    "test": "bun test --coverage"
   },
 
   "peerDependencies": {
     "undici": ">=5"
+  },
+
+  "dependencies": {
+    "zod": "^4.0.1"
   },
 
   "devDependencies": {

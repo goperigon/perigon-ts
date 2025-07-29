@@ -101,7 +101,7 @@ console.log(journalist.name);
 
 ### Articles – search and filter news (`/v1/all`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=11>
+**Docs →** <https://docs.perigon.io/docs/overview>
 
 ```ts
 const { articles } = await perigon.searchArticles({
@@ -112,7 +112,7 @@ const { articles } = await perigon.searchArticles({
 
 ### Articles – date range filter<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=11>
+**Docs →** <https://docs.perigon.io/docs/overview>
 
 ```ts
 await perigon.searchArticles({
@@ -124,7 +124,7 @@ await perigon.searchArticles({
 
 ### Articles – restrict to a source<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=11>
+**Docs →** <https://docs.perigon.io/docs/overview>
 
 ```ts
 await perigon.searchArticles({ source: ["nytimes.com"] });
@@ -132,7 +132,7 @@ await perigon.searchArticles({ source: ["nytimes.com"] });
 
 ### Companies – fetch structured company data (`/v1/companies`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=2>
+**Docs →** <https://docs.perigon.io/docs/company-data>
 
 ```ts
 const { results } = await perigon.searchCompanies({
@@ -143,7 +143,7 @@ const { results } = await perigon.searchCompanies({
 
 ### Journalists – search and detail look‑up (`/v1/journalists`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=2>
+**Docs →** <https://docs.perigon.io/docs/journalist-data>
 
 ```ts
 const { results } = await perigon.searchJournalists1({
@@ -155,26 +155,15 @@ const journalist = await perigon.getJournalistById({ id: results[0].id });
 
 ### Stories – discover related article clusters (`/v1/stories`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=7>
+**Docs →** <https://docs.perigon.io/docs/stories-overview>
 
 ```ts
 await perigon.searchStories({ q: "climate change", size: 5 });
 ```
 
-### Wikipedia – search Wikipedia pages (`/v1/wikipedia`)<br>
-
-**Docs →** <https://dev.perigon.io/reference?endpoint=13>
-
-```ts
-const { pages } = await perigon.searchWikipedia({
-  q: "artificial intelligence",
-  size: 5,
-});
-```
-
 ### Vector search – semantic retrieval (`/v1/vector`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=10>
+**Docs →** <https://docs.perigon.io/docs/vector-endpoint>
 
 ```ts
 await perigon.vectorSearchArticles({
@@ -185,22 +174,9 @@ await perigon.vectorSearchArticles({
 });
 ```
 
-### Wikipedia vector search – semantic Wikipedia retrieval (`/v1/vector/wikipedia`)<br>
-
-**Docs →** <https://dev.perigon.io/reference?endpoint=12>
-
-```ts
-await perigon.vectorSearchWikipedia({
-  wikipediaSearchParams: {
-    prompt: "quantum computing breakthroughs",
-    size: 5,
-  },
-});
-```
-
 ### Summarizer – generate an instant summary (`/v1/summarizer`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=8>
+**Docs →** <https://docs.perigon.io/docs/search-summarizer>
 
 ```ts
 const { summary } = await perigon.searchSummarizer({
@@ -212,27 +188,20 @@ console.log(summary);
 
 ### Topics – explore taxonomy (`/v1/topics`)<br>
 
-**Docs →** <https://dev.perigon.io/reference?endpoint=9>
+**Docs →** <https://docs.perigon.io/docs/topics>
 
 ```ts
 await perigon.searchTopics({ size: 10 });
 ```
 
-| Action                                  | Code Example                                                                                                    |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Filter by source                        | `await perigon.searchArticles({ source: ['nytimes.com'] })`                                                     |
-| Limit by date range                     | `await perigon.searchArticles({ q: 'business', from: '2025‑04‑01', to: '2025‑04‑08' })`                         |
-| Company lookup                          | `await perigon.searchCompanies({ name: 'Apple', size: 5 })`                                                     |
-| Wikipedia page search                   | `await perigon.searchWikipedia({ q: 'machine learning', size: 5 })`                                             |
-| Summarize any query                     | `await perigon.searchSummarizer({ q: 'renewable energy', size: 20 })`                                           |
-| Semantic / vector search                | `await perigon.vectorSearchArticles({ articleSearchParams: { prompt: 'advancements in AI', size: 5 }})`        |
-| Wikipedia semantic search               | `await perigon.vectorSearchWikipedia({ wikipediaSearchParams: { prompt: 'quantum physics', size: 5 }})`        |
-| Retrieve available taxonomic **topics** | `await perigon.searchTopics({ size: 10 })`                                                                      |
-
----
-
-## Usage Examples
-We have put together basic and advanced examples of accessing and using the Perigon API using the python SDK inside the **examples/** folder.
+| Action                                  | Code Example                                                                                            |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Filter by source                        | `await perigon.searchArticles({ source: ['nytimes.com'] })`                                             |
+| Limit by date range                     | `await perigon.searchArticles({ q: 'business', from: '2025‑04‑01', to: '2025‑04‑08' })`                 |
+| Company lookup                          | `await perigon.searchCompanies({ name: 'Apple', size: 5 })`                                             |
+| Summarize any query                     | `await perigon.searchSummarizer({ q: 'renewable energy', size: 20 })`                                   |
+| Semantic / vector search                | `await perigon.vectorSearchArticles({ articleSearchParams: { prompt: 'advancements in AI', size: 5 }})` |
+| Retrieve available taxonomic **topics** | `await perigon.searchTopics({ size: 10 })`                                                              |
 
 ---
 

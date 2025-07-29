@@ -1,0 +1,24 @@
+{{>licenseInfo}}
+
+import { z } from 'zod';
+
+{{#models}}
+{{#model}}
+{{#isEnum}}
+{{>modelZodEnum}}
+
+{{/isEnum}}
+{{^isEnum}}
+{{#oneOf}}
+{{#-first}}
+{{>modelZodOneOf}}
+
+{{/-first}}
+{{/oneOf}}
+{{^oneOf}}
+{{>modelZodSchema}}
+
+{{/oneOf}}
+{{/isEnum}}
+{{/model}}
+{{/models}}

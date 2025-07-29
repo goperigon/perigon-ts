@@ -1,0 +1,52 @@
+
+{{#unescapedDescription}}
+/**
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ * @export
+ */
+{{/unescapedDescription}}
+export const {{classname}}Schema = z.object({
+{{#vars}}
+    {{#unescapedDescription}}
+    /**
+     * {{#lambda.indented_star_4}}{{{unescapedDescription}}}{{/lambda.indented_star_4}}
+     {{#deprecated}}
+     * @deprecated
+     {{/deprecated}}
+     */
+    {{/unescapedDescription}}
+    {{name}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isContainer}}{{#isArray}}z.array({{#items}}{{#isPrimitiveType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.string(){{/isDateTimeType}}{{#isDateType}}z.string().date(){{/isDateType}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}z.unknown(){{/isEnum}}{{/isPrimitiveType}}{{/items}}){{/isArray}}{{#isMap}}z.record(z.string(), {{#items}}{{#isContainer}}{{#isArray}}z.array({{#items}}{{#isPrimitiveType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.string(){{/isDateTimeType}}{{#isDateType}}z.string().date(){{/isDateType}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}z.unknown(){{/isEnum}}{{/isPrimitiveType}}{{/items}}){{/isArray}}{{/isContainer}}{{^isContainer}}{{#isPrimitiveType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.string(){{/isDateTimeType}}{{#isDateType}}z.string().date(){{/isDateType}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}z.unknown(){{/isEnum}}{{/isPrimitiveType}}{{/isContainer}}{{/items}}){{/isMap}}{{/isContainer}}{{^isContainer}}{{#isPrimitiveType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.string(){{/isDateTimeType}}{{#isDateType}}z.string().date(){{/isDateType}}{{/isPrimitiveType}}{{^isPrimitiveType}}z.unknown(){{/isPrimitiveType}}{{/isContainer}}{{/isEnum}}{{#isContainer}}{{#isArray}}.default([]){{/isArray}}{{^isArray}}{{^required}}.optional(){{/required}}{{/isArray}}{{/isContainer}}{{^isContainer}}{{^required}}.optional(){{/required}}{{/isContainer}},
+{{/vars}}
+});
+
+export type {{classname}} = z.infer<typeof {{classname}}Schema>;
+{{#hasEnums}}
+
+{{#vars}}
+{{#isEnum}}
+{{#stringEnums}}
+/**
+* @export
+* @enum {string}
+*/
+export enum {{classname}}{{enumName}} {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+}
+{{/stringEnums}}{{^stringEnums}}
+/**
+ * @export
+ */
+export const {{classname}}{{enumName}} = {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}}: {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+} as const;
+export type {{classname}}{{enumName}} = typeof {{classname}}{{enumName}}[keyof typeof {{classname}}{{enumName}}];
+{{/stringEnums}}
+{{/isEnum}}{{/vars}}{{/hasEnums}}

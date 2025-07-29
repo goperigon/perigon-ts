@@ -10,14 +10,11 @@ import type {
   {{className}},
   {{/imports}}
 } from '../models/index{{importFileExtension}}';
-{{^withoutRuntimeChecks}}
 import {
     {{#imports}}
-    {{className}}FromJSON,
-    {{className}}ToJSON,
+    {{className}}Schema,
     {{/imports}}
 } from '../models/index{{importFileExtension}}';
-{{/withoutRuntimeChecks}}
 {{/imports.0}}
 
 {{#operations}}
@@ -267,7 +264,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{/isEnumRef}}
             {{^isEnumRef}}
             {{^withoutRuntimeChecks}}
-            formParams.append('{{baseName}}', new Blob([JSON.stringify({{returnType}}ToJSON(params.{{paramName}}))], { type: "application/json", }));
+            formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
             {{/withoutRuntimeChecks}}{{#withoutRuntimeChecks}}
             formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
             {{/withoutRuntimeChecks}}
@@ -288,7 +285,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{#bodyParam}}
             {{#isContainer}}
             {{^withoutRuntimeChecks}}
-            body: params.{{paramName}}{{#isArray}}{{#items}}{{^isPrimitiveType}}!.map({{datatype}}ToJSON){{/isPrimitiveType}}{{/items}}{{/isArray}},
+            body: params.{{paramName}}{{#isArray}}{{/isArray}},
             {{/withoutRuntimeChecks}}
             {{#withoutRuntimeChecks}}
             body: params.{{paramName}},
@@ -296,13 +293,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{/isContainer}}
             {{^isContainer}}
             {{^isPrimitiveType}}
-            {{^withoutRuntimeChecks}}
-            body: {{dataType}}ToJSON(params.{{paramName}}),
-            {{/withoutRuntimeChecks}}
-            {{#withoutRuntimeChecks}}
-            body: params.{{paramName}},
-            {{/withoutRuntimeChecks}}
-            {{/isPrimitiveType}}
+             body: params.{{paramName}},            {{/isPrimitiveType}}
             {{#isPrimitiveType}}
             body: params.{{paramName}} as any,
             {{/isPrimitiveType}}
@@ -341,7 +332,7 @@ export class {{classname}} extends runtime.BaseAPI {
         const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
         {{/isMap}}
         {{^isMap}}
-        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
+        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(jsonValue));
         {{/isMap}}
         {{/isArray}}
         {{/returnTypeIsPrimitive}}
@@ -482,7 +473,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{/isEnumRef}}
             {{^isEnumRef}}
             {{^withoutRuntimeChecks}}
-            formParams.append('{{baseName}}', new Blob([JSON.stringify({{returnType}}ToJSON(params.{{paramName}}))], { type: "application/json", }));
+            formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
             {{/withoutRuntimeChecks}}{{#withoutRuntimeChecks}}
             formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
             {{/withoutRuntimeChecks}}
@@ -503,7 +494,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{#bodyParam}}
             {{#isContainer}}
             {{^withoutRuntimeChecks}}
-            body: params.{{paramName}}{{#isArray}}{{#items}}{{^isPrimitiveType}}!.map({{datatype}}ToJSON){{/isPrimitiveType}}{{/items}}{{/isArray}},
+            body: params.{{paramName}}{{#isArray}}{{/isArray}},
             {{/withoutRuntimeChecks}}
             {{#withoutRuntimeChecks}}
             body: params.{{paramName}},
@@ -511,13 +502,7 @@ export class {{classname}} extends runtime.BaseAPI {
             {{/isContainer}}
             {{^isContainer}}
             {{^isPrimitiveType}}
-            {{^withoutRuntimeChecks}}
-            body: {{dataType}}ToJSON(params.{{paramName}}),
-            {{/withoutRuntimeChecks}}
-            {{#withoutRuntimeChecks}}
-            body: params.{{paramName}},
-            {{/withoutRuntimeChecks}}
-            {{/isPrimitiveType}}
+             body: params.{{paramName}},            {{/isPrimitiveType}}
             {{#isPrimitiveType}}
             body: params.{{paramName}} as any,
             {{/isPrimitiveType}}
@@ -556,7 +541,7 @@ export class {{classname}} extends runtime.BaseAPI {
         const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
         {{/isMap}}
         {{^isMap}}
-        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
+        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(jsonValue));
         {{/isMap}}
         {{/isArray}}
         {{/returnTypeIsPrimitive}}

@@ -13,6 +13,7 @@
  */
 
 import * as runtime from "../runtime";
+import { z } from "zod";
 import type {
   AllEndpointSortBy,
   ArticleSearchParams,
@@ -38,1685 +39,1502 @@ import type {
   WikipediaVectorSearchResult,
 } from "../models/index";
 import {
-  AllEndpointSortByFromJSON,
-  AllEndpointSortByToJSON,
-  ArticleSearchParamsFromJSON,
-  ArticleSearchParamsToJSON,
-  ArticlesVectorSearchResultFromJSON,
-  ArticlesVectorSearchResultToJSON,
-  AuthExceptionFromJSON,
-  AuthExceptionToJSON,
-  CompanySearchResultFromJSON,
-  CompanySearchResultToJSON,
-  IllegalParameterExceptionFromJSON,
-  IllegalParameterExceptionToJSON,
-  InternalErrorExceptionFromJSON,
-  InternalErrorExceptionToJSON,
-  JournalistFromJSON,
-  JournalistToJSON,
-  JournalistSearchResultFromJSON,
-  JournalistSearchResultToJSON,
-  NotFoundExceptionFromJSON,
-  NotFoundExceptionToJSON,
-  PeopleSearchResultFromJSON,
-  PeopleSearchResultToJSON,
-  QuerySearchResultFromJSON,
-  QuerySearchResultToJSON,
-  SortByFromJSON,
-  SortByToJSON,
-  SourceSearchResultFromJSON,
-  SourceSearchResultToJSON,
-  StorySearchResultFromJSON,
-  StorySearchResultToJSON,
-  SummaryBodyFromJSON,
-  SummaryBodyToJSON,
-  SummarySearchResultFromJSON,
-  SummarySearchResultToJSON,
-  TooManyRequestsExceptionFromJSON,
-  TooManyRequestsExceptionToJSON,
-  TopicSearchResultFromJSON,
-  TopicSearchResultToJSON,
-  WikipediaSearchParamsFromJSON,
-  WikipediaSearchParamsToJSON,
-  WikipediaSearchResultFromJSON,
-  WikipediaSearchResultToJSON,
-  WikipediaVectorSearchResultFromJSON,
-  WikipediaVectorSearchResultToJSON,
+  AllEndpointSortBySchema,
+  ArticleSearchParamsSchema,
+  ArticlesVectorSearchResultSchema,
+  AuthExceptionSchema,
+  CompanySearchResultSchema,
+  IllegalParameterExceptionSchema,
+  InternalErrorExceptionSchema,
+  JournalistSchema,
+  JournalistSearchResultSchema,
+  NotFoundExceptionSchema,
+  PeopleSearchResultSchema,
+  QuerySearchResultSchema,
+  SortBySchema,
+  SourceSearchResultSchema,
+  StorySearchResultSchema,
+  SummaryBodySchema,
+  SummarySearchResultSchema,
+  TooManyRequestsExceptionSchema,
+  TopicSearchResultSchema,
+  WikipediaSearchParamsSchema,
+  WikipediaSearchResultSchema,
+  WikipediaVectorSearchResultSchema,
 } from "../models/index";
 
-export interface GetJournalistByIdRequest {
+export const GetJournalistByIdPathSchema = z.object({
   /**
    * Parameter id
    * @required
    */
-  id: string;
-}
+  id: z.string(),
+});
 
-export interface SearchArticlesRequest {
+export const GetJournalistByIdRequestSchema = z.object({
+  ...GetJournalistByIdPathSchema.shape,
+});
+
+export type GetJournalistByIdRequest = z.input<
+  typeof GetJournalistByIdRequestSchema
+>;
+
+export const SearchArticlesQuerySchema = z.object({
   /**
    * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  q?: string;
+  q: z.string().optional(),
   /**
    * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
-  title?: string;
+  title: z.string().optional(),
   /**
    * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
    */
-  desc?: string;
+  desc: z.string().optional(),
   /**
    * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
    */
-  content?: string;
+  content: z.string().optional(),
   /**
    * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
    */
-  url?: string;
+  url: z.string().optional(),
   /**
    * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
    */
-  articleId?: Array<string>;
+  articleId: z.array(z.string()).optional(),
   /**
    * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
    */
-  clusterId?: Array<string>;
+  clusterId: z.array(z.string()).optional(),
   /**
    * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
-  sortBy?: AllEndpointSortBy;
+  sortBy: z.any().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size?: number;
+  size: z.any().optional(),
   /**
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  from?: Date;
+  from: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  to?: Date;
+  to: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
-  addDateFrom?: Date;
+  addDateFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  addDateTo?: Date;
+  addDateTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
-  refreshDateFrom?: Date;
+  refreshDateFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  refreshDateTo?: Date;
+  refreshDateTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
    */
-  medium?: Array<string>;
+  medium: z.array(z.string()).optional(),
   /**
    * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
-  source?: Array<string>;
+  source: z.array(z.string()).optional(),
   /**
    * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
    */
-  sourceGroup?: Array<string>;
+  sourceGroup: z.array(z.string()).optional(),
   /**
    * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
    */
-  excludeSourceGroup?: Array<string>;
+  excludeSourceGroup: z.array(z.string()).optional(),
   /**
    * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
    */
-  excludeSource?: Array<string>;
+  excludeSource: z.array(z.string()).optional(),
   /**
    * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
    */
-  paywall?: boolean;
+  paywall: z.boolean().optional(),
   /**
    * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
    */
-  byline?: Array<string>;
+  byline: z.array(z.string()).optional(),
   /**
    * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
    */
-  author?: Array<string>;
+  author: z.array(z.string()).optional(),
   /**
    * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
    */
-  excludeAuthor?: Array<string>;
+  excludeAuthor: z.array(z.string()).optional(),
   /**
    * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
    */
-  journalistId?: Array<string>;
+  journalistId: z.array(z.string()).optional(),
   /**
    * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
    */
-  excludeJournalistId?: Array<string>;
+  excludeJournalistId: z.array(z.string()).optional(),
   /**
    * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
    */
-  language?: Array<string>;
+  language: z.array(z.string()).optional(),
   /**
    * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
    */
-  excludeLanguage?: Array<string>;
+  excludeLanguage: z.array(z.string()).optional(),
   /**
    * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
    */
-  searchTranslation?: boolean;
+  searchTranslation: z.boolean().optional(),
   /**
    * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
    */
-  label?: Array<string>;
+  label: z.array(z.string()).optional(),
   /**
    * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
    */
-  excludeLabel?: Array<string>;
+  excludeLabel: z.array(z.string()).optional(),
   /**
    * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
    */
-  category?: Array<string>;
+  category: z.array(z.string()).optional(),
   /**
    * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
    */
-  excludeCategory?: Array<string>;
+  excludeCategory: z.array(z.string()).optional(),
   /**
    * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
-  topic?: Array<string>;
+  topic: z.array(z.string()).optional(),
   /**
    * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
    */
-  excludeTopic?: Array<string>;
+  excludeTopic: z.array(z.string()).optional(),
   /**
    * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
    */
-  linkTo?: string;
+  linkTo: z.string().optional(),
   /**
    * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
    */
-  showReprints?: boolean;
+  showReprints: z.boolean().optional(),
   /**
    * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
    */
-  reprintGroupId?: string;
+  reprintGroupId: z.string().optional(),
   /**
    * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
    */
-  city?: Array<string>;
+  city: z.array(z.string()).optional(),
   /**
    * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
    */
-  excludeCity?: Array<string>;
+  excludeCity: z.array(z.string()).optional(),
   /**
    * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
    */
-  area?: Array<string>;
+  area: z.array(z.string()).optional(),
   /**
    * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
    */
-  state?: Array<string>;
+  state: z.array(z.string()).optional(),
   /**
    * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
    */
-  excludeState?: Array<string>;
+  excludeState: z.array(z.string()).optional(),
   /**
    * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
    */
-  county?: Array<string>;
+  county: z.array(z.string()).optional(),
   /**
    * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
    */
-  excludeCounty?: Array<string>;
+  excludeCounty: z.array(z.string()).optional(),
   /**
    * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
    */
-  locationsCountry?: Array<string>;
+  locationsCountry: z.array(z.string()).optional(),
   /**
    * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
    */
-  country?: Array<string>;
+  country: z.array(z.string()).optional(),
   /**
    * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
    */
-  excludeLocationsCountry?: Array<string>;
+  excludeLocationsCountry: z.array(z.string()).optional(),
   /**
    * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
    */
-  location?: Array<string>;
+  location: z.array(z.string()).optional(),
   /**
    * Latitude of the center point to search places
    */
-  lat?: number;
+  lat: z.any().optional(),
   /**
    * Longitude of the center point to search places
    */
-  lon?: number;
+  lon: z.any().optional(),
   /**
    * Maximum distance (in km) from starting point to search articles by tagged places
    */
-  maxDistance?: number;
+  maxDistance: z.any().optional(),
   /**
    * Find articles published by sources that are located within a given city.
    */
-  sourceCity?: Array<string>;
+  sourceCity: z.array(z.string()).optional(),
   /**
    * Find articles published by sources that are located within a given county.
    */
-  sourceCounty?: Array<string>;
+  sourceCounty: z.array(z.string()).optional(),
   /**
    * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
    */
-  sourceCountry?: Array<string>;
+  sourceCountry: z.array(z.string()).optional(),
   /**
    * Find articles published by sources that are located within a given state.
    */
-  sourceState?: Array<string>;
+  sourceState: z.array(z.string()).optional(),
   /**
    * Latitude of the center point to search articles created by local publications.
    */
-  sourceLat?: number;
+  sourceLat: z.any().optional(),
   /**
    * Latitude of the center point to search articles created by local publications.
    */
-  sourceLon?: number;
+  sourceLon: z.any().optional(),
   /**
    * Maximum distance from starting point to search articles created by local publications.
    */
-  sourceMaxDistance?: number;
+  sourceMaxDistance: z.any().optional(),
   /**
    * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
    */
-  personWikidataId?: Array<string>;
+  personWikidataId: z.array(z.string()).optional(),
   /**
    * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
    */
-  excludePersonWikidataId?: Array<string>;
+  excludePersonWikidataId: z.array(z.string()).optional(),
   /**
    * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
-  personName?: Array<string>;
+  personName: z.array(z.string()).optional(),
   /**
    * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
    */
-  excludePersonName?: Array<string>;
+  excludePersonName: z.array(z.string()).optional(),
   /**
    * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
    */
-  companyId?: Array<string>;
+  companyId: z.array(z.string()).optional(),
   /**
    * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
    */
-  excludeCompanyId?: Array<string>;
+  excludeCompanyId: z.array(z.string()).optional(),
   /**
    * Filter articles by company name mentions. Performs an exact match on company names.
    */
-  companyName?: string;
+  companyName: z.string().optional(),
   /**
    * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
    */
-  companyDomain?: Array<string>;
+  companyDomain: z.array(z.string()).optional(),
   /**
    * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
    */
-  excludeCompanyDomain?: Array<string>;
+  excludeCompanyDomain: z.array(z.string()).optional(),
   /**
    * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
    */
-  companySymbol?: Array<string>;
+  companySymbol: z.array(z.string()).optional(),
   /**
    * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
    */
-  excludeCompanySymbol?: Array<string>;
+  excludeCompanySymbol: z.array(z.string()).optional(),
   /**
    * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
    */
-  showNumResults?: boolean;
+  showNumResults: z.boolean().optional(),
   /**
    * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentFrom?: number;
+  positiveSentimentFrom: z.any().optional(),
   /**
    * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentTo?: number;
+  positiveSentimentTo: z.any().optional(),
   /**
    * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentFrom?: number;
+  neutralSentimentFrom: z.any().optional(),
   /**
    * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentTo?: number;
+  neutralSentimentTo: z.any().optional(),
   /**
    * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentFrom?: number;
+  negativeSentimentFrom: z.any().optional(),
   /**
    * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentTo?: number;
+  negativeSentimentTo: z.any().optional(),
   /**
    * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
    */
-  taxonomy?: Array<string>;
+  taxonomy: z.array(z.string()).optional(),
   /**
    * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
    */
-  prefixTaxonomy?: string;
+  prefixTaxonomy: z.string().optional(),
   /**
    * When set to true, enables text highlighting in search results.
    */
-  showHighlighting?: boolean;
+  showHighlighting: z.boolean().optional(),
   /**
    * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
-  highlightFragmentSize?: number;
+  highlightFragmentSize: z.any().optional(),
   /**
    * Controls the maximum number of highlighted fragments to return per field.
    */
-  highlightNumFragments?: number;
+  highlightNumFragments: z.any().optional(),
   /**
    * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
-  highlightPreTag?: string;
+  highlightPreTag: z.string().optional(),
   /**
    * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
    */
-  highlightPostTag?: string;
+  highlightPostTag: z.string().optional(),
   /**
    * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
    */
-  highlightQ?: string;
-}
+  highlightQ: z.string().optional(),
+});
 
-export interface SearchCompaniesRequest {
+export const SearchArticlesRequestSchema = z.object({
+  ...SearchArticlesQuerySchema.shape,
+});
+
+export type SearchArticlesRequest = z.input<typeof SearchArticlesRequestSchema>;
+
+export const SearchCompaniesQuerySchema = z.object({
   /**
    * Filter by unique company identifiers. Multiple values create an OR filter.
    */
-  id?: Array<string>;
+  id: z.array(z.string()).optional(),
   /**
    * Filter by company stock ticker symbols (e.g., AAPL, MSFT, GOOGL). Multiple values create an OR filter.
    */
-  symbol?: Array<string>;
+  symbol: z.array(z.string()).optional(),
   /**
    * Filter by company domains or websites (e.g., apple.com, microsoft.com). Multiple values create an OR filter.
    */
-  domain?: Array<string>;
+  domain: z.array(z.string()).optional(),
   /**
    * Filter by company headquarters country. Multiple values create an OR filter.
    */
-  country?: Array<string>;
+  country: z.array(z.string()).optional(),
   /**
    * Filter by stock exchange where companies are listed (e.g., NASDAQ, NYSE). Multiple values create an OR filter.
    */
-  exchange?: Array<string>;
+  exchange: z.array(z.string()).optional(),
   /**
    * Filter for companies with at least this many employees.
    */
-  numEmployeesFrom?: number;
+  numEmployeesFrom: z.any().optional(),
   /**
    * Filter for companies with no more than this many employees.
    */
-  numEmployeesTo?: number;
+  numEmployeesTo: z.any().optional(),
   /**
    * Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
    */
-  ipoFrom?: Date;
+  ipoFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for companies that went public on or before this date. Accepts ISO 8601 format (e.g., 2023-12-31T23:59:59) or yyyy-mm-dd format.
    */
-  ipoTo?: Date;
+  ipoTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Primary search query for filtering companies across name, alternative names, domains, and ticker symbols. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  q?: string;
+  q: z.string().optional(),
   /**
    * Search within company names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  name?: string;
+  name: z.string().optional(),
   /**
    * Filter by company industry classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  industry?: string;
+  industry: z.string().optional(),
   /**
    * Filter by company sector classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  sector?: string;
+  sector: z.string().optional(),
   /**
    * The number of companies to return per page in the paginated response.
    */
-  size?: number;
+  size: z.any().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
-}
+  page: z.any().optional(),
+});
 
-export interface SearchJournalistsRequest {
+export const SearchCompaniesRequestSchema = z.object({
+  ...SearchCompaniesQuerySchema.shape,
+});
+
+export type SearchCompaniesRequest = z.input<
+  typeof SearchCompaniesRequestSchema
+>;
+
+export const SearchJournalistsQuerySchema = z.object({
   /**
    * Filter by unique journalist identifiers. Multiple values create an OR filter to find journalists matching any of the specified IDs.
    */
-  id?: Array<string>;
+  id: z.array(z.string()).optional(),
   /**
    * Primary search query for filtering journalists based on their name, title, and Twitter bio. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  q?: string;
+  q: z.string().optional(),
   /**
    * Search specifically within journalist names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  name?: string;
+  name: z.string().optional(),
   /**
    * Filter journalists by their exact Twitter handle, without the @ symbol.
    */
-  twitter?: string;
+  twitter: z.string().optional(),
   /**
    * The number of journalists to return per page in the paginated response.
    */
-  size?: number;
+  size: z.any().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * Filter journalists by the publisher domains they write for. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
-  source?: Array<string>;
+  source: z.array(z.string()).optional(),
   /**
    * Filter journalists by the topics they frequently cover. Multiple values create an OR filter to find journalists covering any of the specified topics.
    */
-  topic?: Array<string>;
+  topic: z.array(z.string()).optional(),
   /**
    * Filter journalists by the content categories they typically write about (e.g., Politics, Tech, Sports, Business). Multiple values create an OR filter.
    */
-  category?: Array<string>;
+  category: z.array(z.string()).optional(),
   /**
    * Filter journalists by the type of content they typically produce (e.g., Opinion, Paid-news, Non-news). Multiple values create an OR filter.
    */
-  label?: Array<string>;
+  label: z.array(z.string()).optional(),
   /**
    * Filter for journalists who publish at least this many articles per month. Used to identify more active journalists.
    */
-  minMonthlyPosts?: number;
+  minMonthlyPosts: z.any().optional(),
   /**
    * Filter for journalists who publish no more than this many articles per month.
    */
-  maxMonthlyPosts?: number;
+  maxMonthlyPosts: z.any().optional(),
   /**
    * Filter journalists by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). Multiple values create an OR filter.
    */
-  country?: Array<string>;
+  country: z.array(z.string()).optional(),
   /**
    * Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  updatedAtFrom?: Date;
+  updatedAtFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for journalist profiles updated on or before this date. Accepts ISO 8601 format (e.g., 2023-03-01T23:59:59) or yyyy-mm-dd format.
    */
-  updatedAtTo?: Date;
+  updatedAtTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
-  showNumResults?: boolean;
-}
+  showNumResults: z.boolean().optional(),
+});
 
-export interface SearchPeopleRequest {
+export const SearchJournalistsRequestSchema = z.object({
+  ...SearchJournalistsQuerySchema.shape,
+});
+
+export type SearchJournalistsRequest = z.input<
+  typeof SearchJournalistsRequestSchema
+>;
+
+export const SearchPeopleQuerySchema = z.object({
   /**
    * Search by person\&#39;s name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  name?: string;
+  name: z.string().optional(),
   /**
    * Filter by Wikidata entity IDs (e.g., Q7747, Q937). These are unique identifiers from Wikidata.org that precisely identify public figures and eliminate name ambiguity. Multiple values create an OR filter.
    */
-  wikidataId?: Array<string>;
+  wikidataId: z.array(z.string()).optional(),
   /**
    * Filter by Wikidata occupation IDs (e.g., Q82955 for politician, Q33999 for actor, Q19546 for businessman). Finds people with specific professions. Multiple values create an OR filter.
    */
-  occupationId?: Array<string>;
+  occupationId: z.array(z.string()).optional(),
   /**
    * Search by occupation name (e.g., politician, actor, CEO, athlete). Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  occupationLabel?: string;
+  occupationLabel: z.string().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * The number of people to return per page in the paginated response.
    */
-  size?: number;
-}
+  size: z.any().optional(),
+});
 
-export interface SearchSourcesRequest {
+export const SearchPeopleRequestSchema = z.object({
+  ...SearchPeopleQuerySchema.shape,
+});
+
+export type SearchPeopleRequest = z.input<typeof SearchPeopleRequestSchema>;
+
+export const SearchSourcesQuerySchema = z.object({
   /**
    * Filter by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com, us?.nytimes.com). Multiple values create an OR filter.
    */
-  domain?: Array<string>;
+  domain: z.array(z.string()).optional(),
   /**
    * Search by source name or alternative names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  name?: string;
+  name: z.string().optional(),
   /**
    * Filter by predefined publisher bundles (e.g., top100, top50tech). Returns all sources within the specified group. See documentation for available source groups.
    */
-  sourceGroup?: string;
+  sourceGroup: z.string().optional(),
   /**
    * Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
    */
-  sortBy?: SortBy;
+  sortBy: z.any().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * The number of sources to return per page in the paginated response.
    */
-  size?: number;
+  size: z.any().optional(),
   /**
    * Filter for sources with at least this many monthly visitors. Used to target publishers by audience size.
    */
-  minMonthlyVisits?: number;
+  minMonthlyVisits: z.any().optional(),
   /**
    * Filter for sources with no more than this many monthly visitors. Used to target publishers by audience size.
    */
-  maxMonthlyVisits?: number;
+  maxMonthlyVisits: z.any().optional(),
   /**
    * Filter for sources that publish at least this many articles per month. Used to target publishers by content volume.
    */
-  minMonthlyPosts?: number;
+  minMonthlyPosts: z.any().optional(),
   /**
    * Filter for sources that publish no more than this many articles per month. Used to target publishers by content volume.
    */
-  maxMonthlyPosts?: number;
+  maxMonthlyPosts: z.any().optional(),
   /**
    * Filter sources by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
-  country?: Array<string>;
+  country: z.array(z.string()).optional(),
   /**
    * Filter for local publications based in specific countries. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
-  sourceCountry?: Array<string>;
+  sourceCountry: z.array(z.string()).optional(),
   /**
    * Filter for local publications based in specific states or regions. Uses standard two-letter state codes in lowercase (e.g., ca, ny, tx). See documentation for supported state codes. Multiple values create an OR filter.
    */
-  sourceState?: Array<string>;
+  sourceState: z.array(z.string()).optional(),
   /**
    * Filter for local publications based in specific counties. Multiple values create an OR filter.
    */
-  sourceCounty?: Array<string>;
+  sourceCounty: z.array(z.string()).optional(),
   /**
    * Filter for local publications based in specific cities. Multiple values create an OR filter.
    */
-  sourceCity?: Array<string>;
+  sourceCity: z.array(z.string()).optional(),
   /**
    * Latitude coordinate for filtering local publications by geographic proximity. Used with sourceLon and sourceMaxDistance for radius search.
    */
-  sourceLat?: number;
+  sourceLat: z.any().optional(),
   /**
    * Longitude coordinate for filtering local publications by geographic proximity. Used with sourceLat and sourceMaxDistance for radius search.
    */
-  sourceLon?: number;
+  sourceLon: z.any().optional(),
   /**
    * Maximum distance in kilometers from the coordinates defined by sourceLat and sourceLon. Defines the radius for local publication searches.
    */
-  sourceMaxDistance?: number;
+  sourceMaxDistance: z.any().optional(),
   /**
    * Filter sources by their primary content categories such as Politics, Tech, Sports, Business, or Finance. Returns sources that frequently cover these topics. Multiple values create an OR filter.
    */
-  category?: Array<string>;
+  category: z.array(z.string()).optional(),
   /**
    * Filter sources by their frequently covered topics (e.g., Markets, Cryptocurrency, Climate Change). Returns sources where the specified topic is among their top 10 covered areas. Multiple values create an OR filter.
    */
-  topic?: Array<string>;
+  topic: z.array(z.string()).optional(),
   /**
    * Filter sources by their content label patterns (e.g., Opinion, Paid-news, Non-news). Returns sources where the specified label is common in their published content. See documentation for all available labels. Multiple values create an OR filter.
    */
-  label?: Array<string>;
+  label: z.array(z.string()).optional(),
   /**
    * Filter by paywall status. Set to true to find sources with paywalls, or false to find sources without paywalls.
    */
-  paywall?: boolean;
+  paywall: z.boolean().optional(),
   /**
    * Controls whether subdomains are included as separate results. When true (default), subdomains appear as distinct sources. When false, results are consolidated to parent domains only.
    */
-  showSubdomains?: boolean;
+  showSubdomains: z.boolean().optional(),
   /**
    * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
-  showNumResults?: boolean;
-}
+  showNumResults: z.boolean().optional(),
+});
 
-export interface SearchStoriesRequest {
+export const SearchSourcesRequestSchema = z.object({
+  ...SearchSourcesQuerySchema.shape,
+});
+
+export type SearchSourcesRequest = z.input<typeof SearchSourcesRequestSchema>;
+
+export const SearchStoriesQuerySchema = z.object({
   /**
    * Primary search query for filtering stories based on their name, summary, and key points. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  q?: string;
+  q: z.string().optional(),
   /**
    * Search specifically within story names. Supports Boolean operators, exact phrases with quotes, and wildcards for matching name variations.
    */
-  name?: string;
+  name: z.string().optional(),
   /**
    * Filter to specific stories using their unique identifiers. Each clusterId represents a distinct story that groups related articles. Multiple values create an OR filter.
    */
-  clusterId?: Array<string>;
+  clusterId: z.array(z.string()).optional(),
   /**
    * Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
    */
-  excludeClusterId?: Array<string>;
+  excludeClusterId: z.array(z.string()).optional(),
   /**
    * Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
-  sortBy?: SortBy;
+  sortBy: z.any().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size?: number;
+  size: z.any().optional(),
   /**
    * \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
    */
-  from?: Date;
+  from: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
    */
-  to?: Date;
+  to: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for stories created after this date. Alternative parameter for filtering by story creation date.
    */
-  initializedFrom?: Date;
+  initializedFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for stories created before this date. Alternative parameter for filtering by story creation date.
    */
-  initializedTo?: Date;
+  initializedTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
    */
-  updatedFrom?: Date;
+  updatedFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
    */
-  updatedTo?: Date;
+  updatedTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
-  topic?: Array<string>;
+  topic: z.array(z.string()).optional(),
   /**
    * Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
    */
-  category?: Array<string>;
+  category: z.array(z.string()).optional(),
   /**
    * Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
    */
-  taxonomy?: Array<string>;
+  taxonomy: z.array(z.string()).optional(),
   /**
    * Filter stories that contain articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). A story will match if it contains at least one article from any of the specified sources. Multiple values create an OR filter.
    */
-  source?: Array<string>;
+  source: z.array(z.string()).optional(),
   /**
    * Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
    */
-  sourceGroup?: Array<string>;
+  sourceGroup: z.array(z.string()).optional(),
   /**
    * Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
    */
-  minUniqueSources?: number;
+  minUniqueSources: z.any().optional(),
   /**
    * Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
    */
-  personWikidataId?: Array<string>;
+  personWikidataId: z.array(z.string()).optional(),
   /**
    * Filter stories by exact name matches of top mentioned people. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
-  personName?: string;
+  personName: z.string().optional(),
   /**
    * Filter stories by identifiers of top mentioned companies. Returns stories where these companies appear prominently. For a complete list of tracked companies, refer to the /companies endpoint.
    */
-  companyId?: Array<string>;
+  companyId: z.array(z.string()).optional(),
   /**
    * Filter stories by names of top mentioned companies. Performs an exact match on company names in the topCompanies field.
    */
-  companyName?: string;
+  companyName: z.string().optional(),
   /**
    * Filter stories by domains of top mentioned companies (e.g., apple.com). Returns stories where companies with these domains appear prominently. For available company entities, consult the /companies endpoint.
    */
-  companyDomain?: Array<string>;
+  companyDomain: z.array(z.string()).optional(),
   /**
    * Filter stories by stock symbols of top mentioned companies. Returns stories where companies with these symbols appear prominently. For available company entities and their symbols, consult the /companies endpoint.
    */
-  companySymbol?: Array<string>;
+  companySymbol: z.array(z.string()).optional(),
   /**
    * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
    */
-  country?: Array<string>;
+  country: z.array(z.string()).optional(),
   /**
    * Filter local news by state. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
    */
-  state?: Array<string>;
+  state: z.array(z.string()).optional(),
   /**
    * Filter local news by city. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
    */
-  city?: Array<string>;
+  city: z.array(z.string()).optional(),
   /**
    * Filter local news by area. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
    */
-  area?: Array<string>;
+  area: z.array(z.string()).optional(),
   /**
    * Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
    */
-  minClusterSize?: number;
+  minClusterSize: z.any().optional(),
   /**
    * Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
    */
-  maxClusterSize?: number;
+  maxClusterSize: z.any().optional(),
   /**
    * Filter to only include stories that have been assigned names. Defaults to true. Note that stories only receive names after they contain at least 5 unique articles.
    */
-  nameExists?: boolean;
+  nameExists: z.boolean().optional(),
   /**
    * Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentFrom?: number;
+  positiveSentimentFrom: z.any().optional(),
   /**
    * Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentTo?: number;
+  positiveSentimentTo: z.any().optional(),
   /**
    * Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentFrom?: number;
+  neutralSentimentFrom: z.any().optional(),
   /**
    * Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentTo?: number;
+  neutralSentimentTo: z.any().optional(),
   /**
    * Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentFrom?: number;
+  negativeSentimentFrom: z.any().optional(),
   /**
    * Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentTo?: number;
+  negativeSentimentTo: z.any().optional(),
   /**
    * Parameter showStoryPageInfo
    */
-  showStoryPageInfo?: boolean;
+  showStoryPageInfo: z.boolean().optional(),
   /**
    * Show total number of results. By default set to false, will cap result count at 10000.
    */
-  showNumResults?: boolean;
+  showNumResults: z.boolean().optional(),
   /**
    * Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
    */
-  showDuplicates?: boolean;
+  showDuplicates: z.boolean().optional(),
   /**
    * When set to true, enables text highlighting in search results.
    */
-  showHighlighting?: boolean;
+  showHighlighting: z.boolean().optional(),
   /**
    * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
-  highlightFragmentSize?: number;
+  highlightFragmentSize: z.any().optional(),
   /**
    * Controls the maximum number of highlighted fragments to return per field.
    */
-  highlightNumFragments?: number;
+  highlightNumFragments: z.any().optional(),
   /**
    * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
-  highlightPreTag?: string;
+  highlightPreTag: z.string().optional(),
   /**
    * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
    */
-  highlightPostTag?: string;
+  highlightPostTag: z.string().optional(),
   /**
    * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
    */
-  highlightQ?: string;
-}
+  highlightQ: z.string().optional(),
+});
 
-export interface SearchSummarizerRequest {
+export const SearchStoriesRequestSchema = z.object({
+  ...SearchStoriesQuerySchema.shape,
+});
+
+export type SearchStoriesRequest = z.input<typeof SearchStoriesRequestSchema>;
+
+export const SearchSummarizerQuerySchema = z.object({
+  /**
+   * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   */
+  q: z.string().optional(),
+  /**
+   * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   */
+  title: z.string().optional(),
+  /**
+   * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+   */
+  desc: z.string().optional(),
+  /**
+   * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
+   */
+  content: z.string().optional(),
+  /**
+   * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
+   */
+  url: z.string().optional(),
+  /**
+   * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
+   */
+  articleId: z.array(z.string()).optional(),
+  /**
+   * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
+   */
+  clusterId: z.array(z.string()).optional(),
+  /**
+   * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
+   */
+  sortBy: z.any().optional(),
+  /**
+   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   */
+  page: z.any().optional(),
+  /**
+   * The number of articles to return per page in the paginated response.
+   */
+  size: z.any().optional(),
+  /**
+   * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   */
+  from: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
+  /**
+   * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   */
+  to: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
+  /**
+   * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   */
+  addDateFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
+  /**
+   * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   */
+  addDateTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
+  /**
+   * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   */
+  refreshDateFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
+  /**
+   * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   */
+  refreshDateTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
+  /**
+   * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
+   */
+  medium: z.array(z.string()).optional(),
+  /**
+   * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
+   */
+  source: z.array(z.string()).optional(),
+  /**
+   * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
+   */
+  sourceGroup: z.array(z.string()).optional(),
+  /**
+   * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
+   */
+  excludeSourceGroup: z.array(z.string()).optional(),
+  /**
+   * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
+   */
+  excludeSource: z.array(z.string()).optional(),
+  /**
+   * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
+   */
+  paywall: z.boolean().optional(),
+  /**
+   * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
+   */
+  byline: z.array(z.string()).optional(),
+  /**
+   * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
+   */
+  author: z.array(z.string()).optional(),
+  /**
+   * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
+   */
+  excludeAuthor: z.array(z.string()).optional(),
+  /**
+   * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
+   */
+  journalistId: z.array(z.string()).optional(),
+  /**
+   * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
+   */
+  excludeJournalistId: z.array(z.string()).optional(),
+  /**
+   * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
+   */
+  language: z.array(z.string()).optional(),
+  /**
+   * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
+   */
+  excludeLanguage: z.array(z.string()).optional(),
+  /**
+   * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
+   */
+  searchTranslation: z.boolean().optional(),
+  /**
+   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
+   */
+  label: z.array(z.string()).optional(),
+  /**
+   * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
+   */
+  excludeLabel: z.array(z.string()).optional(),
+  /**
+   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
+   */
+  category: z.array(z.string()).optional(),
+  /**
+   * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
+   */
+  excludeCategory: z.array(z.string()).optional(),
+  /**
+   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
+   */
+  topic: z.array(z.string()).optional(),
+  /**
+   * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
+   */
+  excludeTopic: z.array(z.string()).optional(),
+  /**
+   * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
+   */
+  linkTo: z.string().optional(),
+  /**
+   * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
+   */
+  showReprints: z.boolean().optional(),
+  /**
+   * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
+   */
+  reprintGroupId: z.string().optional(),
+  /**
+   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  city: z.array(z.string()).optional(),
+  /**
+   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+   */
+  excludeCity: z.array(z.string()).optional(),
+  /**
+   * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  area: z.array(z.string()).optional(),
+  /**
+   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  state: z.array(z.string()).optional(),
+  /**
+   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+   */
+  excludeState: z.array(z.string()).optional(),
+  /**
+   * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
+   */
+  county: z.array(z.string()).optional(),
+  /**
+   * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   */
+  excludeCounty: z.array(z.string()).optional(),
+  /**
+   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  locationsCountry: z.array(z.string()).optional(),
+  /**
+   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  country: z.array(z.string()).optional(),
+  /**
+   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+   */
+  excludeLocationsCountry: z.array(z.string()).optional(),
+  /**
+   * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   */
+  location: z.array(z.string()).optional(),
+  /**
+   * Latitude of the center point to search places
+   */
+  lat: z.any().optional(),
+  /**
+   * Longitude of the center point to search places
+   */
+  lon: z.any().optional(),
+  /**
+   * Maximum distance (in km) from starting point to search articles by tagged places
+   */
+  maxDistance: z.any().optional(),
+  /**
+   * Find articles published by sources that are located within a given city.
+   */
+  sourceCity: z.array(z.string()).optional(),
+  /**
+   * Find articles published by sources that are located within a given county.
+   */
+  sourceCounty: z.array(z.string()).optional(),
+  /**
+   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+   */
+  sourceCountry: z.array(z.string()).optional(),
+  /**
+   * Find articles published by sources that are located within a given state.
+   */
+  sourceState: z.array(z.string()).optional(),
+  /**
+   * Latitude of the center point to search articles created by local publications.
+   */
+  sourceLat: z.any().optional(),
+  /**
+   * Latitude of the center point to search articles created by local publications.
+   */
+  sourceLon: z.any().optional(),
+  /**
+   * Maximum distance from starting point to search articles created by local publications.
+   */
+  sourceMaxDistance: z.any().optional(),
+  /**
+   * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
+   */
+  personWikidataId: z.array(z.string()).optional(),
+  /**
+   * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
+   */
+  excludePersonWikidataId: z.array(z.string()).optional(),
+  /**
+   * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
+   */
+  personName: z.array(z.string()).optional(),
+  /**
+   * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
+   */
+  excludePersonName: z.array(z.string()).optional(),
+  /**
+   * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
+   */
+  companyId: z.array(z.string()).optional(),
+  /**
+   * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
+   */
+  excludeCompanyId: z.array(z.string()).optional(),
+  /**
+   * Filter articles by company name mentions. Performs an exact match on company names.
+   */
+  companyName: z.string().optional(),
+  /**
+   * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
+   */
+  companyDomain: z.array(z.string()).optional(),
+  /**
+   * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
+   */
+  excludeCompanyDomain: z.array(z.string()).optional(),
+  /**
+   * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
+   */
+  companySymbol: z.array(z.string()).optional(),
+  /**
+   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+   */
+  excludeCompanySymbol: z.array(z.string()).optional(),
+  /**
+   * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
+   */
+  showNumResults: z.boolean().optional(),
+  /**
+   * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   */
+  positiveSentimentFrom: z.any().optional(),
+  /**
+   * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   */
+  positiveSentimentTo: z.any().optional(),
+  /**
+   * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   */
+  neutralSentimentFrom: z.any().optional(),
+  /**
+   * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   */
+  neutralSentimentTo: z.any().optional(),
+  /**
+   * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   */
+  negativeSentimentFrom: z.any().optional(),
+  /**
+   * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   */
+  negativeSentimentTo: z.any().optional(),
+  /**
+   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
+   */
+  taxonomy: z.array(z.string()).optional(),
+  /**
+   * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   */
+  prefixTaxonomy: z.string().optional(),
+  /**
+   * When set to true, enables text highlighting in search results.
+   */
+  showHighlighting: z.boolean().optional(),
+  /**
+   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   */
+  highlightFragmentSize: z.any().optional(),
+  /**
+   * Controls the maximum number of highlighted fragments to return per field.
+   */
+  highlightNumFragments: z.any().optional(),
+  /**
+   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   */
+  highlightPreTag: z.string().optional(),
+  /**
+   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   */
+  highlightPostTag: z.string().optional(),
+  /**
+   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   */
+  highlightQ: z.string().optional(),
+});
+
+export const SearchSummarizerBodySchema = z.object({
   /**
    * Parameter summaryBody
    * @required
    */
-  summaryBody: SummaryBody;
-  /**
-   * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
-   */
-  q?: string;
-  /**
-   * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
-   */
-  title?: string;
-  /**
-   * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
-   */
-  desc?: string;
-  /**
-   * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
-   */
-  content?: string;
-  /**
-   * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
-   */
-  url?: string;
-  /**
-   * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
-   */
-  articleId?: Array<string>;
-  /**
-   * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
-   */
-  clusterId?: Array<string>;
-  /**
-   * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
-   */
-  sortBy?: AllEndpointSortBy;
-  /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
-   */
-  page?: number;
-  /**
-   * The number of articles to return per page in the paginated response.
-   */
-  size?: number;
-  /**
-   * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
-   */
-  from?: Date;
-  /**
-   * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
-   */
-  to?: Date;
-  /**
-   * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
-   */
-  addDateFrom?: Date;
-  /**
-   * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
-   */
-  addDateTo?: Date;
-  /**
-   * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
-   */
-  refreshDateFrom?: Date;
-  /**
-   * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
-   */
-  refreshDateTo?: Date;
-  /**
-   * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
-   */
-  medium?: Array<string>;
-  /**
-   * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
-   */
-  source?: Array<string>;
-  /**
-   * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
-   */
-  sourceGroup?: Array<string>;
-  /**
-   * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
-   */
-  excludeSourceGroup?: Array<string>;
-  /**
-   * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
-   */
-  excludeSource?: Array<string>;
-  /**
-   * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
-   */
-  paywall?: boolean;
-  /**
-   * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
-   */
-  byline?: Array<string>;
-  /**
-   * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
-   */
-  author?: Array<string>;
-  /**
-   * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
-   */
-  excludeAuthor?: Array<string>;
-  /**
-   * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
-   */
-  journalistId?: Array<string>;
-  /**
-   * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
-   */
-  excludeJournalistId?: Array<string>;
-  /**
-   * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
-   */
-  language?: Array<string>;
-  /**
-   * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
-   */
-  excludeLanguage?: Array<string>;
-  /**
-   * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
-   */
-  searchTranslation?: boolean;
-  /**
-   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
-   */
-  label?: Array<string>;
-  /**
-   * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
-   */
-  excludeLabel?: Array<string>;
-  /**
-   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
-   */
-  category?: Array<string>;
-  /**
-   * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
-   */
-  excludeCategory?: Array<string>;
-  /**
-   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
-   */
-  topic?: Array<string>;
-  /**
-   * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
-   */
-  excludeTopic?: Array<string>;
-  /**
-   * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
-   */
-  linkTo?: string;
-  /**
-   * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
-   */
-  showReprints?: boolean;
-  /**
-   * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
-   */
-  reprintGroupId?: string;
-  /**
-   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  city?: Array<string>;
-  /**
-   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
-   */
-  excludeCity?: Array<string>;
-  /**
-   * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  area?: Array<string>;
-  /**
-   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  state?: Array<string>;
-  /**
-   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
-   */
-  excludeState?: Array<string>;
-  /**
-   * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
-   */
-  county?: Array<string>;
-  /**
-   * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
-   */
-  excludeCounty?: Array<string>;
-  /**
-   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  locationsCountry?: Array<string>;
-  /**
-   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  country?: Array<string>;
-  /**
-   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
-   */
-  excludeLocationsCountry?: Array<string>;
-  /**
-   * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
-   */
-  location?: Array<string>;
-  /**
-   * Latitude of the center point to search places
-   */
-  lat?: number;
-  /**
-   * Longitude of the center point to search places
-   */
-  lon?: number;
-  /**
-   * Maximum distance (in km) from starting point to search articles by tagged places
-   */
-  maxDistance?: number;
-  /**
-   * Find articles published by sources that are located within a given city.
-   */
-  sourceCity?: Array<string>;
-  /**
-   * Find articles published by sources that are located within a given county.
-   */
-  sourceCounty?: Array<string>;
-  /**
-   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
-   */
-  sourceCountry?: Array<string>;
-  /**
-   * Find articles published by sources that are located within a given state.
-   */
-  sourceState?: Array<string>;
-  /**
-   * Latitude of the center point to search articles created by local publications.
-   */
-  sourceLat?: number;
-  /**
-   * Latitude of the center point to search articles created by local publications.
-   */
-  sourceLon?: number;
-  /**
-   * Maximum distance from starting point to search articles created by local publications.
-   */
-  sourceMaxDistance?: number;
-  /**
-   * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
-   */
-  personWikidataId?: Array<string>;
-  /**
-   * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
-   */
-  excludePersonWikidataId?: Array<string>;
-  /**
-   * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
-   */
-  personName?: Array<string>;
-  /**
-   * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
-   */
-  excludePersonName?: Array<string>;
-  /**
-   * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
-   */
-  companyId?: Array<string>;
-  /**
-   * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
-   */
-  excludeCompanyId?: Array<string>;
-  /**
-   * Filter articles by company name mentions. Performs an exact match on company names.
-   */
-  companyName?: string;
-  /**
-   * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
-   */
-  companyDomain?: Array<string>;
-  /**
-   * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
-   */
-  excludeCompanyDomain?: Array<string>;
-  /**
-   * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
-   */
-  companySymbol?: Array<string>;
-  /**
-   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
-   */
-  excludeCompanySymbol?: Array<string>;
-  /**
-   * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
-   */
-  showNumResults?: boolean;
-  /**
-   * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
-   */
-  positiveSentimentFrom?: number;
-  /**
-   * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
-   */
-  positiveSentimentTo?: number;
-  /**
-   * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
-   */
-  neutralSentimentFrom?: number;
-  /**
-   * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
-   */
-  neutralSentimentTo?: number;
-  /**
-   * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
-   */
-  negativeSentimentFrom?: number;
-  /**
-   * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
-   */
-  negativeSentimentTo?: number;
-  /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
-   */
-  taxonomy?: Array<string>;
-  /**
-   * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
-   */
-  prefixTaxonomy?: string;
-  /**
-   * When set to true, enables text highlighting in search results.
-   */
-  showHighlighting?: boolean;
-  /**
-   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
-   */
-  highlightFragmentSize?: number;
-  /**
-   * Controls the maximum number of highlighted fragments to return per field.
-   */
-  highlightNumFragments?: number;
-  /**
-   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
-   */
-  highlightPreTag?: string;
-  /**
-   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
-   */
-  highlightPostTag?: string;
-  /**
-   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
-   */
-  highlightQ?: string;
-}
+  summaryBody: z.any(),
+});
 
-export interface SearchTopicsRequest {
+export const SearchSummarizerRequestSchema = z.object({
+  ...SearchSummarizerQuerySchema.shape,
+  ...SearchSummarizerBodySchema.shape,
+});
+
+export type SearchSummarizerRequest = z.input<
+  typeof SearchSummarizerRequestSchema
+>;
+
+export const SearchTopicsQuerySchema = z.object({
   /**
    * Search for topics by exact name or partial text match. Does not support wildcards. Examples include Markets, Cryptocurrency, Climate Change, etc.
    */
-  name?: string;
+  name: z.string().optional(),
   /**
    * Filter topics by broad article categories such as Politics, Tech, Sports, Business, Finance, Entertainment, etc.
    */
-  category?: string;
+  category: z.string().optional(),
   /**
    * Filter topics by their specific subcategory. Subcategories provide more granular classification beyond the main category, such as TV or Event.
    */
-  subcategory?: string;
+  subcategory: z.string().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * The number of topics to return per page in the paginated response.
    */
-  size?: number;
-}
+  size: z.any().optional(),
+});
 
-export interface SearchWikipediaRequest {
+export const SearchTopicsRequestSchema = z.object({
+  ...SearchTopicsQuerySchema.shape,
+});
+
+export type SearchTopicsRequest = z.input<typeof SearchTopicsRequestSchema>;
+
+export const SearchWikipediaQuerySchema = z.object({
   /**
    * Primary search query for filtering pages based on their title, summary, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
-  q?: string;
+  q: z.string().optional(),
   /**
    * Search specifically within page titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
-  title?: string;
+  title: z.string().optional(),
   /**
    * Search specifically within page summary. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
-  summary?: string;
+  summary: z.string().optional(),
   /**
    * Search specifically within the page\&#39;s content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
-  text?: string;
+  text: z.string().optional(),
   /**
    * Search specifically across page\&#39;s references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
-  reference?: string;
+  reference: z.string().optional(),
   /**
    * Retrieve specific pages by their unique Perigon identifiers. Multiple IDs can be provided to return a collection of specific pages.
    */
-  id?: Array<string>;
+  id: z.array(z.string()).optional(),
   /**
    * Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages.
    */
-  wikiPageId?: Array<number>;
+  wikiPageId: z.array(z.number()).optional(),
   /**
    * Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
    */
-  wikiRevisionId?: Array<number>;
+  wikiRevisionId: z.array(z.number()).optional(),
   /**
    * Retrieve pages only from specified wiki projects. Currently, the only accepted value is &#x60;enwiki&#x60;.
    */
-  wikiCode?: Array<string>;
+  wikiCode: z.array(z.string()).optional(),
   /**
    * Retrieve pages only from specified wiki namespace. Currently, only the main namespace (0) is available.
    */
-  wikiNamespace?: Array<number>;
+  wikiNamespace: z.array(z.number()).optional(),
   /**
    * Retrieve pages by the ids corresponding to their Wikidata entities.
    */
-  wikidataId?: Array<string>;
+  wikidataId: z.array(z.string()).optional(),
   /**
    * Retrieve all pages whose Wikidata entities are instances of these provided ids.
    */
-  wikidataInstanceOfId?: Array<string>;
+  wikidataInstanceOfId: z.array(z.string()).optional(),
   /**
    * Retrieve all pages whose Wikidata entities are instances of these ids (provided as labels).
    */
-  wikidataInstanceOfLabel?: Array<string>;
+  wikidataInstanceOfLabel: z.array(z.string()).optional(),
   /**
    * Retrieve all pages for specified categories.
    */
-  category?: Array<string>;
+  category: z.array(z.string()).optional(),
   /**
    * Retrieve pages containing provided section ids. Each section ID is unique.
    */
-  sectionId?: Array<string>;
+  sectionId: z.array(z.string()).optional(),
   /**
    * Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  wikiRevisionFrom?: Date;
+  wikiRevisionFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  wikiRevisionTo?: Date;
+  wikiRevisionTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  scrapedAtFrom?: Date;
+  scrapedAtFrom: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  scrapedAtTo?: Date;
+  scrapedAtTo: z
+    .date()
+    .transform((date) => date.toISOString())
+    .optional(),
   /**
    * Retrieve pages with the average number of views per day higher than the provided value.
    */
-  pageviewsFrom?: number;
+  pageviewsFrom: z.any().optional(),
   /**
    * Retrieve pages with the average number of views per day lower than the provided value.
    */
-  pageviewsTo?: number;
+  pageviewsTo: z.any().optional(),
   /**
    * Retrieve pages that have any viewership statistics available for them. If &#x60;false&#x60; (the default) - return all pages.
    */
-  withPageviews?: boolean;
+  withPageviews: z.boolean().optional(),
   /**
    * Whether to show the total number of all matched pages. Default value is false which makes queries a bit more efficient but also counts up to 10000 pages.
    */
-  showNumResults?: boolean;
+  showNumResults: z.boolean().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page?: number;
+  page: z.any().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size?: number;
+  size: z.any().optional(),
   /**
    * Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
    */
-  sortBy?: SortBy;
-}
+  sortBy: z.any().optional(),
+});
 
-export interface VectorSearchArticlesRequest {
+export const SearchWikipediaRequestSchema = z.object({
+  ...SearchWikipediaQuerySchema.shape,
+});
+
+export type SearchWikipediaRequest = z.input<
+  typeof SearchWikipediaRequestSchema
+>;
+
+export const VectorSearchArticlesBodySchema = z.object({
   /**
    * Parameter articleSearchParams
    * @required
    */
-  articleSearchParams: ArticleSearchParams;
-}
+  articleSearchParams: z.any(),
+});
 
-export interface VectorSearchWikipediaRequest {
+export const VectorSearchArticlesRequestSchema = z.object({
+  ...VectorSearchArticlesBodySchema.shape,
+});
+
+export type VectorSearchArticlesRequest = z.input<
+  typeof VectorSearchArticlesRequestSchema
+>;
+
+export const VectorSearchWikipediaBodySchema = z.object({
   /**
    * Parameter wikipediaSearchParams
    * @required
    */
-  wikipediaSearchParams: WikipediaSearchParams;
-}
+  wikipediaSearchParams: z.any(),
+});
 
-/**
- * V1Api - interface
- *
- * @export
- * @interface V1ApiInterface
- */
-export interface V1ApiInterface {
-  /**
-   * Find additional details on a journalist by using the journalist ID found in an article response object.
-   * @summary Journalists ID
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<Journalist>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  getJournalistByIdRaw(
-    requestParameters: GetJournalistByIdRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<Journalist>>;
+export const VectorSearchWikipediaRequestSchema = z.object({
+  ...VectorSearchWikipediaBodySchema.shape,
+});
 
-  /**
-   * Find additional details on a journalist by using the journalist ID found in an article response object.
-   * Journalists ID
-   */
-  getJournalistById(
-    requestParameters: GetJournalistByIdRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<Journalist>;
-
-  /**
-   * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
-   * @summary Articles
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<QuerySearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchArticlesRaw(
-    requestParameters: SearchArticlesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<QuerySearchResult>>;
-
-  /**
-   * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
-   * Articles
-   */
-  searchArticles(
-    requestParameters: SearchArticlesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<QuerySearchResult>;
-
-  /**
-   * Browse or search for companies Perigon tracks using name, domain, ticker symbol, industry, and more. Supports Boolean search logic and filtering by metadata such as country, exchange, employee count, and IPO date.
-   * @summary Companies
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<CompanySearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchCompaniesRaw(
-    requestParameters: SearchCompaniesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<CompanySearchResult>>;
-
-  /**
-   * Browse or search for companies Perigon tracks using name, domain, ticker symbol, industry, and more. Supports Boolean search logic and filtering by metadata such as country, exchange, employee count, and IPO date.
-   * Companies
-   */
-  searchCompanies(
-    requestParameters: SearchCompaniesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<CompanySearchResult>;
-
-  /**
-   * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
-   * @summary Journalists
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<JournalistSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchJournalistsRaw(
-    requestParameters: SearchJournalistsRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<JournalistSearchResult>>;
-
-  /**
-   * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
-   * Journalists
-   */
-  searchJournalists(
-    requestParameters: SearchJournalistsRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<JournalistSearchResult>;
-
-  /**
-   * Search and retrieve additional information on known persons that exist within Perigon\'s entity database and as referenced in any article response object. Our database contains over 650,000 people from around the world and is refreshed frequently. People data is derived from Wikidata and includes a wikidataId field that can be used to lookup even more information on Wikidata\'s website.
-   * @summary People
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<PeopleSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchPeopleRaw(
-    requestParameters: SearchPeopleRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<PeopleSearchResult>>;
-
-  /**
-   * Search and retrieve additional information on known persons that exist within Perigon\'s entity database and as referenced in any article response object. Our database contains over 650,000 people from around the world and is refreshed frequently. People data is derived from Wikidata and includes a wikidataId field that can be used to lookup even more information on Wikidata\'s website.
-   * People
-   */
-  searchPeople(
-    requestParameters: SearchPeopleRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<PeopleSearchResult>;
-
-  /**
-   * Search and filter the 142,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
-   * @summary Sources
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<SourceSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchSourcesRaw(
-    requestParameters: SearchSourcesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<SourceSearchResult>>;
-
-  /**
-   * Search and filter the 142,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
-   * Sources
-   */
-  searchSources(
-    requestParameters: SearchSourcesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<SourceSearchResult>;
-
-  /**
-   * Search and filter all news stories available via the Perigon API. Each story aggregates key information across related articles, including AI-generated names, summaries, and key points.
-   * @summary Stories
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<StorySearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchStoriesRaw(
-    requestParameters: SearchStoriesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<StorySearchResult>>;
-
-  /**
-   * Search and filter all news stories available via the Perigon API. Each story aggregates key information across related articles, including AI-generated names, summaries, and key points.
-   * Stories
-   */
-  searchStories(
-    requestParameters: SearchStoriesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<StorySearchResult>;
-
-  /**
-   * Produce a single, concise summary over the full corpus of articles matching your filters, using your prompt to guide which insights to highlight.
-   * @summary Search Summarizer
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<SummarySearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchSummarizerRaw(
-    requestParameters: SearchSummarizerRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<SummarySearchResult>>;
-
-  /**
-   * Produce a single, concise summary over the full corpus of articles matching your filters, using your prompt to guide which insights to highlight.
-   * Search Summarizer
-   */
-  searchSummarizer(
-    requestParameters: SearchSummarizerRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<SummarySearchResult>;
-
-  /**
-   * Search through all available Topics that exist within the Perigon Database.
-   * @summary Topics
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<TopicSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchTopicsRaw(
-    requestParameters: SearchTopicsRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<TopicSearchResult>>;
-
-  /**
-   * Search through all available Topics that exist within the Perigon Database.
-   * Topics
-   */
-  searchTopics(
-    requestParameters: SearchTopicsRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<TopicSearchResult>;
-
-  /**
-   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
-   * @summary Wikipedia
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<WikipediaSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  searchWikipediaRaw(
-    requestParameters: SearchWikipediaRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<WikipediaSearchResult>>;
-
-  /**
-   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
-   * Wikipedia
-   */
-  searchWikipedia(
-    requestParameters: SearchWikipediaRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<WikipediaSearchResult>;
-
-  /**
-   * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
-   * @summary Vector
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<ArticlesVectorSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  vectorSearchArticlesRaw(
-    requestParameters: VectorSearchArticlesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<ArticlesVectorSearchResult>>;
-
-  /**
-   * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
-   * Vector
-   */
-  vectorSearchArticles(
-    requestParameters: VectorSearchArticlesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<ArticlesVectorSearchResult>;
-
-  /**
-   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
-   * @summary Vector
-   * @param requestParameters - Request parameters (see interface for details)
-   * @param initOverrides - Override the default HTTP request configuration
-   * @returns {Promise<runtime.ApiResponse<WikipediaVectorSearchResult>}} Raw API response
-   * @throws {RequiredError}
-   * @memberof V1ApiInterface
-   */
-  vectorSearchWikipediaRaw(
-    requestParameters: VectorSearchWikipediaRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<WikipediaVectorSearchResult>>;
-
-  /**
-   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
-   * Vector
-   */
-  vectorSearchWikipedia(
-    requestParameters: VectorSearchWikipediaRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<WikipediaVectorSearchResult>;
-}
+export type VectorSearchWikipediaRequest = z.input<
+  typeof VectorSearchWikipediaRequestSchema
+>;
 
 /**
  *
  */
-export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
-  /**
-   * Find additional details on a journalist by using the journalist ID found in an article response object.
-   * Journalists ID
-   */
-  async getJournalistByIdRaw(
-    requestParameters: GetJournalistByIdRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<Journalist>> {
-    if (requestParameters["id"] == null) {
-      throw new runtime.RequiredError(
-        "id",
-        'Required parameter "id" was null or undefined when calling getJournalistById().',
-      );
-    }
-
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    if (this.configuration && this.configuration.accessToken) {
-      const token = this.configuration.accessToken;
-      const tokenString = await token("apiKeyAuth", []);
-
-      if (tokenString) {
-        headerParameters["Authorization"] = `Bearer ${tokenString}`;
-      }
-    }
-    const response = await this.request(
-      {
-        path: `/v1/journalists/{id}`.replace(
-          `{${"id"}}`,
-          encodeURIComponent(String(requestParameters["id"])),
-        ),
-        method: "GET",
-        headers: headerParameters,
-        query: queryParameters,
-      },
-      initOverrides,
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistFromJSON(jsonValue),
-    );
-  }
-
+export class V1Api extends runtime.BaseAPI {
   /**
    * Find additional details on a journalist by using the journalist ID found in an article response object.
    * Journalists ID
@@ -1725,422 +1543,34 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: GetJournalistByIdRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<Journalist> {
-    const response = await this.getJournalistByIdRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
-   * Articles
-   */
-  async searchArticlesRaw(
-    requestParameters: SearchArticlesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<QuerySearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["q"] != null) {
-      queryParameters["q"] = requestParameters["q"];
-    }
-
-    if (requestParameters["title"] != null) {
-      queryParameters["title"] = requestParameters["title"];
-    }
-
-    if (requestParameters["desc"] != null) {
-      queryParameters["desc"] = requestParameters["desc"];
-    }
-
-    if (requestParameters["content"] != null) {
-      queryParameters["content"] = requestParameters["content"];
-    }
-
-    if (requestParameters["url"] != null) {
-      queryParameters["url"] = requestParameters["url"];
-    }
-
-    if (requestParameters["articleId"] != null) {
-      queryParameters["articleId"] = requestParameters["articleId"];
-    }
-
-    if (requestParameters["clusterId"] != null) {
-      queryParameters["clusterId"] = requestParameters["clusterId"];
-    }
-
-    if (requestParameters["sortBy"] != null) {
-      queryParameters["sortBy"] = requestParameters["sortBy"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["from"] != null) {
-      queryParameters["from"] = (
-        requestParameters["from"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["to"] != null) {
-      queryParameters["to"] = (requestParameters["to"] as any).toISOString();
-    }
-
-    if (requestParameters["addDateFrom"] != null) {
-      queryParameters["addDateFrom"] = (
-        requestParameters["addDateFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["addDateTo"] != null) {
-      queryParameters["addDateTo"] = (
-        requestParameters["addDateTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["refreshDateFrom"] != null) {
-      queryParameters["refreshDateFrom"] = (
-        requestParameters["refreshDateFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["refreshDateTo"] != null) {
-      queryParameters["refreshDateTo"] = (
-        requestParameters["refreshDateTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["medium"] != null) {
-      queryParameters["medium"] = requestParameters["medium"];
-    }
-
-    if (requestParameters["source"] != null) {
-      queryParameters["source"] = requestParameters["source"];
-    }
-
-    if (requestParameters["sourceGroup"] != null) {
-      queryParameters["sourceGroup"] = requestParameters["sourceGroup"];
-    }
-
-    if (requestParameters["excludeSourceGroup"] != null) {
-      queryParameters["excludeSourceGroup"] =
-        requestParameters["excludeSourceGroup"];
-    }
-
-    if (requestParameters["excludeSource"] != null) {
-      queryParameters["excludeSource"] = requestParameters["excludeSource"];
-    }
-
-    if (requestParameters["paywall"] != null) {
-      queryParameters["paywall"] = requestParameters["paywall"];
-    }
-
-    if (requestParameters["byline"] != null) {
-      queryParameters["byline"] = requestParameters["byline"];
-    }
-
-    if (requestParameters["author"] != null) {
-      queryParameters["author"] = requestParameters["author"];
-    }
-
-    if (requestParameters["excludeAuthor"] != null) {
-      queryParameters["excludeAuthor"] = requestParameters["excludeAuthor"];
-    }
-
-    if (requestParameters["journalistId"] != null) {
-      queryParameters["journalistId"] = requestParameters["journalistId"];
-    }
-
-    if (requestParameters["excludeJournalistId"] != null) {
-      queryParameters["excludeJournalistId"] =
-        requestParameters["excludeJournalistId"];
-    }
-
-    if (requestParameters["language"] != null) {
-      queryParameters["language"] = requestParameters["language"];
-    }
-
-    if (requestParameters["excludeLanguage"] != null) {
-      queryParameters["excludeLanguage"] = requestParameters["excludeLanguage"];
-    }
-
-    if (requestParameters["searchTranslation"] != null) {
-      queryParameters["searchTranslation"] =
-        requestParameters["searchTranslation"];
-    }
-
-    if (requestParameters["label"] != null) {
-      queryParameters["label"] = requestParameters["label"];
-    }
-
-    if (requestParameters["excludeLabel"] != null) {
-      queryParameters["excludeLabel"] = requestParameters["excludeLabel"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["excludeCategory"] != null) {
-      queryParameters["excludeCategory"] = requestParameters["excludeCategory"];
-    }
-
-    if (requestParameters["topic"] != null) {
-      queryParameters["topic"] = requestParameters["topic"];
-    }
-
-    if (requestParameters["excludeTopic"] != null) {
-      queryParameters["excludeTopic"] = requestParameters["excludeTopic"];
-    }
-
-    if (requestParameters["linkTo"] != null) {
-      queryParameters["linkTo"] = requestParameters["linkTo"];
-    }
-
-    if (requestParameters["showReprints"] != null) {
-      queryParameters["showReprints"] = requestParameters["showReprints"];
-    }
-
-    if (requestParameters["reprintGroupId"] != null) {
-      queryParameters["reprintGroupId"] = requestParameters["reprintGroupId"];
-    }
-
-    if (requestParameters["city"] != null) {
-      queryParameters["city"] = requestParameters["city"];
-    }
-
-    if (requestParameters["excludeCity"] != null) {
-      queryParameters["excludeCity"] = requestParameters["excludeCity"];
-    }
-
-    if (requestParameters["area"] != null) {
-      queryParameters["area"] = requestParameters["area"];
-    }
-
-    if (requestParameters["state"] != null) {
-      queryParameters["state"] = requestParameters["state"];
-    }
-
-    if (requestParameters["excludeState"] != null) {
-      queryParameters["excludeState"] = requestParameters["excludeState"];
-    }
-
-    if (requestParameters["county"] != null) {
-      queryParameters["county"] = requestParameters["county"];
-    }
-
-    if (requestParameters["excludeCounty"] != null) {
-      queryParameters["excludeCounty"] = requestParameters["excludeCounty"];
-    }
-
-    if (requestParameters["locationsCountry"] != null) {
-      queryParameters["locationsCountry"] =
-        requestParameters["locationsCountry"];
-    }
-
-    if (requestParameters["country"] != null) {
-      queryParameters["country"] = requestParameters["country"];
-    }
-
-    if (requestParameters["excludeLocationsCountry"] != null) {
-      queryParameters["excludeLocationsCountry"] =
-        requestParameters["excludeLocationsCountry"];
-    }
-
-    if (requestParameters["location"] != null) {
-      queryParameters["location"] = requestParameters["location"];
-    }
-
-    if (requestParameters["lat"] != null) {
-      queryParameters["lat"] = requestParameters["lat"];
-    }
-
-    if (requestParameters["lon"] != null) {
-      queryParameters["lon"] = requestParameters["lon"];
-    }
-
-    if (requestParameters["maxDistance"] != null) {
-      queryParameters["maxDistance"] = requestParameters["maxDistance"];
-    }
-
-    if (requestParameters["sourceCity"] != null) {
-      queryParameters["sourceCity"] = requestParameters["sourceCity"];
-    }
-
-    if (requestParameters["sourceCounty"] != null) {
-      queryParameters["sourceCounty"] = requestParameters["sourceCounty"];
-    }
-
-    if (requestParameters["sourceCountry"] != null) {
-      queryParameters["sourceCountry"] = requestParameters["sourceCountry"];
-    }
-
-    if (requestParameters["sourceState"] != null) {
-      queryParameters["sourceState"] = requestParameters["sourceState"];
-    }
-
-    if (requestParameters["sourceLat"] != null) {
-      queryParameters["sourceLat"] = requestParameters["sourceLat"];
-    }
-
-    if (requestParameters["sourceLon"] != null) {
-      queryParameters["sourceLon"] = requestParameters["sourceLon"];
-    }
-
-    if (requestParameters["sourceMaxDistance"] != null) {
-      queryParameters["sourceMaxDistance"] =
-        requestParameters["sourceMaxDistance"];
-    }
-
-    if (requestParameters["personWikidataId"] != null) {
-      queryParameters["personWikidataId"] =
-        requestParameters["personWikidataId"];
-    }
-
-    if (requestParameters["excludePersonWikidataId"] != null) {
-      queryParameters["excludePersonWikidataId"] =
-        requestParameters["excludePersonWikidataId"];
-    }
-
-    if (requestParameters["personName"] != null) {
-      queryParameters["personName"] = requestParameters["personName"];
-    }
-
-    if (requestParameters["excludePersonName"] != null) {
-      queryParameters["excludePersonName"] =
-        requestParameters["excludePersonName"];
-    }
-
-    if (requestParameters["companyId"] != null) {
-      queryParameters["companyId"] = requestParameters["companyId"];
-    }
-
-    if (requestParameters["excludeCompanyId"] != null) {
-      queryParameters["excludeCompanyId"] =
-        requestParameters["excludeCompanyId"];
-    }
-
-    if (requestParameters["companyName"] != null) {
-      queryParameters["companyName"] = requestParameters["companyName"];
-    }
-
-    if (requestParameters["companyDomain"] != null) {
-      queryParameters["companyDomain"] = requestParameters["companyDomain"];
-    }
-
-    if (requestParameters["excludeCompanyDomain"] != null) {
-      queryParameters["excludeCompanyDomain"] =
-        requestParameters["excludeCompanyDomain"];
-    }
-
-    if (requestParameters["companySymbol"] != null) {
-      queryParameters["companySymbol"] = requestParameters["companySymbol"];
-    }
-
-    if (requestParameters["excludeCompanySymbol"] != null) {
-      queryParameters["excludeCompanySymbol"] =
-        requestParameters["excludeCompanySymbol"];
-    }
-
-    if (requestParameters["showNumResults"] != null) {
-      queryParameters["showNumResults"] = requestParameters["showNumResults"];
-    }
-
-    if (requestParameters["positiveSentimentFrom"] != null) {
-      queryParameters["positiveSentimentFrom"] =
-        requestParameters["positiveSentimentFrom"];
-    }
-
-    if (requestParameters["positiveSentimentTo"] != null) {
-      queryParameters["positiveSentimentTo"] =
-        requestParameters["positiveSentimentTo"];
-    }
-
-    if (requestParameters["neutralSentimentFrom"] != null) {
-      queryParameters["neutralSentimentFrom"] =
-        requestParameters["neutralSentimentFrom"];
-    }
-
-    if (requestParameters["neutralSentimentTo"] != null) {
-      queryParameters["neutralSentimentTo"] =
-        requestParameters["neutralSentimentTo"];
-    }
-
-    if (requestParameters["negativeSentimentFrom"] != null) {
-      queryParameters["negativeSentimentFrom"] =
-        requestParameters["negativeSentimentFrom"];
-    }
-
-    if (requestParameters["negativeSentimentTo"] != null) {
-      queryParameters["negativeSentimentTo"] =
-        requestParameters["negativeSentimentTo"];
-    }
-
-    if (requestParameters["taxonomy"] != null) {
-      queryParameters["taxonomy"] = requestParameters["taxonomy"];
-    }
-
-    if (requestParameters["prefixTaxonomy"] != null) {
-      queryParameters["prefixTaxonomy"] = requestParameters["prefixTaxonomy"];
-    }
-
-    if (requestParameters["showHighlighting"] != null) {
-      queryParameters["showHighlighting"] =
-        requestParameters["showHighlighting"];
-    }
-
-    if (requestParameters["highlightFragmentSize"] != null) {
-      queryParameters["highlightFragmentSize"] =
-        requestParameters["highlightFragmentSize"];
-    }
-
-    if (requestParameters["highlightNumFragments"] != null) {
-      queryParameters["highlightNumFragments"] =
-        requestParameters["highlightNumFragments"];
-    }
-
-    if (requestParameters["highlightPreTag"] != null) {
-      queryParameters["highlightPreTag"] = requestParameters["highlightPreTag"];
-    }
-
-    if (requestParameters["highlightPostTag"] != null) {
-      queryParameters["highlightPostTag"] =
-        requestParameters["highlightPostTag"];
-    }
-
-    if (requestParameters["highlightQ"] != null) {
-      queryParameters["highlightQ"] = requestParameters["highlightQ"];
-    }
+    const params = GetJournalistByIdRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/articles/all`,
+        path: `/v1/journalists/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
         method: "GET",
         headers: headerParameters,
-        query: queryParameters,
       },
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      QuerySearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      JournalistSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -2151,101 +1581,22 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchArticlesRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<QuerySearchResult> {
-    const response = await this.searchArticlesRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Browse or search for companies Perigon tracks using name, domain, ticker symbol, industry, and more. Supports Boolean search logic and filtering by metadata such as country, exchange, employee count, and IPO date.
-   * Companies
-   */
-  async searchCompaniesRaw(
-    requestParameters: SearchCompaniesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<CompanySearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["id"] != null) {
-      queryParameters["id"] = requestParameters["id"];
-    }
-
-    if (requestParameters["symbol"] != null) {
-      queryParameters["symbol"] = requestParameters["symbol"];
-    }
-
-    if (requestParameters["domain"] != null) {
-      queryParameters["domain"] = requestParameters["domain"];
-    }
-
-    if (requestParameters["country"] != null) {
-      queryParameters["country"] = requestParameters["country"];
-    }
-
-    if (requestParameters["exchange"] != null) {
-      queryParameters["exchange"] = requestParameters["exchange"];
-    }
-
-    if (requestParameters["numEmployeesFrom"] != null) {
-      queryParameters["numEmployeesFrom"] =
-        requestParameters["numEmployeesFrom"];
-    }
-
-    if (requestParameters["numEmployeesTo"] != null) {
-      queryParameters["numEmployeesTo"] = requestParameters["numEmployeesTo"];
-    }
-
-    if (requestParameters["ipoFrom"] != null) {
-      queryParameters["ipoFrom"] = (
-        requestParameters["ipoFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["ipoTo"] != null) {
-      queryParameters["ipoTo"] = (
-        requestParameters["ipoTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["q"] != null) {
-      queryParameters["q"] = requestParameters["q"];
-    }
-
-    if (requestParameters["name"] != null) {
-      queryParameters["name"] = requestParameters["name"];
-    }
-
-    if (requestParameters["industry"] != null) {
-      queryParameters["industry"] = requestParameters["industry"];
-    }
-
-    if (requestParameters["sector"] != null) {
-      queryParameters["sector"] = requestParameters["sector"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
+    const params = SearchArticlesRequestSchema.parse(requestParameters);
+    const queryParameters = SearchArticlesQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/companies/all`,
+        path: `/v1/articles/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -2253,9 +1604,10 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      CompanySearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      QuerySearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -2266,104 +1618,22 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchCompaniesRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<CompanySearchResult> {
-    const response = await this.searchCompaniesRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
-   * Journalists
-   */
-  async searchJournalistsRaw(
-    requestParameters: SearchJournalistsRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<JournalistSearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["id"] != null) {
-      queryParameters["id"] = requestParameters["id"];
-    }
-
-    if (requestParameters["q"] != null) {
-      queryParameters["q"] = requestParameters["q"];
-    }
-
-    if (requestParameters["name"] != null) {
-      queryParameters["name"] = requestParameters["name"];
-    }
-
-    if (requestParameters["twitter"] != null) {
-      queryParameters["twitter"] = requestParameters["twitter"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["source"] != null) {
-      queryParameters["source"] = requestParameters["source"];
-    }
-
-    if (requestParameters["topic"] != null) {
-      queryParameters["topic"] = requestParameters["topic"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["label"] != null) {
-      queryParameters["label"] = requestParameters["label"];
-    }
-
-    if (requestParameters["minMonthlyPosts"] != null) {
-      queryParameters["minMonthlyPosts"] = requestParameters["minMonthlyPosts"];
-    }
-
-    if (requestParameters["maxMonthlyPosts"] != null) {
-      queryParameters["maxMonthlyPosts"] = requestParameters["maxMonthlyPosts"];
-    }
-
-    if (requestParameters["country"] != null) {
-      queryParameters["country"] = requestParameters["country"];
-    }
-
-    if (requestParameters["updatedAtFrom"] != null) {
-      queryParameters["updatedAtFrom"] = (
-        requestParameters["updatedAtFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["updatedAtTo"] != null) {
-      queryParameters["updatedAtTo"] = (
-        requestParameters["updatedAtTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["showNumResults"] != null) {
-      queryParameters["showNumResults"] = requestParameters["showNumResults"];
-    }
+    const params = SearchCompaniesRequestSchema.parse(requestParameters);
+    const queryParameters = SearchCompaniesQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/journalists/all`,
+        path: `/v1/companies/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -2371,9 +1641,10 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      CompanySearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -2384,60 +1655,22 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchJournalistsRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<JournalistSearchResult> {
-    const response = await this.searchJournalistsRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search and retrieve additional information on known persons that exist within Perigon\'s entity database and as referenced in any article response object. Our database contains over 650,000 people from around the world and is refreshed frequently. People data is derived from Wikidata and includes a wikidataId field that can be used to lookup even more information on Wikidata\'s website.
-   * People
-   */
-  async searchPeopleRaw(
-    requestParameters: SearchPeopleRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<PeopleSearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["name"] != null) {
-      queryParameters["name"] = requestParameters["name"];
-    }
-
-    if (requestParameters["wikidataId"] != null) {
-      queryParameters["wikidataId"] = requestParameters["wikidataId"];
-    }
-
-    if (requestParameters["occupationId"] != null) {
-      queryParameters["occupationId"] = requestParameters["occupationId"];
-    }
-
-    if (requestParameters["occupationLabel"] != null) {
-      queryParameters["occupationLabel"] = requestParameters["occupationLabel"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
+    const params = SearchJournalistsRequestSchema.parse(requestParameters);
+    const queryParameters = SearchJournalistsQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/people/all`,
+        path: `/v1/journalists/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -2445,9 +1678,10 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      PeopleSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      JournalistSearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -2458,135 +1692,22 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchPeopleRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<PeopleSearchResult> {
-    const response = await this.searchPeopleRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search and filter the 142,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
-   * Sources
-   */
-  async searchSourcesRaw(
-    requestParameters: SearchSourcesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<SourceSearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["domain"] != null) {
-      queryParameters["domain"] = requestParameters["domain"];
-    }
-
-    if (requestParameters["name"] != null) {
-      queryParameters["name"] = requestParameters["name"];
-    }
-
-    if (requestParameters["sourceGroup"] != null) {
-      queryParameters["sourceGroup"] = requestParameters["sourceGroup"];
-    }
-
-    if (requestParameters["sortBy"] != null) {
-      queryParameters["sortBy"] = requestParameters["sortBy"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["minMonthlyVisits"] != null) {
-      queryParameters["minMonthlyVisits"] =
-        requestParameters["minMonthlyVisits"];
-    }
-
-    if (requestParameters["maxMonthlyVisits"] != null) {
-      queryParameters["maxMonthlyVisits"] =
-        requestParameters["maxMonthlyVisits"];
-    }
-
-    if (requestParameters["minMonthlyPosts"] != null) {
-      queryParameters["minMonthlyPosts"] = requestParameters["minMonthlyPosts"];
-    }
-
-    if (requestParameters["maxMonthlyPosts"] != null) {
-      queryParameters["maxMonthlyPosts"] = requestParameters["maxMonthlyPosts"];
-    }
-
-    if (requestParameters["country"] != null) {
-      queryParameters["country"] = requestParameters["country"];
-    }
-
-    if (requestParameters["sourceCountry"] != null) {
-      queryParameters["sourceCountry"] = requestParameters["sourceCountry"];
-    }
-
-    if (requestParameters["sourceState"] != null) {
-      queryParameters["sourceState"] = requestParameters["sourceState"];
-    }
-
-    if (requestParameters["sourceCounty"] != null) {
-      queryParameters["sourceCounty"] = requestParameters["sourceCounty"];
-    }
-
-    if (requestParameters["sourceCity"] != null) {
-      queryParameters["sourceCity"] = requestParameters["sourceCity"];
-    }
-
-    if (requestParameters["sourceLat"] != null) {
-      queryParameters["sourceLat"] = requestParameters["sourceLat"];
-    }
-
-    if (requestParameters["sourceLon"] != null) {
-      queryParameters["sourceLon"] = requestParameters["sourceLon"];
-    }
-
-    if (requestParameters["sourceMaxDistance"] != null) {
-      queryParameters["sourceMaxDistance"] =
-        requestParameters["sourceMaxDistance"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["topic"] != null) {
-      queryParameters["topic"] = requestParameters["topic"];
-    }
-
-    if (requestParameters["label"] != null) {
-      queryParameters["label"] = requestParameters["label"];
-    }
-
-    if (requestParameters["paywall"] != null) {
-      queryParameters["paywall"] = requestParameters["paywall"];
-    }
-
-    if (requestParameters["showSubdomains"] != null) {
-      queryParameters["showSubdomains"] = requestParameters["showSubdomains"];
-    }
-
-    if (requestParameters["showNumResults"] != null) {
-      queryParameters["showNumResults"] = requestParameters["showNumResults"];
-    }
+    const params = SearchPeopleRequestSchema.parse(requestParameters);
+    const queryParameters = SearchPeopleQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/sources/all`,
+        path: `/v1/people/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -2594,9 +1715,10 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      SourceSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      PeopleSearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -2607,248 +1729,22 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchSourcesRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceSearchResult> {
-    const response = await this.searchSourcesRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search and filter all news stories available via the Perigon API. Each story aggregates key information across related articles, including AI-generated names, summaries, and key points.
-   * Stories
-   */
-  async searchStoriesRaw(
-    requestParameters: SearchStoriesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<StorySearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["q"] != null) {
-      queryParameters["q"] = requestParameters["q"];
-    }
-
-    if (requestParameters["name"] != null) {
-      queryParameters["name"] = requestParameters["name"];
-    }
-
-    if (requestParameters["clusterId"] != null) {
-      queryParameters["clusterId"] = requestParameters["clusterId"];
-    }
-
-    if (requestParameters["excludeClusterId"] != null) {
-      queryParameters["excludeClusterId"] =
-        requestParameters["excludeClusterId"];
-    }
-
-    if (requestParameters["sortBy"] != null) {
-      queryParameters["sortBy"] = requestParameters["sortBy"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["from"] != null) {
-      queryParameters["from"] = (
-        requestParameters["from"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["to"] != null) {
-      queryParameters["to"] = (requestParameters["to"] as any).toISOString();
-    }
-
-    if (requestParameters["initializedFrom"] != null) {
-      queryParameters["initializedFrom"] = (
-        requestParameters["initializedFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["initializedTo"] != null) {
-      queryParameters["initializedTo"] = (
-        requestParameters["initializedTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["updatedFrom"] != null) {
-      queryParameters["updatedFrom"] = (
-        requestParameters["updatedFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["updatedTo"] != null) {
-      queryParameters["updatedTo"] = (
-        requestParameters["updatedTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["topic"] != null) {
-      queryParameters["topic"] = requestParameters["topic"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["taxonomy"] != null) {
-      queryParameters["taxonomy"] = requestParameters["taxonomy"];
-    }
-
-    if (requestParameters["source"] != null) {
-      queryParameters["source"] = requestParameters["source"];
-    }
-
-    if (requestParameters["sourceGroup"] != null) {
-      queryParameters["sourceGroup"] = requestParameters["sourceGroup"];
-    }
-
-    if (requestParameters["minUniqueSources"] != null) {
-      queryParameters["minUniqueSources"] =
-        requestParameters["minUniqueSources"];
-    }
-
-    if (requestParameters["personWikidataId"] != null) {
-      queryParameters["personWikidataId"] =
-        requestParameters["personWikidataId"];
-    }
-
-    if (requestParameters["personName"] != null) {
-      queryParameters["personName"] = requestParameters["personName"];
-    }
-
-    if (requestParameters["companyId"] != null) {
-      queryParameters["companyId"] = requestParameters["companyId"];
-    }
-
-    if (requestParameters["companyName"] != null) {
-      queryParameters["companyName"] = requestParameters["companyName"];
-    }
-
-    if (requestParameters["companyDomain"] != null) {
-      queryParameters["companyDomain"] = requestParameters["companyDomain"];
-    }
-
-    if (requestParameters["companySymbol"] != null) {
-      queryParameters["companySymbol"] = requestParameters["companySymbol"];
-    }
-
-    if (requestParameters["country"] != null) {
-      queryParameters["country"] = requestParameters["country"];
-    }
-
-    if (requestParameters["state"] != null) {
-      queryParameters["state"] = requestParameters["state"];
-    }
-
-    if (requestParameters["city"] != null) {
-      queryParameters["city"] = requestParameters["city"];
-    }
-
-    if (requestParameters["area"] != null) {
-      queryParameters["area"] = requestParameters["area"];
-    }
-
-    if (requestParameters["minClusterSize"] != null) {
-      queryParameters["minClusterSize"] = requestParameters["minClusterSize"];
-    }
-
-    if (requestParameters["maxClusterSize"] != null) {
-      queryParameters["maxClusterSize"] = requestParameters["maxClusterSize"];
-    }
-
-    if (requestParameters["nameExists"] != null) {
-      queryParameters["nameExists"] = requestParameters["nameExists"];
-    }
-
-    if (requestParameters["positiveSentimentFrom"] != null) {
-      queryParameters["positiveSentimentFrom"] =
-        requestParameters["positiveSentimentFrom"];
-    }
-
-    if (requestParameters["positiveSentimentTo"] != null) {
-      queryParameters["positiveSentimentTo"] =
-        requestParameters["positiveSentimentTo"];
-    }
-
-    if (requestParameters["neutralSentimentFrom"] != null) {
-      queryParameters["neutralSentimentFrom"] =
-        requestParameters["neutralSentimentFrom"];
-    }
-
-    if (requestParameters["neutralSentimentTo"] != null) {
-      queryParameters["neutralSentimentTo"] =
-        requestParameters["neutralSentimentTo"];
-    }
-
-    if (requestParameters["negativeSentimentFrom"] != null) {
-      queryParameters["negativeSentimentFrom"] =
-        requestParameters["negativeSentimentFrom"];
-    }
-
-    if (requestParameters["negativeSentimentTo"] != null) {
-      queryParameters["negativeSentimentTo"] =
-        requestParameters["negativeSentimentTo"];
-    }
-
-    if (requestParameters["showStoryPageInfo"] != null) {
-      queryParameters["showStoryPageInfo"] =
-        requestParameters["showStoryPageInfo"];
-    }
-
-    if (requestParameters["showNumResults"] != null) {
-      queryParameters["showNumResults"] = requestParameters["showNumResults"];
-    }
-
-    if (requestParameters["showDuplicates"] != null) {
-      queryParameters["showDuplicates"] = requestParameters["showDuplicates"];
-    }
-
-    if (requestParameters["showHighlighting"] != null) {
-      queryParameters["showHighlighting"] =
-        requestParameters["showHighlighting"];
-    }
-
-    if (requestParameters["highlightFragmentSize"] != null) {
-      queryParameters["highlightFragmentSize"] =
-        requestParameters["highlightFragmentSize"];
-    }
-
-    if (requestParameters["highlightNumFragments"] != null) {
-      queryParameters["highlightNumFragments"] =
-        requestParameters["highlightNumFragments"];
-    }
-
-    if (requestParameters["highlightPreTag"] != null) {
-      queryParameters["highlightPreTag"] = requestParameters["highlightPreTag"];
-    }
-
-    if (requestParameters["highlightPostTag"] != null) {
-      queryParameters["highlightPostTag"] =
-        requestParameters["highlightPostTag"];
-    }
-
-    if (requestParameters["highlightQ"] != null) {
-      queryParameters["highlightQ"] = requestParameters["highlightQ"];
-    }
+    const params = SearchSourcesRequestSchema.parse(requestParameters);
+    const queryParameters = SearchSourcesQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/stories/all`,
+        path: `/v1/sources/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -2856,9 +1752,10 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      StorySearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      SourceSearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -2869,432 +1766,33 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchStoriesRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<StorySearchResult> {
-    const response = await this.searchStoriesRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Produce a single, concise summary over the full corpus of articles matching your filters, using your prompt to guide which insights to highlight.
-   * Search Summarizer
-   */
-  async searchSummarizerRaw(
-    requestParameters: SearchSummarizerRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<SummarySearchResult>> {
-    if (requestParameters["summaryBody"] == null) {
-      throw new runtime.RequiredError(
-        "summaryBody",
-        'Required parameter "summaryBody" was null or undefined when calling searchSummarizer().',
-      );
-    }
-
-    const queryParameters: any = {};
-
-    if (requestParameters["q"] != null) {
-      queryParameters["q"] = requestParameters["q"];
-    }
-
-    if (requestParameters["title"] != null) {
-      queryParameters["title"] = requestParameters["title"];
-    }
-
-    if (requestParameters["desc"] != null) {
-      queryParameters["desc"] = requestParameters["desc"];
-    }
-
-    if (requestParameters["content"] != null) {
-      queryParameters["content"] = requestParameters["content"];
-    }
-
-    if (requestParameters["url"] != null) {
-      queryParameters["url"] = requestParameters["url"];
-    }
-
-    if (requestParameters["articleId"] != null) {
-      queryParameters["articleId"] = requestParameters["articleId"];
-    }
-
-    if (requestParameters["clusterId"] != null) {
-      queryParameters["clusterId"] = requestParameters["clusterId"];
-    }
-
-    if (requestParameters["sortBy"] != null) {
-      queryParameters["sortBy"] = requestParameters["sortBy"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["from"] != null) {
-      queryParameters["from"] = (
-        requestParameters["from"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["to"] != null) {
-      queryParameters["to"] = (requestParameters["to"] as any).toISOString();
-    }
-
-    if (requestParameters["addDateFrom"] != null) {
-      queryParameters["addDateFrom"] = (
-        requestParameters["addDateFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["addDateTo"] != null) {
-      queryParameters["addDateTo"] = (
-        requestParameters["addDateTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["refreshDateFrom"] != null) {
-      queryParameters["refreshDateFrom"] = (
-        requestParameters["refreshDateFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["refreshDateTo"] != null) {
-      queryParameters["refreshDateTo"] = (
-        requestParameters["refreshDateTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["medium"] != null) {
-      queryParameters["medium"] = requestParameters["medium"];
-    }
-
-    if (requestParameters["source"] != null) {
-      queryParameters["source"] = requestParameters["source"];
-    }
-
-    if (requestParameters["sourceGroup"] != null) {
-      queryParameters["sourceGroup"] = requestParameters["sourceGroup"];
-    }
-
-    if (requestParameters["excludeSourceGroup"] != null) {
-      queryParameters["excludeSourceGroup"] =
-        requestParameters["excludeSourceGroup"];
-    }
-
-    if (requestParameters["excludeSource"] != null) {
-      queryParameters["excludeSource"] = requestParameters["excludeSource"];
-    }
-
-    if (requestParameters["paywall"] != null) {
-      queryParameters["paywall"] = requestParameters["paywall"];
-    }
-
-    if (requestParameters["byline"] != null) {
-      queryParameters["byline"] = requestParameters["byline"];
-    }
-
-    if (requestParameters["author"] != null) {
-      queryParameters["author"] = requestParameters["author"];
-    }
-
-    if (requestParameters["excludeAuthor"] != null) {
-      queryParameters["excludeAuthor"] = requestParameters["excludeAuthor"];
-    }
-
-    if (requestParameters["journalistId"] != null) {
-      queryParameters["journalistId"] = requestParameters["journalistId"];
-    }
-
-    if (requestParameters["excludeJournalistId"] != null) {
-      queryParameters["excludeJournalistId"] =
-        requestParameters["excludeJournalistId"];
-    }
-
-    if (requestParameters["language"] != null) {
-      queryParameters["language"] = requestParameters["language"];
-    }
-
-    if (requestParameters["excludeLanguage"] != null) {
-      queryParameters["excludeLanguage"] = requestParameters["excludeLanguage"];
-    }
-
-    if (requestParameters["searchTranslation"] != null) {
-      queryParameters["searchTranslation"] =
-        requestParameters["searchTranslation"];
-    }
-
-    if (requestParameters["label"] != null) {
-      queryParameters["label"] = requestParameters["label"];
-    }
-
-    if (requestParameters["excludeLabel"] != null) {
-      queryParameters["excludeLabel"] = requestParameters["excludeLabel"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["excludeCategory"] != null) {
-      queryParameters["excludeCategory"] = requestParameters["excludeCategory"];
-    }
-
-    if (requestParameters["topic"] != null) {
-      queryParameters["topic"] = requestParameters["topic"];
-    }
-
-    if (requestParameters["excludeTopic"] != null) {
-      queryParameters["excludeTopic"] = requestParameters["excludeTopic"];
-    }
-
-    if (requestParameters["linkTo"] != null) {
-      queryParameters["linkTo"] = requestParameters["linkTo"];
-    }
-
-    if (requestParameters["showReprints"] != null) {
-      queryParameters["showReprints"] = requestParameters["showReprints"];
-    }
-
-    if (requestParameters["reprintGroupId"] != null) {
-      queryParameters["reprintGroupId"] = requestParameters["reprintGroupId"];
-    }
-
-    if (requestParameters["city"] != null) {
-      queryParameters["city"] = requestParameters["city"];
-    }
-
-    if (requestParameters["excludeCity"] != null) {
-      queryParameters["excludeCity"] = requestParameters["excludeCity"];
-    }
-
-    if (requestParameters["area"] != null) {
-      queryParameters["area"] = requestParameters["area"];
-    }
-
-    if (requestParameters["state"] != null) {
-      queryParameters["state"] = requestParameters["state"];
-    }
-
-    if (requestParameters["excludeState"] != null) {
-      queryParameters["excludeState"] = requestParameters["excludeState"];
-    }
-
-    if (requestParameters["county"] != null) {
-      queryParameters["county"] = requestParameters["county"];
-    }
-
-    if (requestParameters["excludeCounty"] != null) {
-      queryParameters["excludeCounty"] = requestParameters["excludeCounty"];
-    }
-
-    if (requestParameters["locationsCountry"] != null) {
-      queryParameters["locationsCountry"] =
-        requestParameters["locationsCountry"];
-    }
-
-    if (requestParameters["country"] != null) {
-      queryParameters["country"] = requestParameters["country"];
-    }
-
-    if (requestParameters["excludeLocationsCountry"] != null) {
-      queryParameters["excludeLocationsCountry"] =
-        requestParameters["excludeLocationsCountry"];
-    }
-
-    if (requestParameters["location"] != null) {
-      queryParameters["location"] = requestParameters["location"];
-    }
-
-    if (requestParameters["lat"] != null) {
-      queryParameters["lat"] = requestParameters["lat"];
-    }
-
-    if (requestParameters["lon"] != null) {
-      queryParameters["lon"] = requestParameters["lon"];
-    }
-
-    if (requestParameters["maxDistance"] != null) {
-      queryParameters["maxDistance"] = requestParameters["maxDistance"];
-    }
-
-    if (requestParameters["sourceCity"] != null) {
-      queryParameters["sourceCity"] = requestParameters["sourceCity"];
-    }
-
-    if (requestParameters["sourceCounty"] != null) {
-      queryParameters["sourceCounty"] = requestParameters["sourceCounty"];
-    }
-
-    if (requestParameters["sourceCountry"] != null) {
-      queryParameters["sourceCountry"] = requestParameters["sourceCountry"];
-    }
-
-    if (requestParameters["sourceState"] != null) {
-      queryParameters["sourceState"] = requestParameters["sourceState"];
-    }
-
-    if (requestParameters["sourceLat"] != null) {
-      queryParameters["sourceLat"] = requestParameters["sourceLat"];
-    }
-
-    if (requestParameters["sourceLon"] != null) {
-      queryParameters["sourceLon"] = requestParameters["sourceLon"];
-    }
-
-    if (requestParameters["sourceMaxDistance"] != null) {
-      queryParameters["sourceMaxDistance"] =
-        requestParameters["sourceMaxDistance"];
-    }
-
-    if (requestParameters["personWikidataId"] != null) {
-      queryParameters["personWikidataId"] =
-        requestParameters["personWikidataId"];
-    }
-
-    if (requestParameters["excludePersonWikidataId"] != null) {
-      queryParameters["excludePersonWikidataId"] =
-        requestParameters["excludePersonWikidataId"];
-    }
-
-    if (requestParameters["personName"] != null) {
-      queryParameters["personName"] = requestParameters["personName"];
-    }
-
-    if (requestParameters["excludePersonName"] != null) {
-      queryParameters["excludePersonName"] =
-        requestParameters["excludePersonName"];
-    }
-
-    if (requestParameters["companyId"] != null) {
-      queryParameters["companyId"] = requestParameters["companyId"];
-    }
-
-    if (requestParameters["excludeCompanyId"] != null) {
-      queryParameters["excludeCompanyId"] =
-        requestParameters["excludeCompanyId"];
-    }
-
-    if (requestParameters["companyName"] != null) {
-      queryParameters["companyName"] = requestParameters["companyName"];
-    }
-
-    if (requestParameters["companyDomain"] != null) {
-      queryParameters["companyDomain"] = requestParameters["companyDomain"];
-    }
-
-    if (requestParameters["excludeCompanyDomain"] != null) {
-      queryParameters["excludeCompanyDomain"] =
-        requestParameters["excludeCompanyDomain"];
-    }
-
-    if (requestParameters["companySymbol"] != null) {
-      queryParameters["companySymbol"] = requestParameters["companySymbol"];
-    }
-
-    if (requestParameters["excludeCompanySymbol"] != null) {
-      queryParameters["excludeCompanySymbol"] =
-        requestParameters["excludeCompanySymbol"];
-    }
-
-    if (requestParameters["showNumResults"] != null) {
-      queryParameters["showNumResults"] = requestParameters["showNumResults"];
-    }
-
-    if (requestParameters["positiveSentimentFrom"] != null) {
-      queryParameters["positiveSentimentFrom"] =
-        requestParameters["positiveSentimentFrom"];
-    }
-
-    if (requestParameters["positiveSentimentTo"] != null) {
-      queryParameters["positiveSentimentTo"] =
-        requestParameters["positiveSentimentTo"];
-    }
-
-    if (requestParameters["neutralSentimentFrom"] != null) {
-      queryParameters["neutralSentimentFrom"] =
-        requestParameters["neutralSentimentFrom"];
-    }
-
-    if (requestParameters["neutralSentimentTo"] != null) {
-      queryParameters["neutralSentimentTo"] =
-        requestParameters["neutralSentimentTo"];
-    }
-
-    if (requestParameters["negativeSentimentFrom"] != null) {
-      queryParameters["negativeSentimentFrom"] =
-        requestParameters["negativeSentimentFrom"];
-    }
-
-    if (requestParameters["negativeSentimentTo"] != null) {
-      queryParameters["negativeSentimentTo"] =
-        requestParameters["negativeSentimentTo"];
-    }
-
-    if (requestParameters["taxonomy"] != null) {
-      queryParameters["taxonomy"] = requestParameters["taxonomy"];
-    }
-
-    if (requestParameters["prefixTaxonomy"] != null) {
-      queryParameters["prefixTaxonomy"] = requestParameters["prefixTaxonomy"];
-    }
-
-    if (requestParameters["showHighlighting"] != null) {
-      queryParameters["showHighlighting"] =
-        requestParameters["showHighlighting"];
-    }
-
-    if (requestParameters["highlightFragmentSize"] != null) {
-      queryParameters["highlightFragmentSize"] =
-        requestParameters["highlightFragmentSize"];
-    }
-
-    if (requestParameters["highlightNumFragments"] != null) {
-      queryParameters["highlightNumFragments"] =
-        requestParameters["highlightNumFragments"];
-    }
-
-    if (requestParameters["highlightPreTag"] != null) {
-      queryParameters["highlightPreTag"] = requestParameters["highlightPreTag"];
-    }
-
-    if (requestParameters["highlightPostTag"] != null) {
-      queryParameters["highlightPostTag"] =
-        requestParameters["highlightPostTag"];
-    }
-
-    if (requestParameters["highlightQ"] != null) {
-      queryParameters["highlightQ"] = requestParameters["highlightQ"];
-    }
+    const params = SearchStoriesRequestSchema.parse(requestParameters);
+    const queryParameters = SearchStoriesQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
-
-    headerParameters["Content-Type"] = "application/json";
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/summarize`,
-        method: "POST",
+        path: `/v1/stories/all`,
+        method: "GET",
         headers: headerParameters,
         query: queryParameters,
-        body: SummaryBodyToJSON(requestParameters["summaryBody"]),
       },
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      SummarySearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      StorySearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -3305,66 +1803,35 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchSummarizerRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SummarySearchResult> {
-    const response = await this.searchSummarizerRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search through all available Topics that exist within the Perigon Database.
-   * Topics
-   */
-  async searchTopicsRaw(
-    requestParameters: SearchTopicsRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<TopicSearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["name"] != null) {
-      queryParameters["name"] = requestParameters["name"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["subcategory"] != null) {
-      queryParameters["subcategory"] = requestParameters["subcategory"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
+    const params = SearchSummarizerRequestSchema.parse(requestParameters);
+    const queryParameters = SearchSummarizerQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/topics/all`,
-        method: "GET",
+        path: `/v1/summarize`,
+        method: "POST",
         headers: headerParameters,
         query: queryParameters,
+        body: params.summaryBody,
       },
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      TopicSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      SummarySearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -3375,150 +1842,22 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchTopicsRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<TopicSearchResult> {
-    const response = await this.searchTopicsRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
-   * Wikipedia
-   */
-  async searchWikipediaRaw(
-    requestParameters: SearchWikipediaRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<WikipediaSearchResult>> {
-    const queryParameters: any = {};
-
-    if (requestParameters["q"] != null) {
-      queryParameters["q"] = requestParameters["q"];
-    }
-
-    if (requestParameters["title"] != null) {
-      queryParameters["title"] = requestParameters["title"];
-    }
-
-    if (requestParameters["summary"] != null) {
-      queryParameters["summary"] = requestParameters["summary"];
-    }
-
-    if (requestParameters["text"] != null) {
-      queryParameters["text"] = requestParameters["text"];
-    }
-
-    if (requestParameters["reference"] != null) {
-      queryParameters["reference"] = requestParameters["reference"];
-    }
-
-    if (requestParameters["id"] != null) {
-      queryParameters["id"] = requestParameters["id"];
-    }
-
-    if (requestParameters["wikiPageId"] != null) {
-      queryParameters["wikiPageId"] = requestParameters["wikiPageId"];
-    }
-
-    if (requestParameters["wikiRevisionId"] != null) {
-      queryParameters["wikiRevisionId"] = requestParameters["wikiRevisionId"];
-    }
-
-    if (requestParameters["wikiCode"] != null) {
-      queryParameters["wikiCode"] = requestParameters["wikiCode"];
-    }
-
-    if (requestParameters["wikiNamespace"] != null) {
-      queryParameters["wikiNamespace"] = requestParameters["wikiNamespace"];
-    }
-
-    if (requestParameters["wikidataId"] != null) {
-      queryParameters["wikidataId"] = requestParameters["wikidataId"];
-    }
-
-    if (requestParameters["wikidataInstanceOfId"] != null) {
-      queryParameters["wikidataInstanceOfId"] =
-        requestParameters["wikidataInstanceOfId"];
-    }
-
-    if (requestParameters["wikidataInstanceOfLabel"] != null) {
-      queryParameters["wikidataInstanceOfLabel"] =
-        requestParameters["wikidataInstanceOfLabel"];
-    }
-
-    if (requestParameters["category"] != null) {
-      queryParameters["category"] = requestParameters["category"];
-    }
-
-    if (requestParameters["sectionId"] != null) {
-      queryParameters["sectionId"] = requestParameters["sectionId"];
-    }
-
-    if (requestParameters["wikiRevisionFrom"] != null) {
-      queryParameters["wikiRevisionFrom"] = (
-        requestParameters["wikiRevisionFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["wikiRevisionTo"] != null) {
-      queryParameters["wikiRevisionTo"] = (
-        requestParameters["wikiRevisionTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["scrapedAtFrom"] != null) {
-      queryParameters["scrapedAtFrom"] = (
-        requestParameters["scrapedAtFrom"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["scrapedAtTo"] != null) {
-      queryParameters["scrapedAtTo"] = (
-        requestParameters["scrapedAtTo"] as any
-      ).toISOString();
-    }
-
-    if (requestParameters["pageviewsFrom"] != null) {
-      queryParameters["pageviewsFrom"] = requestParameters["pageviewsFrom"];
-    }
-
-    if (requestParameters["pageviewsTo"] != null) {
-      queryParameters["pageviewsTo"] = requestParameters["pageviewsTo"];
-    }
-
-    if (requestParameters["withPageviews"] != null) {
-      queryParameters["withPageviews"] = requestParameters["withPageviews"];
-    }
-
-    if (requestParameters["showNumResults"] != null) {
-      queryParameters["showNumResults"] = requestParameters["showNumResults"];
-    }
-
-    if (requestParameters["page"] != null) {
-      queryParameters["page"] = requestParameters["page"];
-    }
-
-    if (requestParameters["size"] != null) {
-      queryParameters["size"] = requestParameters["size"];
-    }
-
-    if (requestParameters["sortBy"] != null) {
-      queryParameters["sortBy"] = requestParameters["sortBy"];
-    }
+    const params = SearchTopicsRequestSchema.parse(requestParameters);
+    const queryParameters = SearchTopicsQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/wikipedia/all`,
+        path: `/v1/topics/all`,
         method: "GET",
         headers: headerParameters,
         query: queryParameters,
@@ -3526,9 +1865,10 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      TopicSearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -3539,58 +1879,33 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: SearchWikipediaRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WikipediaSearchResult> {
-    const response = await this.searchWikipediaRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
-   * Vector
-   */
-  async vectorSearchArticlesRaw(
-    requestParameters: VectorSearchArticlesRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<ArticlesVectorSearchResult>> {
-    if (requestParameters["articleSearchParams"] == null) {
-      throw new runtime.RequiredError(
-        "articleSearchParams",
-        'Required parameter "articleSearchParams" was null or undefined when calling vectorSearchArticles().',
-      );
-    }
-
-    const queryParameters: any = {};
+    const params = SearchWikipediaRequestSchema.parse(requestParameters);
+    const queryParameters = SearchWikipediaQuerySchema.parse(params);
 
     const headerParameters: runtime.HTTPHeaders = {};
-
-    headerParameters["Content-Type"] = "application/json";
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/vector/news/all`,
-        method: "POST",
+        path: `/v1/wikipedia/all`,
+        method: "GET",
         headers: headerParameters,
         query: queryParameters,
-        body: ArticleSearchParamsToJSON(
-          requestParameters["articleSearchParams"],
-        ),
       },
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      ArticlesVectorSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      WikipediaSearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -3601,58 +1916,34 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: VectorSearchArticlesRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ArticlesVectorSearchResult> {
-    const response = await this.vectorSearchArticlesRaw(
-      requestParameters,
-      initOverrides,
-    );
-    return await response.value();
-  }
-
-  /**
-   * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
-   * Vector
-   */
-  async vectorSearchWikipediaRaw(
-    requestParameters: VectorSearchWikipediaRequest,
-    initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<runtime.ApiResponse<WikipediaVectorSearchResult>> {
-    if (requestParameters["wikipediaSearchParams"] == null) {
-      throw new runtime.RequiredError(
-        "wikipediaSearchParams",
-        'Required parameter "wikipediaSearchParams" was null or undefined when calling vectorSearchWikipedia().',
-      );
-    }
-
-    const queryParameters: any = {};
+    const params = VectorSearchArticlesRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
-
     headerParameters["Content-Type"] = "application/json";
 
     if (this.configuration && this.configuration.accessToken) {
       const token = this.configuration.accessToken;
       const tokenString = await token("apiKeyAuth", []);
-
       if (tokenString) {
         headerParameters["Authorization"] = `Bearer ${tokenString}`;
       }
     }
+
     const response = await this.request(
       {
-        path: `/v1/vector/wikipedia/all`,
+        path: `/v1/vector/news/all`,
         method: "POST",
         headers: headerParameters,
-        query: queryParameters,
-        body: WikipediaSearchParamsToJSON(
-          requestParameters["wikipediaSearchParams"],
-        ),
+
+        body: params.articleSearchParams,
       },
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaVectorSearchResultFromJSON(jsonValue),
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      ArticlesVectorSearchResultSchema.parse(jsonValue),
     );
+    return await apiResponse.value();
   }
 
   /**
@@ -3663,10 +1954,33 @@ export class V1Api extends runtime.BaseAPI implements V1ApiInterface {
     requestParameters: VectorSearchWikipediaRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WikipediaVectorSearchResult> {
-    const response = await this.vectorSearchWikipediaRaw(
-      requestParameters,
+    const params = VectorSearchWikipediaRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/vector/wikipedia/all`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.wikipediaSearchParams,
+      },
       initOverrides,
     );
-    return await response.value();
+
+    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
+      WikipediaVectorSearchResultSchema.parse(jsonValue),
+    );
+    return await apiResponse.value();
   }
 }
