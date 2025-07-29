@@ -3,6 +3,7 @@
 {{>licenseInfo}}
 
 import * as runtime from '../runtime{{importFileExtension}}';
+import { z } from 'zod';
 {{#imports.0}}
 import type {
   {{#imports}}
@@ -22,7 +23,7 @@ import {
 {{#operations}}
 {{#operation}}
 {{#allParams.0}}
-export interface {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request {
+export const {{classname}}{{operationIdCamelCase}}RequestSchema = z.object({
 {{#allParams}}
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
@@ -36,9 +37,11 @@ export interface {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterIn
      * @required
      {{/required}}
      */
-    {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{#hasReadOnly}}Omit<{{{dataType}}}, {{#readOnlyVars}}'{{baseName}}'{{^-last}}|{{/-last}}{{/readOnlyVars}}>{{/hasReadOnly}}{{^hasReadOnly}}{{{dataType}}}{{/hasReadOnly}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+    {{paramName}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isDateTimeType}}z.date().transform(date => date.toISOString()){{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}z.date().transform(date => date.toISOString().substring(0,10)){{/isDateType}}{{^isDateType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.date().transform(date => date.toISOString()){{/isDateTimeType}}{{#isDateType}}z.date().transform(date => date.toISOString().substring(0,10)){{/isDateType}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isDateTimeType}}{{^isDateType}}z.any(){{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/items}}){{/isArray}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isArray}}z.any(){{/isArray}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
 {{/allParams}}
-}
+});
+
+export type {{classname}}{{operationIdCamelCase}}Request = z.input<typeof {{classname}}{{operationIdCamelCase}}RequestSchema>;
 
 {{/allParams.0}}
 {{/operation}}
@@ -67,7 +70,7 @@ export interface {{classname}}Interface {
      * @throws {RequiredError}
      * @memberof {{classname}}Interface
      */
-    {{nickname}}Raw({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>>;
+    {{nickname}}Raw({{#allParams.0}}requestParameters: {{classname}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>>;
 
     /**
      {{#notes}}
@@ -84,7 +87,7 @@ export interface {{classname}}Interface {
     {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}, {{/allParams}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
     {{/useSingleRequestParameter}}
     {{#useSingleRequestParameter}}
-    {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
+    {{nickname}}({{#allParams.0}}requestParameters: {{classname}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
     {{/useSingleRequestParameter}}
 
 {{/operation}}
@@ -115,7 +118,7 @@ export class {{classname}} extends runtime.BaseAPI {
      * @deprecated
      {{/isDeprecated}}
      */
-    async {{nickname}}Raw({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>> {
+    async {{nickname}}Raw({{#allParams.0}}requestParameters: {{classname}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>> {
         {{#allParams}}
         {{#required}}
         if (requestParameters['{{paramName}}'] == null) {
@@ -400,7 +403,7 @@ export class {{classname}} extends runtime.BaseAPI {
     }
     {{/useSingleRequestParameter}}
     {{#useSingleRequestParameter}}
-    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters: {{classname}}{{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
         {{#returnType}}
         const response = await this.{{nickname}}Raw({{#allParams.0}}requestParameters, {{/allParams.0}}initOverrides);
         {{#isResponseOptional}}
