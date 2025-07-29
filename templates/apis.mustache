@@ -24,7 +24,7 @@ import {
 {{#operation}}
 {{#allParams.0}}
 {{#queryParams.0}}
-export const {{classname}}{{operationIdCamelCase}}QuerySchema = z.object({
+export const {{operationIdCamelCase}}QuerySchema = z.object({
 {{#queryParams}}
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
@@ -44,7 +44,7 @@ export const {{classname}}{{operationIdCamelCase}}QuerySchema = z.object({
 
 {{/queryParams.0}}
 {{#bodyParam}}
-export const {{classname}}{{operationIdCamelCase}}BodySchema = z.object({
+export const {{operationIdCamelCase}}BodySchema = z.object({
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
      {{#isEnum}}
@@ -62,7 +62,7 @@ export const {{classname}}{{operationIdCamelCase}}BodySchema = z.object({
 
 {{/bodyParam}}
 {{#pathParams.0}}
-export const {{classname}}{{operationIdCamelCase}}PathSchema = z.object({
+export const {{operationIdCamelCase}}PathSchema = z.object({
 {{#pathParams}}
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
@@ -82,7 +82,7 @@ export const {{classname}}{{operationIdCamelCase}}PathSchema = z.object({
 
 {{/pathParams.0}}
 {{#headerParams.0}}
-export const {{classname}}{{operationIdCamelCase}}HeaderSchema = z.object({
+export const {{operationIdCamelCase}}HeaderSchema = z.object({
 {{#headerParams}}
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
@@ -102,7 +102,7 @@ export const {{classname}}{{operationIdCamelCase}}HeaderSchema = z.object({
 
 {{/headerParams.0}}
 {{#formParams.0}}
-export const {{classname}}{{operationIdCamelCase}}FormSchema = z.object({
+export const {{operationIdCamelCase}}FormSchema = z.object({
 {{#formParams}}
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
@@ -121,15 +121,15 @@ export const {{classname}}{{operationIdCamelCase}}FormSchema = z.object({
 });
 
 {{/formParams.0}}
-export const {{classname}}{{operationIdCamelCase}}RequestSchema = z.object({
-{{#queryParams.0}}...{{classname}}{{operationIdCamelCase}}QuerySchema.shape,{{/queryParams.0}}
-{{#bodyParam}}...{{classname}}{{operationIdCamelCase}}BodySchema.shape,{{/bodyParam}}
-{{#pathParams.0}}...{{classname}}{{operationIdCamelCase}}PathSchema.shape,{{/pathParams.0}}
-{{#headerParams.0}}...{{classname}}{{operationIdCamelCase}}HeaderSchema.shape,{{/headerParams.0}}
-{{#formParams.0}}...{{classname}}{{operationIdCamelCase}}FormSchema.shape{{/formParams.0}}
+export const {{operationIdCamelCase}}RequestSchema = z.object({
+{{#queryParams.0}}...{{operationIdCamelCase}}QuerySchema.shape,{{/queryParams.0}}
+{{#bodyParam}}...{{operationIdCamelCase}}BodySchema.shape,{{/bodyParam}}
+{{#pathParams.0}}...{{operationIdCamelCase}}PathSchema.shape,{{/pathParams.0}}
+{{#headerParams.0}}...{{operationIdCamelCase}}HeaderSchema.shape,{{/headerParams.0}}
+{{#formParams.0}}...{{operationIdCamelCase}}FormSchema.shape{{/formParams.0}}
 });
 
-export type {{classname}}{{operationIdCamelCase}}Request = z.input<typeof {{classname}}{{operationIdCamelCase}}RequestSchema>;
+export type {{operationIdCamelCase}}Request = z.input<typeof {{operationIdCamelCase}}RequestSchema>;
 
 {{/allParams.0}}
 {{/operation}}
@@ -155,12 +155,9 @@ export class {{classname}} extends runtime.BaseAPI {
     {{^useSingleRequestParameter}}
     async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}, {{/allParams}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
         {{#allParams.0}}
-        const params = {{classname}}{{operationIdCamelCase}}RequestSchema.parse({ {{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}} });
+        const params = {{operationIdCamelCase}}RequestSchema.parse({ {{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}} });
         {{#queryParams.0}}
-        const queryParameters = {{classname}}{{operationIdCamelCase}}QuerySchema.parse(params);
-        {{/queryParams.0}}
-        {{^queryParams.0}}
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters = {{operationIdCamelCase}}QuerySchema.parse(params);
         {{/queryParams.0}}
         {{/allParams.0}}
 
@@ -286,7 +283,7 @@ export class {{classname}} extends runtime.BaseAPI {
             path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(params.{{paramName}}))){{/pathParams}},
             method: '{{httpMethod}}',
             headers: headerParameters,
-            query: queryParameters,
+            {{#queryParams.0}}query: queryParameters,{{/queryParams.0}}
             {{#hasBodyParam}}
             {{#bodyParam}}
             {{#isContainer}}
@@ -371,14 +368,11 @@ export class {{classname}} extends runtime.BaseAPI {
     }
     {{/useSingleRequestParameter}}
     {{#useSingleRequestParameter}}
-    async {{nickname}}({{#allParams.0}}requestParameters: {{classname}}{{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters: {{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
         {{#allParams.0}}
-        const params = {{classname}}{{operationIdCamelCase}}RequestSchema.parse(requestParameters);
+        const params = {{operationIdCamelCase}}RequestSchema.parse(requestParameters);
         {{#queryParams.0}}
-        const queryParameters = {{classname}}{{operationIdCamelCase}}QuerySchema.parse(params);
-        {{/queryParams.0}}
-        {{^queryParams.0}}
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters = {{operationIdCamelCase}}QuerySchema.parse(params);
         {{/queryParams.0}}
         {{/allParams.0}}
 
@@ -504,7 +498,7 @@ export class {{classname}} extends runtime.BaseAPI {
             path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(params.{{paramName}}))){{/pathParams}},
             method: '{{httpMethod}}',
             headers: headerParameters,
-            query: queryParameters,
+            {{#queryParams.0}}query: queryParameters,{{/queryParams.0}}
             {{#hasBodyParam}}
             {{#bodyParam}}
             {{#isContainer}}
