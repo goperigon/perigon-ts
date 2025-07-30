@@ -124,43 +124,43 @@ export const SearchArticlesQuerySchema = z.object({
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   from: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   to: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
@@ -483,15 +483,15 @@ export const SearchCompaniesQuerySchema = z.object({
    * Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
    */
   ipoFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for companies that went public on or before this date. Accepts ISO 8601 format (e.g., 2023-12-31T23:59:59) or yyyy-mm-dd format.
    */
   ipoTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Primary search query for filtering companies across name, alternative names, domains, and ticker symbols. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
@@ -584,15 +584,15 @@ export const SearchJournalistsQuerySchema = z.object({
    * Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   updatedAtFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for journalist profiles updated on or before this date. Accepts ISO 8601 format (e.g., 2023-03-01T23:59:59) or yyyy-mm-dd format.
    */
   updatedAtTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
@@ -779,43 +779,43 @@ export const SearchStoriesQuerySchema = z.object({
    * \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
    */
   from: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
    */
   to: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for stories created after this date. Alternative parameter for filtering by story creation date.
    */
   initializedFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for stories created before this date. Alternative parameter for filtering by story creation date.
    */
   initializedTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
    */
   updatedFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
    */
   updatedTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
@@ -1006,43 +1006,43 @@ export const SearchSummarizerQuerySchema = z.object({
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   from: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   to: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
@@ -1437,29 +1437,29 @@ export const SearchWikipediaQuerySchema = z.object({
    * Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   wikiRevisionFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   wikiRevisionTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   scrapedAtFrom: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   scrapedAtTo: z
-    .date()
-    .transform((date) => date.toISOString())
+    .union([z.date(), z.string()])
+    .transform((val) => (val instanceof Date ? val.toISOString() : val))
     .optional(),
   /**
    * Retrieve pages with the average number of views per day higher than the provided value.
@@ -1568,7 +1568,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSchema.parse(jsonValue),
+      JournalistSchema.parse(runtime.transformNullsToUndefined(jsonValue)),
     );
     return await apiResponse.value();
   }
@@ -1605,7 +1605,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      QuerySearchResultSchema.parse(jsonValue),
+      QuerySearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1642,7 +1644,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      CompanySearchResultSchema.parse(jsonValue),
+      CompanySearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1679,7 +1683,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSearchResultSchema.parse(jsonValue),
+      JournalistSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1716,7 +1722,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      PeopleSearchResultSchema.parse(jsonValue),
+      PeopleSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1753,7 +1761,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      SourceSearchResultSchema.parse(jsonValue),
+      SourceSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1790,7 +1800,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      StorySearchResultSchema.parse(jsonValue),
+      StorySearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1829,7 +1841,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      SummarySearchResultSchema.parse(jsonValue),
+      SummarySearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1866,7 +1880,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      TopicSearchResultSchema.parse(jsonValue),
+      TopicSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1903,7 +1919,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaSearchResultSchema.parse(jsonValue),
+      WikipediaSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1941,7 +1959,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      ArticlesVectorSearchResultSchema.parse(jsonValue),
+      ArticlesVectorSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }
@@ -1979,7 +1999,9 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaVectorSearchResultSchema.parse(jsonValue),
+      WikipediaVectorSearchResultSchema.parse(
+        runtime.transformNullsToUndefined(jsonValue),
+      ),
     );
     return await apiResponse.value();
   }

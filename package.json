@@ -58,7 +58,9 @@
   "scripts": {
     "build": "bun run tsup",
     "dev": "bun run tsup --watch",
-    "test": "bun test --coverage"
+    "test": "bun test --coverage",
+    "typecheck": "tsc --noEmit",
+    "generate": "bash ./scripts/generate.sh"
   },
   "peerDependencies": {
     "undici": ">=5"

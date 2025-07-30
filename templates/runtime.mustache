@@ -5,7 +5,6 @@
  export const BASE_PATH = "{{{basePath}}}".replace(/\/+$/, "");
 
  export interface ConfigurationParameters {
-     basePath?: string;
      fetchApi?: FetchAPI;
      middleware?: Middleware[];
      queryParamsStringify?: (params: HTTPQuery) => string;
@@ -34,7 +33,7 @@
 
      set config(configuration: Configuration) { this.configuration = configuration; }
 
-     get basePath() { return this.configuration.basePath ?? BASE_PATH; }
+     get basePath() { return BASE_PATH; }
      get fetchApi()  { return this.configuration.fetchApi; }
      get middleware(): Middleware[] { return this.configuration.middleware || []; }
      get queryParamsStringify() {
@@ -323,6 +322,23 @@ function querystringSingleKey(key: string, value: string | number | null | undef
 export function exists(json: any, key: string) {
     const value = json[key];
     return value !== null && value !== undefined;
+}
+
+/**
+ * Recursively transforms null values to undefined in an object or array.
+ * This ensures API responses with null values work with optional Zod schemas.
+ */
+export function transformNullsToUndefined(obj: any): any {
+    if (obj === null) return undefined;
+    if (Array.isArray(obj)) return obj.map(transformNullsToUndefined);
+    if (typeof obj === 'object' && obj !== null) {
+        const result: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            result[key] = transformNullsToUndefined(value);
+        }
+        return result;
+    }
+    return obj;
 }
 
 {{^withoutRuntimeChecks}}
