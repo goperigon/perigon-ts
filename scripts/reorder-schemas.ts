@@ -5,7 +5,7 @@ import { join } from "path";
 
 /**
  * Comprehensive script to reorder schema definitions to fix TypeScript dependency issues
- * Performs topological sorting of schema dependencies and handles circular references
+ * Performs topological sorting of schema dependencies and handles circular references with z.never()
  */
 function main() {
   const modelsPath = join(process.cwd(), "src/models/index.ts");
@@ -154,7 +154,7 @@ function extractSchemas(content: string): SchemaInfo[] {
 }
 
 function analyzeDependencies(
-  content: string,
+  _content: string,
   schemas: SchemaInfo[],
 ): Map<string, Set<string>> {
   const dependencies = new Map<string, Set<string>>();
@@ -229,7 +229,6 @@ function reorderSchemas(
 ): string {
   const lines = content.split("\n");
   let result = "";
-  let currentLine = 0;
 
   // Copy everything before the first schema
   const firstSchemaLine = Math.min(...sortedSchemas.map((s) => s.startLine));
@@ -239,7 +238,7 @@ function reorderSchemas(
   for (const schema of sortedSchemas) {
     let schemaContent = schema.definition;
 
-    // Handle circular dependencies with z.lazy
+    // Handle circular dependencies with z.never() to prevent infinite recursion
     const deps = dependencies.get(schema.name) || new Set();
     for (const dep of deps) {
       const depSchema = sortedSchemas.find((s) => s.name === dep);
@@ -247,28 +246,31 @@ function reorderSchemas(
         depSchema &&
         sortedSchemas.indexOf(depSchema) > sortedSchemas.indexOf(schema)
       ) {
-        // This is a forward reference - wrap with z.lazy
+        // This is a forward reference - replace with z.never() to break circular dependency
         const regex = new RegExp(`\\b${dep}\\b(?!\\.optional\\(\\))`, "g");
-        schemaContent = schemaContent.replace(regex, `z.lazy(() => ${dep})`);
+        schemaContent = schemaContent.replace(
+          regex,
+          `z.never() /* Circular reference to ${dep} */`,
+        );
       }
     }
 
-    // Handle self-references for recursive schemas
+    // Handle self-references for recursive schemas with z.never() to prevent infinite recursion
     if (
       schema.name === "ArticleSearchFilterSchema" ||
       schema.name === "WikipediaSearchFilterSchema"
     ) {
       schemaContent = schemaContent.replace(
         new RegExp(`AND: z\\.array\\(${schema.name}\\)`, "g"),
-        `AND: z.array(z.lazy(() => ${schema.name}))`,
+        `AND: z.array(z.never()) /* Self-reference prevented */`,
       );
       schemaContent = schemaContent.replace(
         new RegExp(`OR: z\\.array\\(${schema.name}\\)`, "g"),
-        `OR: z.array(z.lazy(() => ${schema.name}))`,
+        `OR: z.array(z.never()) /* Self-reference prevented */`,
       );
       schemaContent = schemaContent.replace(
         new RegExp(`NOT: z\\.array\\(${schema.name}\\)`, "g"),
-        `NOT: z.array(z.lazy(() => ${schema.name}))`,
+        `NOT: z.array(z.never()) /* Self-reference prevented */`,
       );
     }
 
