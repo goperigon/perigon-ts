@@ -1,6 +1,6 @@
 <!-- ----------  Header  ---------- -->
 <p align="center">
-  <img src="https://goperigon.com/favicon.ico" width="120" alt="Perigon logo" />
+  <img src="https://perigon.io/favicon.ico" width="120" alt="Perigon logo" />
 </p>
 
 <h1 align="center">Perigon&nbsp;TypeScript&nbsp;SDK</h1>
@@ -26,23 +26,31 @@
   </a>
 </p>
 
-A fully-typed, promise-based SDK generated from the official Perigon OpenAPI specification. Works in Node.js, modern browsers, Cloudflare Workers, and Deno.
+Fully-typed TypeScript SDK for the Perigon API. Access news articles, AI summaries, entity data, and more with complete type safety.
 
-## Table&nbsp;of&nbsp;Contents
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
----
+**Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
+
+- [{{appName}}](#{{appName}})
+  - [Table of Contents](#table-of-contents)
+  - [✨ Features](#-features)
+  - [📦 Installation](#-installation)
+  - [🚀 Quick Start](#-quick-start)
+  - [🔑 Authentication](#-authentication)
+  - [📚 Endpoints](#-endpoints)
+  - [⚠️ Error Handling](#-error-handling)
+  - [🪪 License](#-license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## ✨ Features
 
-- **Type-safe** request/response models (goodbye `any`)
-- Ships as both **ESM & CommonJS** with sourcemaps
-- **Zero-dependency core** – bring your own `fetch` if needed
-- Generated directly from [docs.perigon.io](https://docs.perigon.io), so it’s always in sync
-- Runs in **Node, browsers, Deno, and edge runtimes**
-
----
+- **Type-safe** – Full TypeScript support with IntelliSense
+- **Universal** – Works in Node.js, browsers, Deno, and edge runtimes
+- **Zero dependencies** – Lightweight core, bring your own fetch
+- **Auto-generated** – Always in sync with the latest API
 
 ## 📦 Installation
 
@@ -50,129 +58,106 @@ A fully-typed, promise-based SDK generated from the official Perigon OpenAPI spe
 npm install {{npmName}}
 # yarn add {{npmName}}
 # pnpm add {{npmName}}
+# bun add {{npmName}}
 ```
 
----
-
-## 🚀 Quick start
-
-### 1. Instantiate the client
+## 🚀 Quick Start
 
 ```ts
 import { Configuration, V1Api } from '{{npmName}}';
 
 const perigon = new V1Api(
   new Configuration({
-    apiKey: "YOUR_API_KEY",      // or () => 'your_key'
-    // basePath: 'https://api.perigon.io',      // override for proxy / dev
+    apiKey: process.env.PERIGON_API_KEY,
+  }),
+);
+
+try {
+  const { articles } = await perigon.searchArticles({
+    q: 'artificial intelligence',
+    size: 5,
+  });
+  console.log(`Found ${articles.length} articles`);
+} catch (error) {
+  console.error('API Error:', error.message);
+}
+```
+
+## 🔑 Authentication
+
+Get your API key from [perigon.io](https://perigon.io):
+
+```bash
+# Environment variable (recommended)
+export PERIGON_API_KEY="your_api_key_here"
+```
+
+```ts
+// Or pass directly
+const perigon = new V1Api(
+  new Configuration({
+    apiKey: "your_api_key_here",
   }),
 );
 ```
 
-### 2. Make calls
+## 📚 Endpoints
 
+### News & Articles
 ```ts
-// 🔍 Search recent news articles
 const { articles, numResults } = await perigon.searchArticles({
-  q: 'artificial intelligence',
-  size: 5,
-});
-console.log(numResults, articles[0].title);
-
-// 👤 Look up a journalist by ID
-const journalist = await perigon.getJournalistById({ id: '123456' });
-console.log(journalist.name);
-```
-
-> All SDK methods return **typed promises** with full IntelliSense support.
-
----
-
-## 🧑‍💻 Endpoint snippets
-
-### Articles – search and filter news (`/v1/all`)<br>
-**Docs →** <https://docs.perigon.io/docs/overview>
-```ts
-const { articles } = await perigon.searchArticles({
-  q: 'technology',
-  size: 5,
-});
-```
-
-### Articles – date range filter<br>
-**Docs →** <https://docs.perigon.io/docs/overview>
-```ts
-await perigon.searchArticles({
-  q: 'business',
-  from: '2025-04-01',
-  to: '2025-04-08',
-});
-```
-
-### Articles – restrict to a source<br>
-**Docs →** <https://docs.perigon.io/docs/overview>
-```ts
-await perigon.searchArticles({ source: ['nytimes.com'] });
-```
-
-### Companies – fetch structured company data (`/v1/companies`)<br>
-**Docs →** <https://docs.perigon.io/docs/company-data>
-```ts
-const { results } = await perigon.searchCompanies({
-  name: 'Apple',
-  size: 5,
-});
-```
-
-### Journalists – search and detail look‑up (`/v1/journalists`)<br>
-**Docs →** <https://docs.perigon.io/docs/journalist-data>
-```ts
-const { results } = await perigon.searchJournalists1({ name: 'Kevin', size: 1 });
-const journalist = await perigon.getJournalistById({ id: results[0].id });
-```
-
-### Stories – discover related article clusters (`/v1/stories`)<br>
-**Docs →** <https://docs.perigon.io/docs/stories-overview>
-```ts
-await perigon.searchStories({ q: 'climate change', size: 5 });
-```
-
-### Vector search – semantic retrieval (`/v1/vector`)<br>
-**Docs →** <https://docs.perigon.io/docs/vector-endpoint>
-```ts
-await perigon.vectorSearchArticles({
-  articleSearchParams: {
-    prompt: 'Latest advancements in artificial intelligence',
-    size: 5,
-  },
-});
-```
-
-### Summarizer – generate an instant summary (`/v1/summarizer`)<br>
-**Docs →** <https://docs.perigon.io/docs/search-summarizer>
-```ts
-const { summary } = await perigon.searchSummarizer({
-  q: 'renewable energy',
+  q: 'technology AND startups',
+  source: ['techcrunch.com'],
+  from: '2024-01-01',
   size: 10,
 });
-console.log(summary);
 ```
+- [`searchArticles`](https://dev.perigon.io/reference?endpoint=11) – Search news articles with advanced filtering by keywords, sources, dates, and more
+- [`vectorSearchArticles`](https://dev.perigon.io/reference?endpoint=10) – Find semantically similar articles using AI-powered vector search
 
-### Topics – explore taxonomy (`/v1/topics`)<br>
-**Docs →** <https://docs.perigon.io/docs/topics>
+### Entities
 ```ts
-await perigon.searchTopics({ size: 10 });
+const { results } = await perigon.searchCompanies({ name: 'Apple', size: 5 });
 ```
+- [`searchCompanies`](https://dev.perigon.io/reference?endpoint=2) – Find companies with detailed business information, financials, and metadata
+- [`searchPeople`](https://dev.perigon.io/reference?endpoint=5) – Search for notable people and public figures across news and media
+- [`searchJournalists`](https://dev.perigon.io/reference?endpoint=3) – Discover journalists and reporters by name, publication, or expertise
+- [`getJournalistById`](https://dev.perigon.io/reference?endpoint=4) – Get comprehensive profile data for a specific journalist
 
-| Action | Code Example |
-|----------|---------|
-| Filter by source | `await perigon.searchArticles({ source: ['nytimes.com'] })` |
-| Limit by date range | `await perigon.searchArticles({ q: 'business', from: '2025‑04‑01', to: '2025‑04‑08' })` |
-| Company lookup | `await perigon.searchCompanies({ name: 'Apple', size: 5 })` |
-| Summarize any query | `await perigon.searchSummarizer({ q: 'renewable energy', size: 20 })` |
-| Semantic / vector search | `await perigon.vectorSearchArticles({ articleSearchParams: { prompt: 'advancements in AI', size: 5 }})` |
-| Retrieve available taxonomic **topics** | `await perigon.searchTopics({ size: 10 })` |
----
+### Content Discovery
+```ts
+const { results } = await perigon.searchStories({ q: 'climate change', size: 5 });
+```
+- [`searchStories`](https://dev.perigon.io/reference?endpoint=7) – Find related article clusters and trending story threads
+- [`searchTopics`](https://dev.perigon.io/reference?endpoint=9) – Browse structured topic taxonomy and content categories
+- [`searchSources`](https://dev.perigon.io/reference?endpoint=6) – Discover news sources, publications, and media outlets
+
+### AI Features
+```ts
+const { summary } = await perigon.searchSummarizer({ q: 'renewable energy', size: 10 });
+```
+- [`searchSummarizer`](https://dev.perigon.io/reference?endpoint=8) – Generate AI-powered summaries from multiple articles on any topic
+
+### Knowledge Base
+```ts
+const { results } = await perigon.searchWikipedia({ q: 'machine learning', size: 10 });
+```
+- [`searchWikipedia`](https://dev.perigon.io/reference?endpoint=13) – Search Wikipedia articles with full-text matching and filtering
+- [`vectorSearchWikipedia`](https://dev.perigon.io/reference?endpoint=12) – Find semantically related Wikipedia content using vector similarity
+
+## ⚠️ Error Handling
+
+All errors extend `ResponseError` and include `status` & `body` properties:
+
+```ts
+try {
+  const result = await perigon.searchArticles({ q: 'test' });
+} catch (error) {
+  if (error.status === 401) console.error('Invalid API key');
+  else if (error.status === 429) console.error('Rate limit exceeded');
+  else console.error('API Error:', error.message);
+}
+```
 
 ## 🪪 License
 
