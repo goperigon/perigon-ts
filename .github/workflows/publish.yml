@@ -20,10 +20,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Setup Node.js
-      - uses: actions/setup-node@v3
+      # Setup Bun
+      - uses: oven-sh/setup-bun@v1
         with:
-          node-version: "18"
+          bun-version: latest
           registry-url: "https://registry.npmjs.org"
 
       - name: Get package name and determine version
@@ -70,14 +70,14 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: bun install
 
       # Build the package
       - name: Build package
-        run: npm run build
+        run: bun run build
 
       # Publish to npm
       - name: Publish to npm
-        run: npm publish --access=public
+        run: bun publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
