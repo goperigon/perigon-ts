@@ -3,27 +3,26 @@
 {{>licenseInfo}}
 
 import * as runtime from '../runtime{{importFileExtension}}';
+import { z } from 'zod';
 {{#imports.0}}
 import type {
   {{#imports}}
   {{className}},
   {{/imports}}
 } from '../models/index{{importFileExtension}}';
-{{^withoutRuntimeChecks}}
 import {
     {{#imports}}
-    {{className}}FromJSON,
-    {{className}}ToJSON,
+    {{className}}Schema,
     {{/imports}}
 } from '../models/index{{importFileExtension}}';
-{{/withoutRuntimeChecks}}
 {{/imports.0}}
 
 {{#operations}}
 {{#operation}}
 {{#allParams.0}}
-export interface {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request {
-{{#allParams}}
+{{#queryParams.0}}
+export const {{operationIdCamelCase}}QuerySchema = z.object({
+{{#queryParams}}
     /**
      * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
      {{#isEnum}}
@@ -36,72 +35,107 @@ export interface {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterIn
      * @required
      {{/required}}
      */
-    {{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{#hasReadOnly}}Omit<{{{dataType}}}, {{#readOnlyVars}}'{{baseName}}'{{^-last}}|{{/-last}}{{/readOnlyVars}}>{{/hasReadOnly}}{{^hasReadOnly}}{{{dataType}}}{{/hasReadOnly}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
-{{/allParams}}
-}
+    {{paramName}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isDateType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isDateTimeType}}{{^isDateType}}z.any(){{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/items}}){{/isArray}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isArray}}z.any(){{/isArray}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
+{{/queryParams}}
+});
+
+{{/queryParams.0}}
+{{#bodyParam}}
+export const {{operationIdCamelCase}}BodySchema = z.object({
+    /**
+     * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
+     {{#isEnum}}
+     * @type {{{datatypeWithEnum}}}
+     {{#allowableValues}}
+     * @values {{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}
+     {{/allowableValues}}
+     {{/isEnum}}
+     {{#required}}
+     * @required
+     {{/required}}
+     */
+    {{paramName}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isDateType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isDateTimeType}}{{^isDateType}}z.any(){{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/items}}){{/isArray}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isArray}}z.any(){{/isArray}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
+});
+
+{{/bodyParam}}
+{{#pathParams.0}}
+export const {{operationIdCamelCase}}PathSchema = z.object({
+{{#pathParams}}
+    /**
+     * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
+     {{#isEnum}}
+     * @type {{{datatypeWithEnum}}}
+     {{#allowableValues}}
+     * @values {{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}
+     {{/allowableValues}}
+     {{/isEnum}}
+     {{#required}}
+     * @required
+     {{/required}}
+     */
+    {{paramName}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isDateType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isDateTimeType}}{{^isDateType}}z.any(){{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/items}}){{/isArray}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isArray}}z.any(){{/isArray}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
+{{/pathParams}}
+});
+
+{{/pathParams.0}}
+{{#headerParams.0}}
+export const {{operationIdCamelCase}}HeaderSchema = z.object({
+{{#headerParams}}
+    /**
+     * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
+     {{#isEnum}}
+     * @type {{{datatypeWithEnum}}}
+     {{#allowableValues}}
+     * @values {{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}
+     {{/allowableValues}}
+     {{/isEnum}}
+     {{#required}}
+     * @required
+     {{/required}}
+     */
+    {{paramName}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isDateType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isDateTimeType}}{{^isDateType}}z.any(){{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/items}}){{/isArray}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isArray}}z.any(){{/isArray}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
+{{/headerParams}}
+});
+
+{{/headerParams.0}}
+{{#formParams.0}}
+export const {{operationIdCamelCase}}FormSchema = z.object({
+{{#formParams}}
+    /**
+     * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
+     {{#isEnum}}
+     * @type {{{datatypeWithEnum}}}
+     {{#allowableValues}}
+     * @values {{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}
+     {{/allowableValues}}
+     {{/isEnum}}
+     {{#required}}
+     * @required
+     {{/required}}
+     */
+    {{paramName}}: {{#isEnum}}z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^isEnum}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isDateType}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val){{/isDateTimeType}}{{#isDateType}}z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val){{/isDateType}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isDateTimeType}}{{^isDateType}}z.any(){{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/items}}){{/isArray}}{{^isString}}{{^isNumeric}}{{^isBoolean}}{{^isArray}}z.any(){{/isArray}}{{/isBoolean}}{{/isNumeric}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
+{{/formParams}}
+});
+
+{{/formParams.0}}
+export const {{operationIdCamelCase}}RequestSchema = z.object({
+{{#queryParams.0}}...{{operationIdCamelCase}}QuerySchema.shape,{{/queryParams.0}}
+{{#bodyParam}}...{{operationIdCamelCase}}BodySchema.shape,{{/bodyParam}}
+{{#pathParams.0}}...{{operationIdCamelCase}}PathSchema.shape,{{/pathParams.0}}
+{{#headerParams.0}}...{{operationIdCamelCase}}HeaderSchema.shape,{{/headerParams.0}}
+{{#formParams.0}}...{{operationIdCamelCase}}FormSchema.shape{{/formParams.0}}
+});
+
+export type {{operationIdCamelCase}}Request = z.input<typeof {{operationIdCamelCase}}RequestSchema>;
 
 {{/allParams.0}}
 {{/operation}}
 {{/operations}}
-{{#withInterfaces}}
-{{#operations}}
-/**
- * {{classname}} - interface
- * {{#lambda.indented_1}}{{{unescapedDescription}}}{{/lambda.indented_1}}
- * @export
- * @interface {{classname}}Interface
- */
-export interface {{classname}}Interface {
-{{#operation}}
-    /**
-     * {{&notes}}
-     {{#summary}}
-     * @summary {{&summary}}
-     {{/summary}}
-     * @param requestParameters - Request parameters (see interface for details)
-     * @param initOverrides - Override the default HTTP request configuration
-     * @returns {Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>}} Raw API response
-    {{#isDeprecated}}
-     * @deprecated
-    {{/isDeprecated}}
-     * @throws {RequiredError}
-     * @memberof {{classname}}Interface
-     */
-    {{nickname}}Raw({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>>;
-
-    /**
-     {{#notes}}
-     * {{&notes}}
-     {{/notes}}
-     {{#summary}}
-     * {{&summary}}
-     {{/summary}}
-     {{#isDeprecated}}
-     * @deprecated
-     {{/isDeprecated}}
-     */
-    {{^useSingleRequestParameter}}
-    {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}, {{/allParams}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
-    {{/useSingleRequestParameter}}
-    {{#useSingleRequestParameter}}
-    {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}>;
-    {{/useSingleRequestParameter}}
-
-{{/operation}}
-}
-
-{{/operations}}
-{{/withInterfaces}}
 {{#operations}}
 /**
  * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
  */
-{{#withInterfaces}}
-export class {{classname}} extends runtime.BaseAPI implements {{classname}}Interface {
-{{/withInterfaces}}
-{{^withInterfaces}}
 export class {{classname}} extends runtime.BaseAPI {
-{{/withInterfaces}}
 
     {{#operation}}
     /**
@@ -115,75 +149,37 @@ export class {{classname}} extends runtime.BaseAPI {
      * @deprecated
      {{/isDeprecated}}
      */
-    async {{nickname}}Raw({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{{{returnType}}}{{^returnType}}void{{/returnType}}>> {
-        {{#allParams}}
-        {{#required}}
-        if (requestParameters['{{paramName}}'] == null) {
-            throw new runtime.RequiredError(
-                '{{paramName}}',
-                'Required parameter "{{paramName}}" was null or undefined when calling {{nickname}}().'
-            );
-        }
+    {{^useSingleRequestParameter}}
+    async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}, {{/allParams}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
+        {{#allParams.0}}
+        const params = {{operationIdCamelCase}}RequestSchema.parse({ {{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}} });
+        {{#queryParams.0}}
+        const queryParameters = {{operationIdCamelCase}}QuerySchema.parse(params);
+        {{/queryParams.0}}
+        {{/allParams.0}}
 
-        {{/required}}
-        {{/allParams}}
-        const queryParameters: any = {};
-
-        {{#queryParams}}
-        {{#isArray}}
-        if (requestParameters['{{paramName}}'] != null) {
-            {{#isCollectionFormatMulti}}
-            queryParameters['{{baseName}}'] = requestParameters['{{paramName}}'];
-            {{/isCollectionFormatMulti}}
-            {{^isCollectionFormatMulti}}
-            queryParameters['{{baseName}}'] = {{#uniqueItems}}Array.from({{/uniqueItems}}requestParameters['{{paramName}}']{{#uniqueItems}}){{/uniqueItems}}!.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]);
-            {{/isCollectionFormatMulti}}
-        }
-
-        {{/isArray}}
-        {{^isArray}}
-        if (requestParameters['{{paramName}}'] != null) {
-            {{#isDateTimeType}}
-            queryParameters['{{baseName}}'] = (requestParameters['{{paramName}}'] as any).toISOString();
-            {{/isDateTimeType}}
-            {{^isDateTimeType}}
-            {{#isDateType}}
-            queryParameters['{{baseName}}'] = (requestParameters['{{paramName}}'] as any).toISOString().substring(0,10);
-            {{/isDateType}}
-            {{^isDateType}}
-            queryParameters['{{baseName}}'] = requestParameters['{{paramName}}'];
-            {{/isDateType}}
-            {{/isDateTimeType}}
-        }
-
-        {{/isArray}}
-        {{/queryParams}}
         const headerParameters: runtime.HTTPHeaders = {};
-
         {{#bodyParam}}
         {{^consumes}}
         headerParameters['Content-Type'] = 'application/json';
-
         {{/consumes}}
         {{#consumes.0}}
         headerParameters['Content-Type'] = '{{{mediaType}}}';
-
         {{/consumes.0}}
         {{/bodyParam}}
         {{#headerParams}}
         {{#isArray}}
-        if (requestParameters['{{paramName}}'] != null) {
-            headerParameters['{{baseName}}'] = {{#uniqueItems}}Array.from({{/uniqueItems}}requestParameters['{{paramName}}']{{#uniqueItems}}){{/uniqueItems}}!.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]);
+        if (params.{{paramName}} !== undefined) {
+            headerParameters['{{baseName}}'] = {{#uniqueItems}}Array.from({{/uniqueItems}}params.{{paramName}}{{#uniqueItems}}){{/uniqueItems}}.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]);
         }
-
         {{/isArray}}
         {{^isArray}}
-        if (requestParameters['{{paramName}}'] != null) {
-            headerParameters['{{baseName}}'] = String(requestParameters['{{paramName}}']);
+        if (params.{{paramName}} !== undefined) {
+            headerParameters['{{baseName}}'] = String(params.{{paramName}});
         }
-
         {{/isArray}}
         {{/headerParams}}
+
         {{#authMethods}}
         {{#isBasic}}
         {{#isBasicBasic}}
@@ -195,7 +191,6 @@ export class {{classname}} extends runtime.BaseAPI {
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
             const tokenString = await token("{{name}}", [{{#scopes}}"{{{scope}}}"{{^-last}}, {{/-last}}{{/scopes}}]);
-
             if (tokenString) {
                 headerParameters["Authorization"] = `Bearer ${tokenString}`;
             }
@@ -205,39 +200,33 @@ export class {{classname}} extends runtime.BaseAPI {
         {{#isApiKey}}
         {{#isKeyInHeader}}
         if (this.configuration && this.configuration.apiKey) {
-            headerParameters["{{keyParamName}}"] = await this.configuration.apiKey("{{keyParamName}}"); // {{name}} authentication
+            headerParameters["{{keyParamName}}"] = await this.configuration.apiKey("{{keyParamName}}");
         }
-
         {{/isKeyInHeader}}
         {{#isKeyInQuery}}
         if (this.configuration && this.configuration.apiKey) {
-            queryParameters["{{keyParamName}}"] = await this.configuration.apiKey("{{keyParamName}}"); // {{name}} authentication
+            queryParameters["{{keyParamName}}"] = await this.configuration.apiKey("{{keyParamName}}");
         }
-
         {{/isKeyInQuery}}
         {{/isApiKey}}
         {{#isOAuth}}
         if (this.configuration && this.configuration.accessToken) {
-            // oauth required
             headerParameters["Authorization"] = await this.configuration.accessToken("{{name}}", [{{#scopes}}"{{{scope}}}"{{^-last}}, {{/-last}}{{/scopes}}]);
         }
-
         {{/isOAuth}}
         {{/authMethods}}
+
         {{#hasFormParams}}
         const consumes: runtime.Consume[] = [
             {{#consumes}}
             { contentType: '{{{mediaType}}}' },
             {{/consumes}}
         ];
-        // @ts-ignore: canConsumeForm may be unused
         const canConsumeForm = runtime.canConsumeForm(consumes);
-
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
         {{#formParams}}
         {{#isFile}}
-        // use FormData to transmit files using content-type "multipart/form-data"
         useForm = canConsumeForm;
         {{/isFile}}
         {{/formParams}}
@@ -249,71 +238,64 @@ export class {{classname}} extends runtime.BaseAPI {
 
         {{#formParams}}
         {{#isArray}}
-        if (requestParameters['{{paramName}}'] != null) {
+        if (params.{{paramName}} !== undefined) {
             {{#isCollectionFormatMulti}}
-            requestParameters['{{paramName}}'].forEach((element) => {
+            params.{{paramName}}.forEach((element) => {
                 formParams.append('{{baseName}}{{#useSquareBracketsInArrayNames}}[]{{/useSquareBracketsInArrayNames}}', element as any);
             })
             {{/isCollectionFormatMulti}}
             {{^isCollectionFormatMulti}}
-            formParams.append('{{baseName}}{{#useSquareBracketsInArrayNames}}[]{{/useSquareBracketsInArrayNames}}', {{#uniqueItems}}Array.from({{/uniqueItems}}requestParameters['{{paramName}}']{{#uniqueItems}}){{/uniqueItems}}!.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]));
+            formParams.append('{{baseName}}{{#useSquareBracketsInArrayNames}}[]{{/useSquareBracketsInArrayNames}}', {{#uniqueItems}}Array.from({{/uniqueItems}}params.{{paramName}}{{#uniqueItems}}){{/uniqueItems}}.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]));
             {{/isCollectionFormatMulti}}
         }
-
         {{/isArray}}
         {{^isArray}}
-        if (requestParameters['{{paramName}}'] != null) {
+        if (params.{{paramName}} !== undefined) {
             {{#isDateTimeType}}
-            formParams.append('{{baseName}}', (requestParameters['{{paramName}}'] as any).toISOString());
+            formParams.append('{{baseName}}', (params.{{paramName}} as any).toISOString());
             {{/isDateTimeType}}
             {{^isDateTimeType}}
             {{#isPrimitiveType}}
-            formParams.append('{{baseName}}', requestParameters['{{paramName}}'] as any);
+            formParams.append('{{baseName}}', params.{{paramName}} as any);
             {{/isPrimitiveType}}
             {{^isPrimitiveType}}
             {{#isEnumRef}}
-            formParams.append('{{baseName}}', requestParameters['{{paramName}}'] as any);
+            formParams.append('{{baseName}}', params.{{paramName}} as any);
             {{/isEnumRef}}
             {{^isEnumRef}}
             {{^withoutRuntimeChecks}}
-            formParams.append('{{baseName}}', new Blob([JSON.stringify({{returnType}}ToJSON(requestParameters['{{paramName}}']))], { type: "application/json", }));
+            formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
             {{/withoutRuntimeChecks}}{{#withoutRuntimeChecks}}
-            formParams.append('{{baseName}}', new Blob([JSON.stringify(requestParameters['{{paramName}}'])], { type: "application/json", }));
+            formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
             {{/withoutRuntimeChecks}}
             {{/isEnumRef}}
             {{/isPrimitiveType}}
             {{/isDateTimeType}}
         }
-
         {{/isArray}}
         {{/formParams}}
         {{/hasFormParams}}
+
         const response = await this.request({
-            path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(requestParameters['{{paramName}}']))){{/pathParams}},
+            path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(params.{{paramName}}))){{/pathParams}},
             method: '{{httpMethod}}',
             headers: headerParameters,
-            query: queryParameters,
+            {{#queryParams.0}}query: queryParameters,{{/queryParams.0}}
             {{#hasBodyParam}}
             {{#bodyParam}}
             {{#isContainer}}
             {{^withoutRuntimeChecks}}
-            body: requestParameters['{{paramName}}']{{#isArray}}{{#items}}{{^isPrimitiveType}}!.map({{datatype}}ToJSON){{/isPrimitiveType}}{{/items}}{{/isArray}},
+            body: params.{{paramName}}{{#isArray}}{{/isArray}},
             {{/withoutRuntimeChecks}}
             {{#withoutRuntimeChecks}}
-            body: requestParameters['{{paramName}}'],
+            body: params.{{paramName}},
             {{/withoutRuntimeChecks}}
             {{/isContainer}}
             {{^isContainer}}
             {{^isPrimitiveType}}
-            {{^withoutRuntimeChecks}}
-            body: {{dataType}}ToJSON(requestParameters['{{paramName}}']),
-            {{/withoutRuntimeChecks}}
-            {{#withoutRuntimeChecks}}
-            body: requestParameters['{{paramName}}'],
-            {{/withoutRuntimeChecks}}
-            {{/isPrimitiveType}}
+             body: params.{{paramName}},            {{/isPrimitiveType}}
             {{#isPrimitiveType}}
-            body: requestParameters['{{paramName}}'] as any,
+            body: params.{{paramName}} as any,
             {{/isPrimitiveType}}
             {{/isContainer}}
             {{/bodyParam}}
@@ -325,102 +307,263 @@ export class {{classname}} extends runtime.BaseAPI {
 
         {{#returnType}}
         {{#isResponseFile}}
-        return new runtime.BlobApiResponse(response);
+        const apiResponse = new runtime.BlobApiResponse(response);
         {{/isResponseFile}}
         {{^isResponseFile}}
         {{#returnTypeIsPrimitive}}
         {{#isMap}}
-        return new runtime.JSONApiResponse<any>(response);
+        const apiResponse = new runtime.JSONApiResponse<any>(response);
         {{/isMap}}
         {{#isArray}}
-        return new runtime.JSONApiResponse<any>(response);
+        const apiResponse = new runtime.JSONApiResponse<any>(response);
         {{/isArray}}
         {{#returnSimpleType}}
-        if (this.isJsonMime(response.headers.get('content-type'))) {
-            return new runtime.JSONApiResponse<{{returnType}}>(response);
-        } else {
-            return new runtime.TextApiResponse(response) as any;
-        }
+        const apiResponse = this.isJsonMime(response.headers.get('content-type')) 
+            ? new runtime.JSONApiResponse<{{returnType}}>(response)
+            : new runtime.TextApiResponse(response) as any;
         {{/returnSimpleType}}
         {{/returnTypeIsPrimitive}}
         {{^returnTypeIsPrimitive}}
         {{#isArray}}
-        return new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}){{/uniqueItems}};
+        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}){{/uniqueItems}};
         {{/isArray}}
         {{^isArray}}
         {{#isMap}}
-        return new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
+        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
         {{/isMap}}
         {{^isMap}}
-        return new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{returnBaseType}}FromJSON(jsonValue){{/withoutRuntimeChecks}});
+        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(runtime.transformNullsToUndefined(jsonValue)));
         {{/isMap}}
         {{/isArray}}
         {{/returnTypeIsPrimitive}}
         {{/isResponseFile}}
-        {{/returnType}}
-        {{^returnType}}
-        return new runtime.VoidApiResponse(response);
-        {{/returnType}}
-    }
-
-    /**
-     {{#notes}}
-     * {{&notes}}
-     {{/notes}}
-     {{#summary}}
-     * {{&summary}}
-     {{/summary}}
-     {{#isDeprecated}}
-     * @deprecated
-     {{/isDeprecated}}
-     */
-    {{^useSingleRequestParameter}}
-    async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}}, {{/allParams}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
-        {{#returnType}}
-        const response = await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }, {{/allParams.0}}initOverrides);
         {{#isResponseOptional}}
-        switch (response.raw.status) {
+        switch (response.status) {
             {{#responses}}
             {{#is2xx}}
             case {{code}}:
-                return {{#dataType}}await response.value(){{/dataType}}{{^dataType}}null{{/dataType}};
+                return {{#dataType}}await apiResponse.value(){{/dataType}}{{^dataType}}null{{/dataType}};
             {{/is2xx}}
             {{/responses}}
             default:
-                return await response.value();
+                return await apiResponse.value();
         }
         {{/isResponseOptional}}
         {{^isResponseOptional}}
-        return await response.value();
+        return await apiResponse.value();
         {{/isResponseOptional}}
         {{/returnType}}
         {{^returnType}}
-        await this.{{nickname}}Raw({{#allParams.0}}{ {{#allParams}}{{paramName}}: {{paramName}}{{^-last}}, {{/-last}}{{/allParams}} }, {{/allParams.0}}initOverrides);
+        // void return type
         {{/returnType}}
     }
     {{/useSingleRequestParameter}}
     {{#useSingleRequestParameter}}
-    async {{nickname}}({{#allParams.0}}requestParameters: {{#prefixParameterInterfaces}}{{classname}}{{/prefixParameterInterfaces}}{{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters: {{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
+        {{#allParams.0}}
+        const params = {{operationIdCamelCase}}RequestSchema.parse(requestParameters);
+        {{#queryParams.0}}
+        const queryParameters = {{operationIdCamelCase}}QuerySchema.parse(params);
+        {{/queryParams.0}}
+        {{/allParams.0}}
+
+        const headerParameters: runtime.HTTPHeaders = {};
+        {{#bodyParam}}
+        {{^consumes}}
+        headerParameters['Content-Type'] = 'application/json';
+        {{/consumes}}
+        {{#consumes.0}}
+        headerParameters['Content-Type'] = '{{{mediaType}}}';
+        {{/consumes.0}}
+        {{/bodyParam}}
+        {{#headerParams}}
+        {{#isArray}}
+        if (params.{{paramName}} !== undefined) {
+            headerParameters['{{baseName}}'] = {{#uniqueItems}}Array.from({{/uniqueItems}}params.{{paramName}}{{#uniqueItems}}){{/uniqueItems}}.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]);
+        }
+        {{/isArray}}
+        {{^isArray}}
+        if (params.{{paramName}} !== undefined) {
+            headerParameters['{{baseName}}'] = String(params.{{paramName}});
+        }
+        {{/isArray}}
+        {{/headerParams}}
+
+        {{#authMethods}}
+        {{#isBasic}}
+        {{#isBasicBasic}}
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        {{/isBasicBasic}}
+        {{#isBasicBearer}}
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("{{name}}", [{{#scopes}}"{{{scope}}}"{{^-last}}, {{/-last}}{{/scopes}}]);
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        {{/isBasicBearer}}
+        {{/isBasic}}
+        {{#isApiKey}}
+        {{#isKeyInHeader}}
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["{{keyParamName}}"] = await this.configuration.apiKey("{{keyParamName}}");
+        }
+        {{/isKeyInHeader}}
+        {{#isKeyInQuery}}
+        if (this.configuration && this.configuration.apiKey) {
+            queryParameters["{{keyParamName}}"] = await this.configuration.apiKey("{{keyParamName}}");
+        }
+        {{/isKeyInQuery}}
+        {{/isApiKey}}
+        {{#isOAuth}}
+        if (this.configuration && this.configuration.accessToken) {
+            headerParameters["Authorization"] = await this.configuration.accessToken("{{name}}", [{{#scopes}}"{{{scope}}}"{{^-last}}, {{/-last}}{{/scopes}}]);
+        }
+        {{/isOAuth}}
+        {{/authMethods}}
+
+        {{#hasFormParams}}
+        const consumes: runtime.Consume[] = [
+            {{#consumes}}
+            { contentType: '{{{mediaType}}}' },
+            {{/consumes}}
+        ];
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        {{#formParams}}
+        {{#isFile}}
+        useForm = canConsumeForm;
+        {{/isFile}}
+        {{/formParams}}
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        {{#formParams}}
+        {{#isArray}}
+        if (params.{{paramName}} !== undefined) {
+            {{#isCollectionFormatMulti}}
+            params.{{paramName}}.forEach((element) => {
+                formParams.append('{{baseName}}{{#useSquareBracketsInArrayNames}}[]{{/useSquareBracketsInArrayNames}}', element as any);
+            })
+            {{/isCollectionFormatMulti}}
+            {{^isCollectionFormatMulti}}
+            formParams.append('{{baseName}}{{#useSquareBracketsInArrayNames}}[]{{/useSquareBracketsInArrayNames}}', {{#uniqueItems}}Array.from({{/uniqueItems}}params.{{paramName}}{{#uniqueItems}}){{/uniqueItems}}.join(runtime.COLLECTION_FORMATS["{{collectionFormat}}"]));
+            {{/isCollectionFormatMulti}}
+        }
+        {{/isArray}}
+        {{^isArray}}
+        if (params.{{paramName}} !== undefined) {
+            {{#isDateTimeType}}
+            formParams.append('{{baseName}}', (params.{{paramName}} as any).toISOString());
+            {{/isDateTimeType}}
+            {{^isDateTimeType}}
+            {{#isPrimitiveType}}
+            formParams.append('{{baseName}}', params.{{paramName}} as any);
+            {{/isPrimitiveType}}
+            {{^isPrimitiveType}}
+            {{#isEnumRef}}
+            formParams.append('{{baseName}}', params.{{paramName}} as any);
+            {{/isEnumRef}}
+            {{^isEnumRef}}
+            {{^withoutRuntimeChecks}}
+            formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
+            {{/withoutRuntimeChecks}}{{#withoutRuntimeChecks}}
+            formParams.append('{{baseName}}', new Blob([JSON.stringify(params.{{paramName}})], { type: "application/json", }));
+            {{/withoutRuntimeChecks}}
+            {{/isEnumRef}}
+            {{/isPrimitiveType}}
+            {{/isDateTimeType}}
+        }
+        {{/isArray}}
+        {{/formParams}}
+        {{/hasFormParams}}
+
+        const response = await this.request({
+            path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(params.{{paramName}}))){{/pathParams}},
+            method: '{{httpMethod}}',
+            headers: headerParameters,
+            {{#queryParams.0}}query: queryParameters,{{/queryParams.0}}
+            {{#hasBodyParam}}
+            {{#bodyParam}}
+            {{#isContainer}}
+            {{^withoutRuntimeChecks}}
+            body: params.{{paramName}}{{#isArray}}{{/isArray}},
+            {{/withoutRuntimeChecks}}
+            {{#withoutRuntimeChecks}}
+            body: params.{{paramName}},
+            {{/withoutRuntimeChecks}}
+            {{/isContainer}}
+            {{^isContainer}}
+            {{^isPrimitiveType}}
+             body: params.{{paramName}},            {{/isPrimitiveType}}
+            {{#isPrimitiveType}}
+            body: params.{{paramName}} as any,
+            {{/isPrimitiveType}}
+            {{/isContainer}}
+            {{/bodyParam}}
+            {{/hasBodyParam}}
+            {{#hasFormParams}}
+            body: formParams,
+            {{/hasFormParams}}
+        }, initOverrides);
+
         {{#returnType}}
-        const response = await this.{{nickname}}Raw({{#allParams.0}}requestParameters, {{/allParams.0}}initOverrides);
+        {{#isResponseFile}}
+        const apiResponse = new runtime.BlobApiResponse(response);
+        {{/isResponseFile}}
+        {{^isResponseFile}}
+        {{#returnTypeIsPrimitive}}
+        {{#isMap}}
+        const apiResponse = new runtime.JSONApiResponse<any>(response);
+        {{/isMap}}
+        {{#isArray}}
+        const apiResponse = new runtime.JSONApiResponse<any>(response);
+        {{/isArray}}
+        {{#returnSimpleType}}
+        const apiResponse = this.isJsonMime(response.headers.get('content-type')) 
+            ? new runtime.JSONApiResponse<{{returnType}}>(response)
+            : new runtime.TextApiResponse(response) as any;
+        {{/returnSimpleType}}
+        {{/returnTypeIsPrimitive}}
+        {{^returnTypeIsPrimitive}}
+        {{#isArray}}
+        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}){{/uniqueItems}};
+        {{/isArray}}
+        {{^isArray}}
+        {{#isMap}}
+        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
+        {{/isMap}}
+        {{^isMap}}
+        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(runtime.transformNullsToUndefined(jsonValue)));
+        {{/isMap}}
+        {{/isArray}}
+        {{/returnTypeIsPrimitive}}
+        {{/isResponseFile}}
         {{#isResponseOptional}}
-        switch (response.raw.status) {
+        switch (response.status) {
             {{#responses}}
             {{#is2xx}}
             case {{code}}:
-                return {{#dataType}}await response.value(){{/dataType}}{{^dataType}}null{{/dataType}};
+                return {{#dataType}}await apiResponse.value(){{/dataType}}{{^dataType}}null{{/dataType}};
             {{/is2xx}}
             {{/responses}}
             default:
-                return await response.value();
+                return await apiResponse.value();
         }
         {{/isResponseOptional}}
         {{^isResponseOptional}}
-        return await response.value();
+        return await apiResponse.value();
         {{/isResponseOptional}}
         {{/returnType}}
         {{^returnType}}
-        await this.{{nickname}}Raw({{#allParams.0}}requestParameters, {{/allParams.0}}initOverrides);
+        // void return type
         {{/returnType}}
     }
     {{/useSingleRequestParameter}}

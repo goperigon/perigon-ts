@@ -5,5 +5,6 @@
   "supportsES6": true,
   "withInterfaces": true,
   "githubOrg": "goperigon",
-  "githubRepo": "perigon-ts"
+  "githubRepo": "perigon-ts",
+  "modelPropertyNaming": "original"
 }

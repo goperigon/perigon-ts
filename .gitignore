@@ -39,5 +39,3 @@ yarn-error.log*
 # Lock files (optional - some teams commit these, others don't)
 # package-lock.json
 # yarn.lock
-
-examples/node_modules

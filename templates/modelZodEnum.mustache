@@ -1,0 +1,57 @@
+
+{{#unescapedDescription}}
+/**
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ * @export
+ */
+{{/unescapedDescription}}
+export const {{classname}}Schema = z.enum([
+{{#allowableValues}}
+{{#enumVars}}
+    {{{value}}}{{^-last}},{{/-last}}
+{{/enumVars}}
+{{/allowableValues}}
+]);
+
+export type {{classname}} = z.infer<typeof {{classname}}Schema>;
+
+{{#stringEnums}}
+{{#unescapedDescription}}
+/**
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ * @export
+ * @enum {string}
+ */
+{{/unescapedDescription}}
+export enum {{classname}} {
+{{#allowableValues}}
+{{#enumVars}}
+    {{#enumDescription}}
+    /**
+    * {{enumDescription}}
+    */
+    {{/enumDescription}}
+    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+{{/enumVars}}
+{{/allowableValues}}
+}
+{{/stringEnums}}{{^stringEnums}}
+{{#unescapedDescription}}
+/**
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ * @export
+ */
+{{/unescapedDescription}}
+export const {{classname}} = {
+{{#allowableValues}}
+{{#enumVars}}
+    {{#enumDescription}}
+    /**
+    * {{enumDescription}}
+    */
+    {{/enumDescription}}
+    {{{name}}}: {{{value}}}{{^-last}},{{/-last}}
+{{/enumVars}}
+{{/allowableValues}}
+} as const;
+{{/stringEnums}}

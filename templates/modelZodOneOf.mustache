@@ -1,0 +1,23 @@
+
+{{#unescapedDescription}}
+/**
+ * @export
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ */
+{{/unescapedDescription}}
+{{#discriminator}}
+export const {{classname}}Schema = z.discriminatedUnion('{{discriminator.propertyName}}', [
+{{#discriminator.mappedModels}}
+    z.lazy(() => {{modelName}}Schema){{^-last}},{{/-last}}
+{{/discriminator.mappedModels}}
+]);
+{{/discriminator}}
+{{^discriminator}}
+export const {{classname}}Schema = z.union([
+{{#oneOf}}
+    {{#oneOfModels}}z.lazy(() => {{.}}Schema){{/oneOfModels}}{{#oneOfArrays}}z.array(z.lazy(() => {{.}}Schema)){{/oneOfArrays}}{{#oneOfPrimitives}}{{#isArray}}z.array({{#items}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.string(){{/isDateTimeType}}{{#isDateType}}z.string().date(){{/isDateType}}{{/items}}){{/isArray}}{{^isArray}}{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTimeType}}z.string(){{/isDateTimeType}}{{#isDateType}}z.string().date(){{/isDateType}}{{/isArray}}{{/oneOfPrimitives}}{{^-last}},{{/-last}}
+{{/oneOf}}
+]);
+{{/discriminator}}
+
+export type {{classname}} = z.infer<typeof {{classname}}Schema>;

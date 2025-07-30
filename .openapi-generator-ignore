@@ -24,3 +24,7 @@
 
 tsconfig.esm.json
 .npmignore
+
+# Ignore individual model files since we're generating everything in index.ts
+src/models/*.ts
+!src/models/index.ts

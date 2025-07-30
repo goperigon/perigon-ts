@@ -6,5 +6,7 @@ npx @openapitools/openapi-generator-cli generate \
   -t templates/ \
   -c ts-fetch.config.json
 
+bun run scripts/reorder-schemas.ts
+
 npx prettier --write "**/*.{ts,js,json,md}"
 npx doctoc README.md --github --maxlevel 2

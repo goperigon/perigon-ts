@@ -1,0 +1,52 @@
+
+{{#unescapedDescription}}
+/**
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ * @export
+ */
+{{/unescapedDescription}}
+export const {{classname}}Schema = z.object({
+{{#vars}}
+    {{#unescapedDescription}}
+    /**
+     * {{#lambda.indented_star_4}}{{{unescapedDescription}}}{{/lambda.indented_star_4}}
+     {{#deprecated}}
+     * @deprecated
+     {{/deprecated}}
+     */
+    {{/unescapedDescription}}
+    {{name}}: {{>zodFieldType}}{{^required}}.optional(){{/required}},
+{{/vars}}
+});
+
+export type {{classname}} = z.infer<typeof {{classname}}Schema>;
+{{#hasEnums}}
+
+{{#vars}}
+{{#isEnum}}
+{{#stringEnums}}
+/**
+* @export
+* @enum {string}
+*/
+export enum {{classname}}{{enumName}} {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+}
+{{/stringEnums}}{{^stringEnums}}
+/**
+ * @export
+ */
+export const {{classname}}{{enumName}} = {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}}: {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+} as const;
+export type {{classname}}{{enumName}} = typeof {{classname}}{{enumName}}[keyof typeof {{classname}}{{enumName}}];
+{{/stringEnums}}
+{{/isEnum}}{{/vars}}{{/hasEnums}}
