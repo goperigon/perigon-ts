@@ -24,6 +24,11 @@ jobs:
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
+
+      # Setup Node for npm publishing
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
           registry-url: "https://registry.npmjs.org"
 
       - name: Get package name and determine version
