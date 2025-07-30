@@ -67,7 +67,9 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         const zodError = error as ZodError;
         expect(zodError.name).toBe("ZodError");
         expect(zodError.issues[0].path).toContain("id");
-        expect(zodError.issues[0].message).toContain("Invalid input");
+        expect(zodError.issues[0].message).toContain(
+          "Expected string, received null",
+        );
       }
     });
 
