@@ -330,7 +330,7 @@ export class {{classname}} extends runtime.BaseAPI {
         const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
         {{/isMap}}
         {{^isMap}}
-        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(runtime.transformNullsToUndefined(jsonValue)));
+        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(jsonValue));
         {{/isMap}}
         {{/isArray}}
         {{/returnTypeIsPrimitive}}
@@ -539,7 +539,7 @@ export class {{classname}} extends runtime.BaseAPI {
         const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
         {{/isMap}}
         {{^isMap}}
-        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(runtime.transformNullsToUndefined(jsonValue)));
+        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(jsonValue));
         {{/isMap}}
         {{/isArray}}
         {{/returnTypeIsPrimitive}}

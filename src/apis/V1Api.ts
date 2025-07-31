@@ -1546,7 +1546,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSchema.parse(runtime.transformNullsToUndefined(jsonValue)),
+      JournalistSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1583,9 +1583,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      QuerySearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      QuerySearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1622,9 +1620,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      CompanySearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      CompanySearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1661,9 +1657,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      JournalistSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1700,9 +1694,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      PeopleSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      PeopleSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1739,9 +1731,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      SourceSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      SourceSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1778,9 +1768,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      StorySearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      StorySearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1819,9 +1807,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      SummarySearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      SummarySearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1858,9 +1844,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      TopicSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      TopicSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1897,9 +1881,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      WikipediaSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1937,9 +1919,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      ArticlesVectorSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      ArticlesVectorSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }
@@ -1977,9 +1957,7 @@ export class V1Api extends runtime.BaseAPI {
     );
 
     const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaVectorSearchResultSchema.parse(
-        runtime.transformNullsToUndefined(jsonValue),
-      ),
+      WikipediaVectorSearchResultSchema.parse(jsonValue),
     );
     return await apiResponse.value();
   }

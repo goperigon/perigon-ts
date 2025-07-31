@@ -401,23 +401,6 @@ export function exists(json: any, key: string) {
   return value !== null && value !== undefined;
 }
 
-/**
- * Recursively transforms null values to undefined in an object or array.
- * This ensures API responses with null values work with optional Zod schemas.
- */
-export function transformNullsToUndefined(obj: any): any {
-  if (obj === null) return undefined;
-  if (Array.isArray(obj)) return obj.map(transformNullsToUndefined);
-  if (typeof obj === "object" && obj !== null) {
-    const result: any = {};
-    for (const [key, value] of Object.entries(obj)) {
-      result[key] = transformNullsToUndefined(value);
-    }
-    return result;
-  }
-  return obj;
-}
-
 export function mapValues(data: any, fn: (item: any) => any) {
   const result: { [key: string]: any } = {};
   for (const key of Object.keys(data)) {

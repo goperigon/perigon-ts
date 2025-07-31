@@ -236,7 +236,7 @@ export const SourceLocationSchema = z.object({
   state: z.string().optional().nullable(),
   county: z.string().optional().nullable(),
   city: z.string().optional().nullable(),
-  coordinates: CoordinateSchema.optional(),
+  coordinates: CoordinateSchema.optional().nullable(),
 });
 
 export type SourceLocation = z.infer<typeof SourceLocationSchema>;
@@ -244,7 +244,7 @@ export type SourceLocation = z.infer<typeof SourceLocationSchema>;
 export const SourceHolderSchema = z.object({
   domain: z.string().optional().nullable(),
   paywall: z.boolean().optional().nullable(),
-  location: SourceLocationSchema.optional(),
+  location: SourceLocationSchema.optional().nullable(),
 });
 
 export type SourceHolder = z.infer<typeof SourceHolderSchema>;
@@ -266,7 +266,7 @@ export const NewsClusterSchema = z.object({
   summary: z.string().optional().nullable(),
   shortSummary: z.string().optional().nullable(),
   summaryReferences: z.array(z.string()).optional().nullable(),
-  imageSource: SourceHolderSchema.optional(),
+  imageSource: SourceHolderSchema.optional().nullable(),
   imageUrl: z.string().optional().nullable(),
   keyPoints: z.array(KeyPointSchema).optional().nullable(),
   questions: z.array(QuestionSchema).optional().nullable(),
@@ -275,7 +275,7 @@ export const NewsClusterSchema = z.object({
     .array(z.never() /* Circular reference to ArticleSchema */)
     .optional()
     .nullable(),
-  sentiment: SentimentHolderSchema.optional(),
+  sentiment: SentimentHolderSchema.optional().nullable(),
   uniqueCount: z.number().optional().nullable(),
   reprintCount: z.number().optional().nullable(),
   totalCount: z.number().optional().nullable(),
@@ -313,7 +313,7 @@ export const PlaceSchema = z.object({
   countryCode: z.string().optional().nullable(),
   amenity: z.string().optional().nullable(),
   neighbourhood: z.string().optional().nullable(),
-  coordinates: CoordinateSchema.optional(),
+  coordinates: CoordinateSchema.optional().nullable(),
 });
 
 export type Place = z.infer<typeof PlaceSchema>;
@@ -323,7 +323,7 @@ export const ArticleSchema = z.object({
   authorsByline: z.string().optional().nullable(),
   articleId: z.string().optional().nullable(),
   clusterId: z.string().optional().nullable(),
-  source: SourceHolderSchema.optional(),
+  source: SourceHolderSchema.optional().nullable(),
   imageUrl: z.string().optional().nullable(),
   country: z.string().optional().nullable(),
   language: z.string().optional().nullable(),
@@ -347,7 +347,7 @@ export const ArticleSchema = z.object({
   taxonomies: z.array(CategoryWithScoreHolderSchema).optional().nullable(),
   entities: z.array(EntityHolderSchema).optional().nullable(),
   companies: z.array(CompanyHolderSchema).optional().nullable(),
-  sentiment: SentimentHolderSchema.optional(),
+  sentiment: SentimentHolderSchema.optional().nullable(),
   summary: z.string().optional().nullable(),
   shortSummary: z.string().optional().nullable(),
   translation: z.string().optional().nullable(),
@@ -359,7 +359,7 @@ export const ArticleSchema = z.object({
   reprintGroupId: z.string().optional().nullable(),
   places: z.array(PlaceSchema).optional().nullable(),
   people: z.array(PersonHolderSchema).optional().nullable(),
-  cluster: NewsClusterSchema.optional(),
+  cluster: NewsClusterSchema.optional().nullable(),
   journalists: z.array(JournalistSchema).optional().nullable(),
   highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
 });
@@ -483,8 +483,8 @@ export const ArticleSearchFilterSchema = z.object({
    * Filter for articles from publishers based in specific cities. Accepts either a single city name or an array. Multiple values create an OR filter.
    */
   sourceCity: z.array(z.string()).optional().nullable(),
-  coordinates: CoordinateFilterSchema.optional(),
-  sourceCoordinates: CoordinateFilterSchema.optional(),
+  coordinates: CoordinateFilterSchema.optional().nullable(),
+  sourceCoordinates: CoordinateFilterSchema.optional().nullable(),
   /**
    * Filter articles by company identifiers. Accepts either a single ID or an array. Multiple values create an OR filter. For a complete list of tracked companies and their IDs, refer to the /companies endpoint.
    */
@@ -559,7 +559,7 @@ export const ArticleSearchParamsSchema = z.object({
    * Natural language query to search the news articles database
    */
   prompt: z.string(),
-  filter: ArticleSearchFilterSchema.optional(),
+  filter: ArticleSearchFilterSchema.optional().nullable(),
   /**
    * 'pubDateFrom' filter, will search articles published after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request
    */
@@ -586,7 +586,7 @@ export type ArticleSearchParams = z.infer<typeof ArticleSearchParamsSchema>;
 
 export const ScoredDataArticleSchema = z.object({
   score: z.number().optional().nullable(),
-  data: ArticleSchema.optional(),
+  data: ArticleSchema.optional().nullable(),
 });
 
 export type ScoredDataArticle = z.infer<typeof ScoredDataArticleSchema>;
@@ -600,7 +600,7 @@ export type ArticlesVectorSearchResult = z.infer<
   typeof ArticlesVectorSearchResultSchema
 >;
 
-export const AuthExceptionCauseStackTraceInnerSchema = z.object({
+export const IllegalParameterExceptionCauseStackTraceInnerSchema = z.object({
   classLoaderName: z.string().optional(),
   moduleName: z.string().optional(),
   moduleVersion: z.string().optional(),
@@ -611,32 +611,38 @@ export const AuthExceptionCauseStackTraceInnerSchema = z.object({
   className: z.string().optional(),
 });
 
-export type AuthExceptionCauseStackTraceInner = z.infer<
-  typeof AuthExceptionCauseStackTraceInnerSchema
+export type IllegalParameterExceptionCauseStackTraceInner = z.infer<
+  typeof IllegalParameterExceptionCauseStackTraceInnerSchema
 >;
 
-export const AuthExceptionCauseSchema = z.object({
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
+export const IllegalParameterExceptionCauseSchema = z.object({
+  stackTrace: z
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .optional(),
   message: z.string().optional(),
   localizedMessage: z.string().optional(),
 });
 
-export type AuthExceptionCause = z.infer<typeof AuthExceptionCauseSchema>;
+export type IllegalParameterExceptionCause = z.infer<
+  typeof IllegalParameterExceptionCauseSchema
+>;
 
-export const AuthExceptionSuppressedInnerSchema = z.object({
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
+export const IllegalParameterExceptionSuppressedInnerSchema = z.object({
+  stackTrace: z
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .optional(),
   message: z.string().optional(),
   localizedMessage: z.string().optional(),
 });
 
-export type AuthExceptionSuppressedInner = z.infer<
-  typeof AuthExceptionSuppressedInnerSchema
+export type IllegalParameterExceptionSuppressedInner = z.infer<
+  typeof IllegalParameterExceptionSuppressedInnerSchema
 >;
 
 export const AuthExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional().nullable(),
+  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   statusCode: z
@@ -713,7 +719,10 @@ export const AuthExceptionSchema = z.object({
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  suppressed: z
+    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .optional()
+    .nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -780,7 +789,7 @@ export const CompanySchema = z.object({
   sic: z.string().optional().nullable(),
   yearFounded: z.number().optional().nullable(),
   revenue: z.string().optional().nullable(),
-  webResources: WebResourcesSchema.optional(),
+  webResources: WebResourcesSchema.optional().nullable(),
 });
 
 export type Company = z.infer<typeof CompanySchema>;
@@ -794,13 +803,16 @@ export const CompanySearchResultSchema = z.object({
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
 export const IllegalParameterExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional().nullable(),
+  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  suppressed: z
+    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .optional()
+    .nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -815,13 +827,16 @@ export const ImageHolderSchema = z.object({
 export type ImageHolder = z.infer<typeof ImageHolderSchema>;
 
 export const InternalErrorExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional().nullable(),
+  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  suppressed: z
+    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .optional()
+    .nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -840,13 +855,16 @@ export type JournalistSearchResult = z.infer<
 >;
 
 export const NotFoundExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional().nullable(),
+  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  suppressed: z
+    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .optional()
+    .nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -869,8 +887,8 @@ export type WikidataLabelHolder = z.infer<typeof WikidataLabelHolderSchema>;
 export const WikidataPoliticalPartyHolderSchema = z.object({
   wikidataId: z.string().optional().nullable(),
   label: z.string().optional().nullable(),
-  startTime: WikidataDateHolderSchema.optional(),
-  endTime: WikidataDateHolderSchema.optional(),
+  startTime: WikidataDateHolderSchema.optional().nullable(),
+  endTime: WikidataDateHolderSchema.optional().nullable(),
 });
 
 export type WikidataPoliticalPartyHolder = z.infer<
@@ -880,9 +898,9 @@ export type WikidataPoliticalPartyHolder = z.infer<
 export const WikidataPositionHolderSchema = z.object({
   wikidataId: z.string().optional().nullable(),
   label: z.string().optional().nullable(),
-  startTime: WikidataDateHolderSchema.optional(),
-  endTime: WikidataDateHolderSchema.optional(),
-  employer: WikidataLabelHolderSchema.optional(),
+  startTime: WikidataDateHolderSchema.optional().nullable(),
+  endTime: WikidataDateHolderSchema.optional().nullable(),
+  employer: WikidataLabelHolderSchema.optional().nullable(),
 });
 
 export type WikidataPositionHolder = z.infer<
@@ -894,9 +912,9 @@ export const PersonSchema = z.object({
   createdAt: z.string().optional().nullable(),
   updatedAt: z.string().optional().nullable(),
   name: z.string().optional().nullable(),
-  gender: WikidataLabelHolderSchema.optional(),
-  dateOfBirth: WikidataDateHolderSchema.optional(),
-  dateOfDeath: WikidataDateHolderSchema.optional(),
+  gender: WikidataLabelHolderSchema.optional().nullable(),
+  dateOfBirth: WikidataDateHolderSchema.optional().nullable(),
+  dateOfDeath: WikidataDateHolderSchema.optional().nullable(),
   description: z.string().optional().nullable(),
   aliases: z.array(z.string()).optional().nullable(),
   occupation: z.array(WikidataLabelHolderSchema).optional().nullable(),
@@ -905,7 +923,7 @@ export const PersonSchema = z.object({
     .array(WikidataPoliticalPartyHolderSchema)
     .optional()
     .nullable(),
-  image: ImageHolderSchema.optional(),
+  image: ImageHolderSchema.optional().nullable(),
   _abstract: z.string().optional().nullable(),
 });
 
@@ -949,7 +967,7 @@ export type WikiData = z.infer<typeof WikiDataSchema>;
 
 export const ScoredDataWikiDataSchema = z.object({
   score: z.number().optional().nullable(),
-  data: WikiDataSchema.optional(),
+  data: WikiDataSchema.optional().nullable(),
 });
 
 export type ScoredDataWikiData = z.infer<typeof ScoredDataWikiDataSchema>;
@@ -971,7 +989,7 @@ export const SourceSchema = z.object({
   description: z.string().optional().nullable(),
   avgMonthlyPosts: z.number().optional().nullable(),
   paywall: z.boolean().optional().nullable(),
-  location: SourceLocationSchema.optional(),
+  location: SourceLocationSchema.optional().nullable(),
   topCategories: z.array(SourceTopStatHolderSchema).optional().nullable(),
   topTopics: z.array(SourceTopStatHolderSchema).optional().nullable(),
   topCountries: z.array(SourceTopStatHolderSchema).optional().nullable(),
@@ -982,9 +1000,9 @@ export const SourceSchema = z.object({
   mbfcBiasRating: z.string().optional().nullable(),
   monthlyVisits: z.number().optional().nullable(),
   globalRank: z.number().optional().nullable(),
-  logoLarge: ImageHolderSchema.optional(),
-  logoFavIcon: ImageHolderSchema.optional(),
-  logoSquare: ImageHolderSchema.optional(),
+  logoLarge: ImageHolderSchema.optional().nullable(),
+  logoFavIcon: ImageHolderSchema.optional().nullable(),
+  logoSquare: ImageHolderSchema.optional().nullable(),
 });
 
 export type Source = z.infer<typeof SourceSchema>;
@@ -1070,9 +1088,9 @@ export const SummarySearchResultSchema = z.object({
 export type SummarySearchResult = z.infer<typeof SummarySearchResultSchema>;
 
 export const TooManyRequestsExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional().nullable(),
+  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   status: z
@@ -1149,7 +1167,10 @@ export const TooManyRequestsExceptionSchema = z.object({
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  suppressed: z
+    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .optional()
+    .nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -1169,7 +1190,7 @@ export const TopicDtoSchema = z.object({
   createdAt: z.string().optional().nullable(),
   updatedAt: z.string().optional().nullable(),
   name: z.string().optional().nullable(),
-  labels: TopicLabelsSchema.optional(),
+  labels: TopicLabelsSchema.optional().nullable(),
 });
 
 export type TopicDto = z.infer<typeof TopicDtoSchema>;
@@ -1283,7 +1304,7 @@ export const WikipediaSearchParamsSchema = z.object({
    * Natural language query to search the Wikipedia pages database
    */
   prompt: z.string(),
-  filter: WikipediaSearchFilterSchema.optional(),
+  filter: WikipediaSearchFilterSchema.optional().nullable(),
   /**
    * 'wikiRevisionFrom' filter, will search pages modified after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
