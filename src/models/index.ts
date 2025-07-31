@@ -53,14 +53,14 @@ export const AllEndpointSortBy = {
 } as const;
 
 export const CategoryHolderSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().optional().nullable(),
 });
 
 export type CategoryHolder = z.infer<typeof CategoryHolderSchema>;
 
 export const CategoryWithScoreHolderSchema = z.object({
-  name: z.string().optional(),
-  score: z.number().optional(),
+  name: z.string().optional().nullable(),
+  score: z.number().optional().nullable(),
 });
 
 export type CategoryWithScoreHolder = z.infer<
@@ -68,307 +68,308 @@ export type CategoryWithScoreHolder = z.infer<
 >;
 
 export const CompanyHolderSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
-  domains: z.array(z.string()).optional(),
-  symbols: z.array(z.string()).optional(),
+  id: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  domains: z.array(z.string()).optional().nullable(),
+  symbols: z.array(z.string()).optional().nullable(),
 });
 
 export type CompanyHolder = z.infer<typeof CompanyHolderSchema>;
 
 export const EntityHolderSchema = z.object({
-  data: z.string().optional(),
-  type: z.string().optional(),
-  mentions: z.number().optional(),
+  data: z.string().optional().nullable(),
+  type: z.string().optional().nullable(),
+  mentions: z.number().optional().nullable(),
 });
 
 export type EntityHolder = z.infer<typeof EntityHolderSchema>;
 
 export const EventTypeHolderSchema = z.object({
-  name: z.string().optional(),
-  type: z.string().optional(),
+  name: z.string().optional().nullable(),
+  type: z.string().optional().nullable(),
 });
 
 export type EventTypeHolder = z.infer<typeof EventTypeHolderSchema>;
 
 export const IdNameHolderSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
+  id: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
 });
 
 export type IdNameHolder = z.infer<typeof IdNameHolderSchema>;
 
 export const LocationHolderSchema = z.object({
-  country: z.string().optional(),
-  state: z.string().optional(),
-  county: z.string().optional(),
-  city: z.string().optional(),
-  area: z.string().optional(),
+  country: z.string().optional().nullable(),
+  state: z.string().optional().nullable(),
+  county: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  area: z.string().optional().nullable(),
 });
 
 export type LocationHolder = z.infer<typeof LocationHolderSchema>;
 
 export const NameCountSchema = z.object({
-  name: z.string().optional(),
-  count: z.number().optional(),
+  name: z.string().optional().nullable(),
+  count: z.number().optional().nullable(),
 });
 
 export type NameCount = z.infer<typeof NameCountSchema>;
 
 export const JournalistSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
-  fullName: z.string().optional(),
-  headline: z.string().optional(),
-  description: z.string().optional(),
-  title: z.string().optional(),
-  locations: z.array(LocationHolderSchema).optional(),
-  updatedAt: z.string().optional(),
-  topTopics: z.array(NameCountSchema).optional(),
-  topSources: z.array(NameCountSchema).optional(),
-  topCategories: z.array(NameCountSchema).optional(),
-  topLabels: z.array(NameCountSchema).optional(),
-  topCountries: z.array(NameCountSchema).optional(),
-  avgMonthlyPosts: z.number().optional(),
-  twitterHandle: z.string().optional(),
-  twitterBio: z.string().optional(),
-  imageUrl: z.string().optional(),
-  linkedinUrl: z.string().optional(),
-  linkedinConnections: z.number().optional(),
-  linkedinFollowers: z.number().optional(),
-  facebookUrl: z.string().optional(),
-  instagramUrl: z.string().optional(),
-  websiteUrl: z.string().optional(),
-  blogUrl: z.string().optional(),
-  tumblrUrl: z.string().optional(),
-  youtubeUrl: z.string().optional(),
+  id: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  fullName: z.string().optional().nullable(),
+  headline: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  locations: z.array(LocationHolderSchema).optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  topTopics: z.array(NameCountSchema).optional().nullable(),
+  topSources: z.array(NameCountSchema).optional().nullable(),
+  topCategories: z.array(NameCountSchema).optional().nullable(),
+  topLabels: z.array(NameCountSchema).optional().nullable(),
+  topCountries: z.array(NameCountSchema).optional().nullable(),
+  avgMonthlyPosts: z.number().optional().nullable(),
+  twitterHandle: z.string().optional().nullable(),
+  twitterBio: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
+  linkedinUrl: z.string().optional().nullable(),
+  linkedinConnections: z.number().optional().nullable(),
+  linkedinFollowers: z.number().optional().nullable(),
+  facebookUrl: z.string().optional().nullable(),
+  instagramUrl: z.string().optional().nullable(),
+  websiteUrl: z.string().optional().nullable(),
+  blogUrl: z.string().optional().nullable(),
+  tumblrUrl: z.string().optional().nullable(),
+  youtubeUrl: z.string().optional().nullable(),
 });
 
 export type Journalist = z.infer<typeof JournalistSchema>;
 
 export const KeywordHolderSchema = z.object({
-  name: z.string().optional(),
-  weight: z.number().optional(),
+  name: z.string().optional().nullable(),
+  weight: z.number().optional().nullable(),
 });
 
 export type KeywordHolder = z.infer<typeof KeywordHolderSchema>;
 
 export const LabelHolderSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().optional().nullable(),
 });
 
 export type LabelHolder = z.infer<typeof LabelHolderSchema>;
 
 export const CompanyCountSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
-  domains: z.array(z.string()).optional(),
-  symbols: z.array(z.string()).optional(),
-  count: z.number().optional(),
+  id: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  domains: z.array(z.string()).optional().nullable(),
+  symbols: z.array(z.string()).optional().nullable(),
+  count: z.number().optional().nullable(),
 });
 
 export type CompanyCount = z.infer<typeof CompanyCountSchema>;
 
 export const KeyPointSchema = z.object({
-  point: z.string().optional(),
-  references: z.array(z.string()).optional(),
+  point: z.string().optional().nullable(),
+  references: z.array(z.string()).optional().nullable(),
 });
 
 export type KeyPoint = z.infer<typeof KeyPointSchema>;
 
 export const LocationCountSchema = z.object({
-  state: z.string().optional(),
-  county: z.string().optional(),
-  city: z.string().optional(),
-  area: z.string().optional(),
-  count: z.number().optional(),
+  state: z.string().optional().nullable(),
+  county: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  area: z.string().optional().nullable(),
+  count: z.number().optional().nullable(),
 });
 
 export type LocationCount = z.infer<typeof LocationCountSchema>;
 
 export const PersonCountSchema = z.object({
-  wikidataId: z.string().optional(),
-  name: z.string().optional(),
-  count: z.number().optional(),
+  wikidataId: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  count: z.number().optional().nullable(),
 });
 
 export type PersonCount = z.infer<typeof PersonCountSchema>;
 
 export const PersonHolderSchema = z.object({
-  wikidataId: z.string().optional(),
-  name: z.string().optional(),
+  wikidataId: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
 });
 
 export type PersonHolder = z.infer<typeof PersonHolderSchema>;
 
 export const QuestionSchema = z.object({
-  question: z.string().optional(),
-  answer: z.string().optional(),
-  references: z.array(z.string()).optional(),
+  question: z.string().optional().nullable(),
+  answer: z.string().optional().nullable(),
+  references: z.array(z.string()).optional().nullable(),
 });
 
 export type Question = z.infer<typeof QuestionSchema>;
 
 export const RecordStatHolderSchema = z.object({
-  name: z.string().optional(),
-  count: z.number().optional(),
+  name: z.string().optional().nullable(),
+  count: z.number().optional().nullable(),
 });
 
 export type RecordStatHolder = z.infer<typeof RecordStatHolderSchema>;
 
 export const SentimentHolderSchema = z.object({
-  positive: z.number().optional(),
-  negative: z.number().optional(),
-  neutral: z.number().optional(),
+  positive: z.number().optional().nullable(),
+  negative: z.number().optional().nullable(),
+  neutral: z.number().optional().nullable(),
 });
 
 export type SentimentHolder = z.infer<typeof SentimentHolderSchema>;
 
 export const CoordinateSchema = z.object({
-  lat: z.number().optional(),
-  lon: z.number().optional(),
+  lat: z.number().optional().nullable(),
+  lon: z.number().optional().nullable(),
 });
 
 export type Coordinate = z.infer<typeof CoordinateSchema>;
 
 export const SourceLocationSchema = z.object({
-  country: z.string().optional(),
-  state: z.string().optional(),
-  county: z.string().optional(),
-  city: z.string().optional(),
+  country: z.string().optional().nullable(),
+  state: z.string().optional().nullable(),
+  county: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
   coordinates: CoordinateSchema.optional(),
 });
 
 export type SourceLocation = z.infer<typeof SourceLocationSchema>;
 
 export const SourceHolderSchema = z.object({
-  domain: z.string().optional(),
-  paywall: z.boolean().optional(),
+  domain: z.string().optional().nullable(),
+  paywall: z.boolean().optional().nullable(),
   location: SourceLocationSchema.optional(),
 });
 
 export type SourceHolder = z.infer<typeof SourceHolderSchema>;
 
 export const TopicHolderSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().optional().nullable(),
 });
 
 export type TopicHolder = z.infer<typeof TopicHolderSchema>;
 
 export const NewsClusterSchema = z.object({
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-  initializedAt: z.string().optional(),
-  id: z.string().optional(),
-  duplicateOf: z.string().optional(),
-  slug: z.string().optional(),
-  name: z.string().optional(),
-  summary: z.string().optional(),
-  shortSummary: z.string().optional(),
-  summaryReferences: z.array(z.string()).optional(),
+  createdAt: z.string().optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  initializedAt: z.string().optional().nullable(),
+  id: z.string().optional().nullable(),
+  duplicateOf: z.string().optional().nullable(),
+  slug: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  summary: z.string().optional().nullable(),
+  shortSummary: z.string().optional().nullable(),
+  summaryReferences: z.array(z.string()).optional().nullable(),
   imageSource: SourceHolderSchema.optional(),
-  imageUrl: z.string().optional(),
-  keyPoints: z.array(KeyPointSchema).optional(),
-  questions: z.array(QuestionSchema).optional(),
-  uniqueSources: z.array(z.string()).optional(),
+  imageUrl: z.string().optional().nullable(),
+  keyPoints: z.array(KeyPointSchema).optional().nullable(),
+  questions: z.array(QuestionSchema).optional().nullable(),
+  uniqueSources: z.array(z.string()).optional().nullable(),
   selectedArticles: z
     .array(z.never() /* Circular reference to ArticleSchema */)
-    .optional(),
+    .optional()
+    .nullable(),
   sentiment: SentimentHolderSchema.optional(),
-  uniqueCount: z.number().optional(),
-  reprintCount: z.number().optional(),
-  totalCount: z.number().optional(),
-  countries: z.array(RecordStatHolderSchema).optional(),
-  topCountries: z.array(z.string()).optional(),
-  topics: z.array(RecordStatHolderSchema).optional(),
-  topTopics: z.array(TopicHolderSchema).optional(),
-  categories: z.array(RecordStatHolderSchema).optional(),
-  topCategories: z.array(CategoryHolderSchema).optional(),
-  taxonomies: z.array(RecordStatHolderSchema).optional(),
-  topTaxonomies: z.array(CategoryHolderSchema).optional(),
-  people: z.array(PersonCountSchema).optional(),
-  topPeople: z.array(PersonHolderSchema).optional(),
-  companies: z.array(CompanyCountSchema).optional(),
-  topCompanies: z.array(CompanyHolderSchema).optional(),
-  locations: z.array(LocationCountSchema).optional(),
-  topLocations: z.array(LocationHolderSchema).optional(),
-  highlights: z.record(z.string(), z.array(z.string())).optional(),
+  uniqueCount: z.number().optional().nullable(),
+  reprintCount: z.number().optional().nullable(),
+  totalCount: z.number().optional().nullable(),
+  countries: z.array(RecordStatHolderSchema).optional().nullable(),
+  topCountries: z.array(z.string()).optional().nullable(),
+  topics: z.array(RecordStatHolderSchema).optional().nullable(),
+  topTopics: z.array(TopicHolderSchema).optional().nullable(),
+  categories: z.array(RecordStatHolderSchema).optional().nullable(),
+  topCategories: z.array(CategoryHolderSchema).optional().nullable(),
+  taxonomies: z.array(RecordStatHolderSchema).optional().nullable(),
+  topTaxonomies: z.array(CategoryHolderSchema).optional().nullable(),
+  people: z.array(PersonCountSchema).optional().nullable(),
+  topPeople: z.array(PersonHolderSchema).optional().nullable(),
+  companies: z.array(CompanyCountSchema).optional().nullable(),
+  topCompanies: z.array(CompanyHolderSchema).optional().nullable(),
+  locations: z.array(LocationCountSchema).optional().nullable(),
+  topLocations: z.array(LocationHolderSchema).optional().nullable(),
+  highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
 });
 
 export type NewsCluster = z.infer<typeof NewsClusterSchema>;
 
 export const PlaceSchema = z.object({
-  osmId: z.string().optional(),
-  road: z.string().optional(),
-  quarter: z.string().optional(),
-  suburb: z.string().optional(),
-  city: z.string().optional(),
-  town: z.string().optional(),
-  county: z.string().optional(),
-  stateDistrict: z.string().optional(),
-  state: z.string().optional(),
-  postcode: z.string().optional(),
-  country: z.string().optional(),
-  countryCode: z.string().optional(),
-  amenity: z.string().optional(),
-  neighbourhood: z.string().optional(),
+  osmId: z.string().optional().nullable(),
+  road: z.string().optional().nullable(),
+  quarter: z.string().optional().nullable(),
+  suburb: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  town: z.string().optional().nullable(),
+  county: z.string().optional().nullable(),
+  stateDistrict: z.string().optional().nullable(),
+  state: z.string().optional().nullable(),
+  postcode: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  countryCode: z.string().optional().nullable(),
+  amenity: z.string().optional().nullable(),
+  neighbourhood: z.string().optional().nullable(),
   coordinates: CoordinateSchema.optional(),
 });
 
 export type Place = z.infer<typeof PlaceSchema>;
 
 export const ArticleSchema = z.object({
-  url: z.string().optional(),
-  authorsByline: z.string().optional(),
-  articleId: z.string().optional(),
-  clusterId: z.string().optional(),
+  url: z.string().optional().nullable(),
+  authorsByline: z.string().optional().nullable(),
+  articleId: z.string().optional().nullable(),
+  clusterId: z.string().optional().nullable(),
   source: SourceHolderSchema.optional(),
-  imageUrl: z.string().optional(),
-  country: z.string().optional(),
-  language: z.string().optional(),
-  pubDate: z.string().optional(),
-  addDate: z.string().optional(),
-  refreshDate: z.string().optional(),
-  score: z.number().optional(),
-  title: z.string().optional(),
-  description: z.string().optional(),
-  content: z.string().optional(),
-  medium: z.string().optional(),
-  links: z.array(z.string()).optional(),
-  labels: z.array(LabelHolderSchema).optional(),
-  eventTypes: z.array(EventTypeHolderSchema).optional(),
-  matchedAuthors: z.array(IdNameHolderSchema).optional(),
-  claim: z.string().optional(),
-  verdict: z.string().optional(),
-  keywords: z.array(KeywordHolderSchema).optional(),
-  topics: z.array(TopicHolderSchema).optional(),
-  categories: z.array(CategoryHolderSchema).optional(),
-  taxonomies: z.array(CategoryWithScoreHolderSchema).optional(),
-  entities: z.array(EntityHolderSchema).optional(),
-  companies: z.array(CompanyHolderSchema).optional(),
+  imageUrl: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  language: z.string().optional().nullable(),
+  pubDate: z.string().optional().nullable(),
+  addDate: z.string().optional().nullable(),
+  refreshDate: z.string().optional().nullable(),
+  score: z.number().optional().nullable(),
+  title: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  content: z.string().optional().nullable(),
+  medium: z.string().optional().nullable(),
+  links: z.array(z.string()).optional().nullable(),
+  labels: z.array(LabelHolderSchema).optional().nullable(),
+  eventTypes: z.array(EventTypeHolderSchema).optional().nullable(),
+  matchedAuthors: z.array(IdNameHolderSchema).optional().nullable(),
+  claim: z.string().optional().nullable(),
+  verdict: z.string().optional().nullable(),
+  keywords: z.array(KeywordHolderSchema).optional().nullable(),
+  topics: z.array(TopicHolderSchema).optional().nullable(),
+  categories: z.array(CategoryHolderSchema).optional().nullable(),
+  taxonomies: z.array(CategoryWithScoreHolderSchema).optional().nullable(),
+  entities: z.array(EntityHolderSchema).optional().nullable(),
+  companies: z.array(CompanyHolderSchema).optional().nullable(),
   sentiment: SentimentHolderSchema.optional(),
-  summary: z.string().optional(),
-  shortSummary: z.string().optional(),
-  translation: z.string().optional(),
-  translatedTitle: z.string().optional(),
-  translatedDescription: z.string().optional(),
-  translatedSummary: z.string().optional(),
-  locations: z.array(LocationHolderSchema).optional(),
-  reprint: z.boolean().optional(),
-  reprintGroupId: z.string().optional(),
-  places: z.array(PlaceSchema).optional(),
-  people: z.array(PersonHolderSchema).optional(),
+  summary: z.string().optional().nullable(),
+  shortSummary: z.string().optional().nullable(),
+  translation: z.string().optional().nullable(),
+  translatedTitle: z.string().optional().nullable(),
+  translatedDescription: z.string().optional().nullable(),
+  translatedSummary: z.string().optional().nullable(),
+  locations: z.array(LocationHolderSchema).optional().nullable(),
+  reprint: z.boolean().optional().nullable(),
+  reprintGroupId: z.string().optional().nullable(),
+  places: z.array(PlaceSchema).optional().nullable(),
+  people: z.array(PersonHolderSchema).optional().nullable(),
   cluster: NewsClusterSchema.optional(),
-  journalists: z.array(JournalistSchema).optional(),
-  highlights: z.record(z.string(), z.array(z.string())).optional(),
+  journalists: z.array(JournalistSchema).optional().nullable(),
+  highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
 });
 
 export type Article = z.infer<typeof ArticleSchema>;
 
 export const CoordinateFilterSchema = z.object({
-  lat: z.number().optional(),
-  lon: z.number().optional(),
-  radius: z.number().optional(),
+  lat: z.number().optional().nullable(),
+  lon: z.number().optional().nullable(),
+  radius: z.number().optional().nullable(),
 });
 
 export type CoordinateFilter = z.infer<typeof CoordinateFilterSchema>;
@@ -377,175 +378,178 @@ export const ArticleSearchFilterSchema = z.object({
   /**
    * Filter by specific article identifiers. Accepts either a single ID or an array of IDs. Returns only articles matching these IDs.
    */
-  articleId: z.array(z.string()).optional(),
+  articleId: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific story identifiers. Accepts either a single ID or an array of IDs. Returns only articles belonging to these stories.
    */
-  clusterId: z.array(z.string()).optional(),
+  clusterId: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by specific publisher domains or subdomains. Accepts either a single domain or an array of domains. Multiple values create an OR filter.
    */
-  source: z.array(z.string()).optional(),
+  source: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles from specific publisher domains or subdomains. Accepts either a single domain or an array of domains. Multiple values create an AND-exclude filter.
    */
-  excludeSource: z.array(z.string()).optional(),
+  excludeSource: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles using Perigon's curated publisher bundles (e.g., top100, top25tech). Accepts either a single source group or an array. Multiple values create an OR filter to include articles from any of the specified bundles.
    */
-  sourceGroup: z.array(z.string()).optional(),
+  sourceGroup: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by their language using ISO-639 two-letter codes in lowercase (e.g., en, es, fr). Accepts either a single language code or an array. Multiple values create an OR filter.
    */
-  language: z.array(z.string()).optional(),
+  language: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles in specific languages using ISO-639 two-letter codes in lowercase. Accepts either a single language code or an array. Multiple values create an AND-exclude filter.
    */
-  excludeLanguage: z.array(z.string()).optional(),
+  excludeLanguage: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. View our docs for an exhaustive list of labels. Accepts either a single label or an array. Multiple values create an OR filter.
    */
-  label: z.array(z.string()).optional(),
+  label: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles with specific editorial labels. Accepts either a single label or an array. Multiple values create an AND-exclude filter, removing all content with any of these labels.
    */
-  excludeLabel: z.array(z.string()).optional(),
+  excludeLabel: z.array(z.string()).optional().nullable(),
   /**
    * Filter by Google Content Categories. Must pass the full hierarchical path of the category. Accepts either a single path or an array. Example: taxonomy=/Finance/Banking/Other,/Finance/Investing/Funds. Multiple values create an OR filter.
    */
-  taxonomy: z.array(z.string()).optional(),
+  taxonomy: z.array(z.string()).optional().nullable(),
   /**
    * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Accepts either a single category or an array. Use none to find uncategorized articles. Multiple values create an OR filter.
    */
-  category: z.array(z.string()).optional(),
+  category: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Accepts either a single topic or an array. Topics are more granular than categories, and articles can have multiple topics. Multiple values create an OR filter.
    */
-  topic: z.array(z.string()).optional(),
+  topic: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles with specific topics. Accepts either a single topic or an array. Multiple values create an AND-exclude filter, removing all content with any of these topics.
    */
-  excludeTopic: z.array(z.string()).optional(),
+  excludeTopic: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by countries they mention using two-letter country codes in lowercase (e.g., us, gb, jp). Accepts either a single country code or an array. Multiple values create an OR filter. See documentation for supported country codes.
    */
-  country: z.array(z.string()).optional(),
+  country: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles from specific countries using two-letter country codes in lowercase. Accepts either a single country code or an array. Multiple values create an AND-exclude filter. See documentation for supported country codes.
    */
-  excludeCountry: z.array(z.string()).optional(),
+  excludeCountry: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles where specified countries play a central role in the content, not just mentioned. Uses two-letter country codes in lowercase. Accepts either a single country code or an array. Multiple values create an OR filter. See documentation for supported country codes.
    */
-  locationsCountry: z.array(z.string()).optional(),
+  locationsCountry: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles where specified countries play a central role in the content. Accepts either a single country code or an array. Multiple values create an AND-exclude filter, removing articles focused on any of these countries. See documentation for supported country codes.
    */
-  excludeLocationsCountry: z.array(z.string()).optional(),
+  excludeLocationsCountry: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles where specified states play a central role in the content. Accepts either a single state code or an array. Multiple values create an OR filter. Uses two-letter state codes in lowercase. See documentation for supported state codes.
    */
-  state: z.array(z.string()).optional(),
+  state: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles where specified states play a central role. Accepts either a single state code or an array. Multiple values create an AND-exclude filter, removing articles focused on any of these states. See documentation for supported state codes.
    */
-  excludeState: z.array(z.string()).optional(),
+  excludeState: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles that mention or are related to specific counties. Accepts either a single county name or an array. Multiple values create an OR filter. County names typically include the word 'County' (e.g., Los Angeles County).
    */
-  county: z.array(z.string()).optional(),
+  county: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles that mention or are related to specific counties. Accepts either a single county name or an array. Multiple values create an AND-exclude filter. County names should match the format in article metadata (e.g., Los Angeles County, Cook County).
    */
-  excludeCounty: z.array(z.string()).optional(),
+  excludeCounty: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles that mention or are related to specific cities. Accepts either a single city name or an array. Multiple values create an OR filter.
    */
-  city: z.array(z.string()).optional(),
+  city: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles that mention or are related to specific cities. Accepts either a single city name or an array. Multiple values create an AND-exclude filter.
    */
-  excludeCity: z.array(z.string()).optional(),
+  excludeCity: z.array(z.string()).optional().nullable(),
   /**
    * Filter for articles from publishers based in specific countries. Accepts either a single country code or an array. Uses two-letter country codes in lowercase (e.g., us, gb). See documentation for supported country codes.
    */
-  sourceCountry: z.array(z.string()).optional(),
+  sourceCountry: z.array(z.string()).optional().nullable(),
   /**
    * Filter for articles from publishers based in specific states or regions. Accepts either a single state code or an array. Uses two-letter state codes in lowercase. See documentation for supported state codes.
    */
-  sourceState: z.array(z.string()).optional(),
+  sourceState: z.array(z.string()).optional().nullable(),
   /**
    * Filter for articles from publishers based in specific counties. Accepts either a single county name or an array. Multiple values create an OR filter.
    */
-  sourceCounty: z.array(z.string()).optional(),
+  sourceCounty: z.array(z.string()).optional().nullable(),
   /**
    * Filter for articles from publishers based in specific cities. Accepts either a single city name or an array. Multiple values create an OR filter.
    */
-  sourceCity: z.array(z.string()).optional(),
+  sourceCity: z.array(z.string()).optional().nullable(),
   coordinates: CoordinateFilterSchema.optional(),
   sourceCoordinates: CoordinateFilterSchema.optional(),
   /**
    * Filter articles by company identifiers. Accepts either a single ID or an array. Multiple values create an OR filter. For a complete list of tracked companies and their IDs, refer to the /companies endpoint.
    */
-  companyId: z.array(z.string()).optional(),
+  companyId: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles mentioning companies with specific identifiers. Accepts either a single ID or an array. Multiple values create an AND-exclude filter. For a complete list of tracked companies and their IDs, refer to the /companies endpoint.
    */
-  excludeCompanyId: z.array(z.string()).optional(),
+  excludeCompanyId: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by company domains (e.g., apple.com). Accepts either a single domain or an array. Multiple values create an OR filter. For a complete list of tracked companies and their domains, refer to the /companies endpoint.
    */
-  companyDomain: z.array(z.string()).optional(),
+  companyDomain: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles related to companies with specific domains. Accepts either a single domain or an array. Multiple values create an AND-exclude filter. For a complete list of tracked companies and their domains, refer to the /companies endpoint.
    */
-  excludeCompanyDomain: z.array(z.string()).optional(),
+  excludeCompanyDomain: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by company stock symbols (e.g., AAPL, MSFT). Accepts either a single symbol or an array. Multiple values create an OR filter. For a complete list of tracked companies and their symbols, refer to the /companies endpoint.
    */
-  companySymbol: z.array(z.string()).optional(),
+  companySymbol: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles related to companies with specific stock symbols. Accepts either a single symbol or an array. Multiple values create an AND-exclude filter. For a complete list of tracked companies and their symbols, refer to the /companies endpoint.
    */
-  excludeCompanySymbol: z.array(z.string()).optional(),
+  excludeCompanySymbol: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by company name mentions. Accepts either a single name or an array. Performs exact matching on company names. Multiple values create an OR filter. For a complete list of tracked companies and their names, refer to the /companies endpoint.
    */
-  companyName: z.array(z.string()).optional(),
+  companyName: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by Wikidata IDs of mentioned people. Accepts either a single ID or an array. Multiple values create an OR filter. For a complete list of tracked individuals and their Wikidata IDs, refer to the /people endpoint.
    */
-  personWikidataId: z.array(z.string()).optional(),
+  personWikidataId: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles mentioning people with specific Wikidata IDs. Accepts either a single ID or an array. Multiple values create an AND-exclude filter. For a complete list of tracked individuals and their Wikidata IDs, refer to the /people endpoint.
    */
-  excludePersonWikidataId: z.array(z.string()).optional(),
+  excludePersonWikidataId: z.array(z.string()).optional().nullable(),
   /**
    * Filter articles by exact person name matches. Accepts either a single name or an array. Does not support Boolean operators or wildcards. Multiple values create an OR filter. For a complete list of tracked individuals and their names, refer to the /people endpoint.
    */
-  personName: z.array(z.string()).optional(),
+  personName: z.array(z.string()).optional().nullable(),
   /**
    * Exclude articles mentioning specific people by name. Accepts either a single name or an array. Multiple values create an AND-exclude filter. For a complete list of tracked individuals and their names, refer to the /people endpoint.
    */
-  excludePersonName: z.array(z.string()).optional(),
+  excludePersonName: z.array(z.string()).optional().nullable(),
   /**
    * Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
    */
   AND: z
     .array(z.never()) /* Self-reference prevented */
-    .optional(),
+    .optional()
+    .nullable(),
   /**
    * Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
    */
   OR: z
     .array(z.never()) /* Self-reference prevented */
-    .optional(),
+    .optional()
+    .nullable(),
   /**
    * A filter object for logical NOT operations
    */
   NOT: z
     .array(z.never()) /* Self-reference prevented */
-    .optional(),
+    .optional()
+    .nullable(),
 });
 
 export type ArticleSearchFilter = z.infer<typeof ArticleSearchFilterSchema>;
@@ -559,29 +563,29 @@ export const ArticleSearchParamsSchema = z.object({
   /**
    * 'pubDateFrom' filter, will search articles published after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request
    */
-  pubDateFrom: z.string().optional(),
+  pubDateFrom: z.string().optional().nullable(),
   /**
    * 'pubDateFrom' filter, will search articles published before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00
    */
-  pubDateTo: z.string().optional(),
+  pubDateTo: z.string().optional().nullable(),
   /**
    * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is 'true'.
    */
-  showReprints: z.boolean().optional(),
+  showReprints: z.boolean().optional().nullable(),
   /**
    * The number of items per page.
    */
-  size: z.number().optional(),
+  size: z.number().optional().nullable(),
   /**
    * The page number to retrieve.
    */
-  page: z.number().optional(),
+  page: z.number().optional().nullable(),
 });
 
 export type ArticleSearchParams = z.infer<typeof ArticleSearchParamsSchema>;
 
 export const ScoredDataArticleSchema = z.object({
-  score: z.number().optional(),
+  score: z.number().optional().nullable(),
   data: ArticleSchema.optional(),
 });
 
@@ -630,8 +634,11 @@ export type AuthExceptionSuppressedInner = z.infer<
 >;
 
 export const AuthExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional(),
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
+  stackTrace: z
+    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .optional()
+    .nullable(),
   statusCode: z
     .enum([
       "100 CONTINUE",
@@ -703,75 +710,76 @@ export const AuthExceptionSchema = z.object({
       "510 NOT_EXTENDED",
       "511 NETWORK_AUTHENTICATION_REQUIRED",
     ])
-    .optional(),
-  message: z.string().optional(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional(),
-  localizedMessage: z.string().optional(),
+    .optional()
+    .nullable(),
+  message: z.string().optional().nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  localizedMessage: z.string().optional().nullable(),
 });
 
 export type AuthException = z.infer<typeof AuthExceptionSchema>;
 
 export const SymbolHolderSchema = z.object({
-  symbol: z.string().optional(),
-  exchange: z.string().optional(),
-  exchangeShortName: z.string().optional(),
-  ipoDate: z.string().optional(),
+  symbol: z.string().optional().nullable(),
+  exchange: z.string().optional().nullable(),
+  exchangeShortName: z.string().optional().nullable(),
+  ipoDate: z.string().optional().nullable(),
 });
 
 export type SymbolHolder = z.infer<typeof SymbolHolderSchema>;
 
 export const WebResourcesSchema = z.object({
-  careers: z.string().optional(),
-  about: z.string().optional(),
-  blog: z.string().optional(),
-  events: z.string().optional(),
-  sitemap: z.string().optional(),
-  updates: z.string().optional(),
-  linkedin: z.string().optional(),
-  facebook: z.string().optional(),
-  instagram: z.string().optional(),
-  medium: z.string().optional(),
-  reddit: z.string().optional(),
-  threads: z.string().optional(),
-  tiktok: z.string().optional(),
-  x: z.string().optional(),
-  wellfound: z.string().optional(),
-  youtube: z.string().optional(),
-  wikipedia: z.string().optional(),
+  careers: z.string().optional().nullable(),
+  about: z.string().optional().nullable(),
+  blog: z.string().optional().nullable(),
+  events: z.string().optional().nullable(),
+  sitemap: z.string().optional().nullable(),
+  updates: z.string().optional().nullable(),
+  linkedin: z.string().optional().nullable(),
+  facebook: z.string().optional().nullable(),
+  instagram: z.string().optional().nullable(),
+  medium: z.string().optional().nullable(),
+  reddit: z.string().optional().nullable(),
+  threads: z.string().optional().nullable(),
+  tiktok: z.string().optional().nullable(),
+  x: z.string().optional().nullable(),
+  wellfound: z.string().optional().nullable(),
+  youtube: z.string().optional().nullable(),
+  wikipedia: z.string().optional().nullable(),
 });
 
 export type WebResources = z.infer<typeof WebResourcesSchema>;
 
 export const CompanySchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
-  updatedAt: z.string().optional(),
-  primaryRecordId: z.string().optional(),
-  altNames: z.array(z.string()).optional(),
-  domains: z.array(z.string()).optional(),
-  monthlyVisits: z.number().optional(),
-  globalRank: z.number().optional(),
-  description: z.string().optional(),
-  ceo: z.string().optional(),
-  industry: z.string().optional(),
-  sector: z.string().optional(),
-  country: z.string().optional(),
-  fullTimeEmployees: z.number().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zip: z.string().optional(),
-  logo: z.string().optional(),
-  favicon: z.string().optional(),
-  isEtf: z.boolean().optional(),
-  isActivelyTrading: z.boolean().optional(),
-  isFund: z.boolean().optional(),
-  isAdr: z.boolean().optional(),
-  symbols: z.array(SymbolHolderSchema).optional(),
-  naics: z.string().optional(),
-  sic: z.string().optional(),
-  yearFounded: z.number().optional(),
-  revenue: z.string().optional(),
+  id: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  primaryRecordId: z.string().optional().nullable(),
+  altNames: z.array(z.string()).optional().nullable(),
+  domains: z.array(z.string()).optional().nullable(),
+  monthlyVisits: z.number().optional().nullable(),
+  globalRank: z.number().optional().nullable(),
+  description: z.string().optional().nullable(),
+  ceo: z.string().optional().nullable(),
+  industry: z.string().optional().nullable(),
+  sector: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  fullTimeEmployees: z.number().optional().nullable(),
+  address: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  state: z.string().optional().nullable(),
+  zip: z.string().optional().nullable(),
+  logo: z.string().optional().nullable(),
+  favicon: z.string().optional().nullable(),
+  isEtf: z.boolean().optional().nullable(),
+  isActivelyTrading: z.boolean().optional().nullable(),
+  isFund: z.boolean().optional().nullable(),
+  isAdr: z.boolean().optional().nullable(),
+  symbols: z.array(SymbolHolderSchema).optional().nullable(),
+  naics: z.string().optional().nullable(),
+  sic: z.string().optional().nullable(),
+  yearFounded: z.number().optional().nullable(),
+  revenue: z.string().optional().nullable(),
   webResources: WebResourcesSchema.optional(),
 });
 
@@ -786,11 +794,14 @@ export const CompanySearchResultSchema = z.object({
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
 export const IllegalParameterExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional(),
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
-  message: z.string().optional(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional(),
-  localizedMessage: z.string().optional(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
+  stackTrace: z
+    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .optional()
+    .nullable(),
+  message: z.string().optional().nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  localizedMessage: z.string().optional().nullable(),
 });
 
 export type IllegalParameterException = z.infer<
@@ -798,17 +809,20 @@ export type IllegalParameterException = z.infer<
 >;
 
 export const ImageHolderSchema = z.object({
-  url: z.string().optional(),
+  url: z.string().optional().nullable(),
 });
 
 export type ImageHolder = z.infer<typeof ImageHolderSchema>;
 
 export const InternalErrorExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional(),
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
-  message: z.string().optional(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional(),
-  localizedMessage: z.string().optional(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
+  stackTrace: z
+    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .optional()
+    .nullable(),
+  message: z.string().optional().nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  localizedMessage: z.string().optional().nullable(),
 });
 
 export type InternalErrorException = z.infer<
@@ -826,32 +840,35 @@ export type JournalistSearchResult = z.infer<
 >;
 
 export const NotFoundExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional(),
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
-  message: z.string().optional(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional(),
-  localizedMessage: z.string().optional(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
+  stackTrace: z
+    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .optional()
+    .nullable(),
+  message: z.string().optional().nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  localizedMessage: z.string().optional().nullable(),
 });
 
 export type NotFoundException = z.infer<typeof NotFoundExceptionSchema>;
 
 export const WikidataDateHolderSchema = z.object({
-  time: z.string().optional(),
-  precision: z.string().optional(),
+  time: z.string().optional().nullable(),
+  precision: z.string().optional().nullable(),
 });
 
 export type WikidataDateHolder = z.infer<typeof WikidataDateHolderSchema>;
 
 export const WikidataLabelHolderSchema = z.object({
-  wikidataId: z.string().optional(),
-  label: z.string().optional(),
+  wikidataId: z.string().optional().nullable(),
+  label: z.string().optional().nullable(),
 });
 
 export type WikidataLabelHolder = z.infer<typeof WikidataLabelHolderSchema>;
 
 export const WikidataPoliticalPartyHolderSchema = z.object({
-  wikidataId: z.string().optional(),
-  label: z.string().optional(),
+  wikidataId: z.string().optional().nullable(),
+  label: z.string().optional().nullable(),
   startTime: WikidataDateHolderSchema.optional(),
   endTime: WikidataDateHolderSchema.optional(),
 });
@@ -861,8 +878,8 @@ export type WikidataPoliticalPartyHolder = z.infer<
 >;
 
 export const WikidataPositionHolderSchema = z.object({
-  wikidataId: z.string().optional(),
-  label: z.string().optional(),
+  wikidataId: z.string().optional().nullable(),
+  label: z.string().optional().nullable(),
   startTime: WikidataDateHolderSchema.optional(),
   endTime: WikidataDateHolderSchema.optional(),
   employer: WikidataLabelHolderSchema.optional(),
@@ -873,20 +890,23 @@ export type WikidataPositionHolder = z.infer<
 >;
 
 export const PersonSchema = z.object({
-  wikidataId: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-  name: z.string().optional(),
+  wikidataId: z.string().optional().nullable(),
+  createdAt: z.string().optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
   gender: WikidataLabelHolderSchema.optional(),
   dateOfBirth: WikidataDateHolderSchema.optional(),
   dateOfDeath: WikidataDateHolderSchema.optional(),
-  description: z.string().optional(),
-  aliases: z.array(z.string()).optional(),
-  occupation: z.array(WikidataLabelHolderSchema).optional(),
-  position: z.array(WikidataPositionHolderSchema).optional(),
-  politicalParty: z.array(WikidataPoliticalPartyHolderSchema).optional(),
+  description: z.string().optional().nullable(),
+  aliases: z.array(z.string()).optional().nullable(),
+  occupation: z.array(WikidataLabelHolderSchema).optional().nullable(),
+  position: z.array(WikidataPositionHolderSchema).optional().nullable(),
+  politicalParty: z
+    .array(WikidataPoliticalPartyHolderSchema)
+    .optional()
+    .nullable(),
   image: ImageHolderSchema.optional(),
-  _abstract: z.string().optional(),
+  _abstract: z.string().optional().nullable(),
 });
 
 export type Person = z.infer<typeof PersonSchema>;
@@ -908,60 +928,60 @@ export const QuerySearchResultSchema = z.object({
 export type QuerySearchResult = z.infer<typeof QuerySearchResultSchema>;
 
 export const WikiDataSchema = z.object({
-  pageId: z.string().optional(),
-  sectionId: z.string().optional(),
-  wikiPageId: z.number().optional(),
-  wikiRevisionId: z.number().optional(),
-  wikiRevisionTs: z.string().optional(),
-  wikiCode: z.string().optional(),
-  wikiNamespace: z.number().optional(),
-  wikiTitle: z.string().optional(),
-  wikidataId: z.string().optional(),
-  wikidataInstanceOf: z.array(WikidataLabelHolderSchema).optional(),
-  redirectTitles: z.array(z.string()).optional(),
-  pageviews: z.number().optional(),
-  title: z.string().optional(),
-  styleLevel: z.number().optional(),
-  content: z.string().optional(),
+  pageId: z.string().optional().nullable(),
+  sectionId: z.string().optional().nullable(),
+  wikiPageId: z.number().optional().nullable(),
+  wikiRevisionId: z.number().optional().nullable(),
+  wikiRevisionTs: z.string().optional().nullable(),
+  wikiCode: z.string().optional().nullable(),
+  wikiNamespace: z.number().optional().nullable(),
+  wikiTitle: z.string().optional().nullable(),
+  wikidataId: z.string().optional().nullable(),
+  wikidataInstanceOf: z.array(WikidataLabelHolderSchema).optional().nullable(),
+  redirectTitles: z.array(z.string()).optional().nullable(),
+  pageviews: z.number().optional().nullable(),
+  title: z.string().optional().nullable(),
+  styleLevel: z.number().optional().nullable(),
+  content: z.string().optional().nullable(),
 });
 
 export type WikiData = z.infer<typeof WikiDataSchema>;
 
 export const ScoredDataWikiDataSchema = z.object({
-  score: z.number().optional(),
+  score: z.number().optional().nullable(),
   data: WikiDataSchema.optional(),
 });
 
 export type ScoredDataWikiData = z.infer<typeof ScoredDataWikiDataSchema>;
 
 export const SourceTopStatHolderSchema = z.object({
-  name: z.string().optional(),
-  count: z.number().optional(),
+  name: z.string().optional().nullable(),
+  count: z.number().optional().nullable(),
 });
 
 export type SourceTopStatHolder = z.infer<typeof SourceTopStatHolderSchema>;
 
 export const SourceSchema = z.object({
-  id: z.string().optional(),
-  domain: z.string().optional(),
-  name: z.string().optional(),
-  primaryRecordId: z.string().optional(),
-  updatedAt: z.string().optional(),
-  altNames: z.array(z.string()).optional(),
-  description: z.string().optional(),
-  avgMonthlyPosts: z.number().optional(),
-  paywall: z.boolean().optional(),
+  id: z.string().optional().nullable(),
+  domain: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  primaryRecordId: z.string().optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  altNames: z.array(z.string()).optional().nullable(),
+  description: z.string().optional().nullable(),
+  avgMonthlyPosts: z.number().optional().nullable(),
+  paywall: z.boolean().optional().nullable(),
   location: SourceLocationSchema.optional(),
-  topCategories: z.array(SourceTopStatHolderSchema).optional(),
-  topTopics: z.array(SourceTopStatHolderSchema).optional(),
-  topCountries: z.array(SourceTopStatHolderSchema).optional(),
-  topLabels: z.array(SourceTopStatHolderSchema).optional(),
-  avgBiasRating: z.string().optional(),
-  adFontesBiasRating: z.string().optional(),
-  allSidesBiasRating: z.string().optional(),
-  mbfcBiasRating: z.string().optional(),
-  monthlyVisits: z.number().optional(),
-  globalRank: z.number().optional(),
+  topCategories: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  topTopics: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  topCountries: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  topLabels: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  avgBiasRating: z.string().optional().nullable(),
+  adFontesBiasRating: z.string().optional().nullable(),
+  allSidesBiasRating: z.string().optional().nullable(),
+  mbfcBiasRating: z.string().optional().nullable(),
+  monthlyVisits: z.number().optional().nullable(),
+  globalRank: z.number().optional().nullable(),
   logoLarge: ImageHolderSchema.optional(),
   logoFavIcon: ImageHolderSchema.optional(),
   logoSquare: ImageHolderSchema.optional(),
@@ -989,23 +1009,26 @@ export const SummaryBodySchema = z.object({
   /**
    * Instructions guiding how the summary should be written. Maximum length: 2 048 characters.
    */
-  prompt: z.string().optional(),
+  prompt: z.string().optional().nullable(),
   /**
    * The maximum number of articles to factor into the summary.
    */
-  maxArticleCount: z.number().optional(),
+  maxArticleCount: z.number().optional().nullable(),
   /**
    * The maximum number of articles that should be returned in the response. This can be used to return fewer than maxArticleCount results.
    */
-  returnedArticleCount: z.number().optional(),
+  returnedArticleCount: z.number().optional().nullable(),
   /**
    * Which article fields to include when generating the summary. Up to three values from TITLE, CONTENT, SUMMARY.
    */
-  summarizeFields: z.enum(["TITLE", "CONTENT", "SUMMARY"]).optional(),
+  summarizeFields: z
+    .enum(["TITLE", "CONTENT", "SUMMARY"])
+    .optional()
+    .nullable(),
   /**
    * Method for selecting articles: ARTICLES (include all matches) or CLUSTERS (one per cluster).
    */
-  method: z.enum(["ARTICLES", "CLUSTERS"]).optional(),
+  method: z.enum(["ARTICLES", "CLUSTERS"]).optional().nullable(),
   /**
    * The underlying LLM model to use for generation.
    */
@@ -1019,19 +1042,20 @@ export const SummaryBodySchema = z.object({
       "llama-3.3-70b-versatile",
       "deepseek-r1-distill-llama-70b",
     ])
-    .optional(),
+    .optional()
+    .nullable(),
   /**
    * Sampling temperature for the LLM (0.0 = deterministic to 2.0 = very creative).
    */
-  temperature: z.number().optional(),
+  temperature: z.number().optional().nullable(),
   /**
    * Nucleus sampling (top-p) for the LLM (0.0 to 1.0).
    */
-  topP: z.number().optional(),
+  topP: z.number().optional().nullable(),
   /**
    * Maximum number of tokens to generate in the summary.
    */
-  maxTokens: z.number().optional(),
+  maxTokens: z.number().optional().nullable(),
 });
 
 export type SummaryBody = z.infer<typeof SummaryBodySchema>;
@@ -1046,8 +1070,11 @@ export const SummarySearchResultSchema = z.object({
 export type SummarySearchResult = z.infer<typeof SummarySearchResultSchema>;
 
 export const TooManyRequestsExceptionSchema = z.object({
-  cause: AuthExceptionCauseSchema.optional(),
-  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
+  stackTrace: z
+    .array(AuthExceptionCauseStackTraceInnerSchema)
+    .optional()
+    .nullable(),
   status: z
     .enum([
       "100 CONTINUE",
@@ -1119,10 +1146,11 @@ export const TooManyRequestsExceptionSchema = z.object({
       "510 NOT_EXTENDED",
       "511 NETWORK_AUTHENTICATION_REQUIRED",
     ])
-    .optional(),
-  message: z.string().optional(),
-  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional(),
-  localizedMessage: z.string().optional(),
+    .optional()
+    .nullable(),
+  message: z.string().optional().nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
+  localizedMessage: z.string().optional().nullable(),
 });
 
 export type TooManyRequestsException = z.infer<
@@ -1130,17 +1158,17 @@ export type TooManyRequestsException = z.infer<
 >;
 
 export const TopicLabelsSchema = z.object({
-  category: z.string().optional(),
-  subcategory: z.string().optional(),
+  category: z.string().optional().nullable(),
+  subcategory: z.string().optional().nullable(),
 });
 
 export type TopicLabels = z.infer<typeof TopicLabelsSchema>;
 
 export const TopicDtoSchema = z.object({
-  id: z.number().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-  name: z.string().optional(),
+  id: z.number().optional().nullable(),
+  createdAt: z.string().optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
   labels: TopicLabelsSchema.optional(),
 });
 
@@ -1154,36 +1182,36 @@ export const TopicSearchResultSchema = z.object({
 export type TopicSearchResult = z.infer<typeof TopicSearchResultSchema>;
 
 export const WikiPageSectionHolderSchema = z.object({
-  id: z.string().optional(),
-  title: z.string().optional(),
-  styleLevel: z.number().optional(),
-  loc: z.array(z.number()).optional(),
-  textRaw: z.string().optional(),
-  textRich: z.string().optional(),
+  id: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  styleLevel: z.number().optional().nullable(),
+  loc: z.array(z.number()).optional().nullable(),
+  textRaw: z.string().optional().nullable(),
+  textRich: z.string().optional().nullable(),
 });
 
 export type WikiPageSectionHolder = z.infer<typeof WikiPageSectionHolderSchema>;
 
 export const WikiPageSchema = z.object({
-  id: z.string().optional(),
-  scrapedAt: z.string().optional(),
-  wikiPageId: z.number().optional(),
-  wikiRevisionId: z.number().optional(),
-  wikiRevisionTs: z.string().optional(),
-  wikiCode: z.string().optional(),
-  wikiNamespace: z.number().optional(),
-  wikiTitle: z.string().optional(),
-  url: z.string().optional(),
-  topImage: z.string().optional(),
-  wikidataId: z.string().optional(),
-  wikidataInstanceOf: z.array(WikidataLabelHolderSchema).optional(),
-  redirectTitles: z.array(z.string()).optional(),
-  summary: z.string().optional(),
-  sections: z.array(WikiPageSectionHolderSchema).optional(),
-  categories: z.array(z.string()).optional(),
-  externalLinks: z.array(z.string()).optional(),
-  references: z.array(z.string()).optional(),
-  pageviews: z.number().optional(),
+  id: z.string().optional().nullable(),
+  scrapedAt: z.string().optional().nullable(),
+  wikiPageId: z.number().optional().nullable(),
+  wikiRevisionId: z.number().optional().nullable(),
+  wikiRevisionTs: z.string().optional().nullable(),
+  wikiCode: z.string().optional().nullable(),
+  wikiNamespace: z.number().optional().nullable(),
+  wikiTitle: z.string().optional().nullable(),
+  url: z.string().optional().nullable(),
+  topImage: z.string().optional().nullable(),
+  wikidataId: z.string().optional().nullable(),
+  wikidataInstanceOf: z.array(WikidataLabelHolderSchema).optional().nullable(),
+  redirectTitles: z.array(z.string()).optional().nullable(),
+  summary: z.string().optional().nullable(),
+  sections: z.array(WikiPageSectionHolderSchema).optional().nullable(),
+  categories: z.array(z.string()).optional().nullable(),
+  externalLinks: z.array(z.string()).optional().nullable(),
+  references: z.array(z.string()).optional().nullable(),
+  pageviews: z.number().optional().nullable(),
 });
 
 export type WikiPage = z.infer<typeof WikiPageSchema>;
@@ -1192,57 +1220,60 @@ export const WikipediaSearchFilterSchema = z.object({
   /**
    * Filter by specific Perigon page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
    */
-  pageId: z.array(z.string()).optional(),
+  pageId: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific section identifiers. Accepts either a single ID or an array of IDs. Returns only pages containing these sections.
    */
-  sectionId: z.array(z.string()).optional(),
+  sectionId: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific Wikipedia page identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
    */
-  wikiPageId: z.array(z.number()).optional(),
+  wikiPageId: z.array(z.number()).optional().nullable(),
   /**
    * Filter by specific Perigon page revision identifiers. Accepts either a single ID or an array of IDs. Returns only pages matching these IDs.
    */
-  wikiRevisionId: z.array(z.number()).optional(),
+  wikiRevisionId: z.array(z.number()).optional().nullable(),
   /**
    * Filter by specific Wikipedia project codes. Returns only pages matching these projects.
    */
-  wikiCode: z.array(z.string()).optional(),
+  wikiCode: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific Wikipedia namespaces. Returns only pages matching these namespaces.
    */
-  wikiNamespace: z.array(z.number()).optional(),
+  wikiNamespace: z.array(z.number()).optional().nullable(),
   /**
    * Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities match those ids.
    */
-  wikidataId: z.array(z.string()).optional(),
+  wikidataId: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific Wikidata entity IDs. Returns only pages whose Wikidata entities are instances of provided ids.
    */
-  wikidataInstanceOfId: z.array(z.string()).optional(),
+  wikidataInstanceOfId: z.array(z.string()).optional().nullable(),
   /**
    * Filter by specific Wikidata entity labels. Returns only pages whose Wikidata entities are instances of these labels.
    */
-  wikidataInstanceOfLabel: z.array(z.string()).optional(),
+  wikidataInstanceOfLabel: z.array(z.string()).optional().nullable(),
   /**
    * Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
    */
   AND: z
     .array(z.never()) /* Self-reference prevented */
-    .optional(),
+    .optional()
+    .nullable(),
   /**
    * Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
    */
   OR: z
     .array(z.never()) /* Self-reference prevented */
-    .optional(),
+    .optional()
+    .nullable(),
   /**
    * A filter object for logical NOT operations
    */
   NOT: z
     .array(z.never()) /* Self-reference prevented */
-    .optional(),
+    .optional()
+    .nullable(),
 });
 
 export type WikipediaSearchFilter = z.infer<typeof WikipediaSearchFilterSchema>;
@@ -1256,27 +1287,27 @@ export const WikipediaSearchParamsSchema = z.object({
   /**
    * 'wikiRevisionFrom' filter, will search pages modified after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
-  wikiRevisionFrom: z.string().optional(),
+  wikiRevisionFrom: z.string().optional().nullable(),
   /**
    * 'wikiRevisionFrom' filter, will search pages modified before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
-  wikiRevisionTo: z.string().optional(),
+  wikiRevisionTo: z.string().optional().nullable(),
   /**
    * 'pageviewsFrom' filter, will search pages with at least the provided number of views per day.
    */
-  pageviewsFrom: z.number().optional(),
+  pageviewsFrom: z.number().optional().nullable(),
   /**
    * 'pageviewsFrom' filter, will search pages with at most the provided number of views per day.
    */
-  pageviewsTo: z.number().optional(),
+  pageviewsTo: z.number().optional().nullable(),
   /**
    * The number of items per page.
    */
-  size: z.number().optional(),
+  size: z.number().optional().nullable(),
   /**
    * The page number to retrieve.
    */
-  page: z.number().optional(),
+  page: z.number().optional().nullable(),
 });
 
 export type WikipediaSearchParams = z.infer<typeof WikipediaSearchParamsSchema>;
