@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 /**
  * Perigon API
  * The Perigon API provides access to comprehensive news and web content data. To use the API, simply sign up for a Perigon Business Solutions account to obtain your API key. Your available features may vary based on your plan. See the Authentication section for details on how to use your API key.
@@ -15,50 +13,30 @@
 import * as runtime from "../runtime";
 import { z } from "zod";
 import type {
-  AllEndpointSortBy,
-  ArticleSearchParams,
   ArticlesVectorSearchResult,
-  AuthException,
   CompanySearchResult,
-  IllegalParameterException,
-  InternalErrorException,
   Journalist,
   JournalistSearchResult,
-  NotFoundException,
   PeopleSearchResult,
   QuerySearchResult,
-  SortBy,
   SourceSearchResult,
   StorySearchResult,
-  SummaryBody,
   SummarySearchResult,
-  TooManyRequestsException,
   TopicSearchResult,
-  WikipediaSearchParams,
   WikipediaSearchResult,
   WikipediaVectorSearchResult,
 } from "../models/index";
 import {
-  AllEndpointSortBySchema,
-  ArticleSearchParamsSchema,
   ArticlesVectorSearchResultSchema,
-  AuthExceptionSchema,
   CompanySearchResultSchema,
-  IllegalParameterExceptionSchema,
-  InternalErrorExceptionSchema,
   JournalistSchema,
   JournalistSearchResultSchema,
-  NotFoundExceptionSchema,
   PeopleSearchResultSchema,
   QuerySearchResultSchema,
-  SortBySchema,
   SourceSearchResultSchema,
   StorySearchResultSchema,
-  SummaryBodySchema,
   SummarySearchResultSchema,
-  TooManyRequestsExceptionSchema,
   TopicSearchResultSchema,
-  WikipediaSearchParamsSchema,
   WikipediaSearchResultSchema,
   WikipediaVectorSearchResultSchema,
 } from "../models/index";

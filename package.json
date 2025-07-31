@@ -76,6 +76,12 @@
     "ts-jest": "^29.1.1",
     "@types/jest": "^29.5.9",
     "@types/node": "^20.4.0",
-    "@openapitools/openapi-generator-cli": "^2.20.0"
+    "@openapitools/openapi-generator-cli": "^2.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.32.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier": "^3.0.0",
+    "doctoc": "^2.2.1"
   }
 }

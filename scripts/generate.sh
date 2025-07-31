@@ -8,5 +8,6 @@ npx @openapitools/openapi-generator-cli generate \
 
 bun run scripts/reorder-schemas.ts
 
+npx eslint src/**/*.ts --fix
 npx prettier --write "**/*.{ts,js,json,md}"
 npx doctoc README.md --github --maxlevel 2
