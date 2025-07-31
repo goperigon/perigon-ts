@@ -1,0 +1,59 @@
+/**
+ * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
+ {{#isEnum}}
+ * @type {{{datatypeWithEnum}}}
+ {{#allowableValues}}
+ * @values {{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}
+ {{/allowableValues}}
+ {{/isEnum}}
+ {{#required}}
+ * @required
+ {{/required}}
+ */
+{{paramName}}: {{#isEnum}}
+z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
+{{/isEnum}}{{^isEnum}}{{#isArray}}
+z.array({{#items}}{{#isEnum}}
+z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
+{{/isEnum}}{{^isEnum}}{{#isString}}
+z.string()
+{{/isString}}{{^isString}}{{#isNumber}}
+z.number()
+{{/isNumber}}{{^isNumber}}{{#isInteger}}
+z.number()
+{{/isInteger}}{{^isInteger}}{{#isFloat}}
+z.number()
+{{/isFloat}}{{^isFloat}}{{#isDouble}}
+z.number()
+{{/isDouble}}{{^isDouble}}{{#isBoolean}}
+z.boolean()
+{{/isBoolean}}{{^isBoolean}}{{#isDateTimeType}}
+z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val)
+{{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}
+z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val)
+{{/isDateType}}{{^isDateType}}
+z.string()
+{{/isDateType}}{{/isDateTimeType}}{{/isBoolean}}{{/isDouble}}{{/isFloat}}{{/isInteger}}{{/isNumber}}{{/isString}}{{/isEnum}}{{/items}})
+{{/isArray}}{{^isArray}}{{#isDateTimeType}}
+z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString() : val)
+{{/isDateTimeType}}{{^isDateTimeType}}{{#isDateType}}
+z.union([z.date(), z.string()]).transform(val => val instanceof Date ? val.toISOString().substring(0,10) : val)
+{{/isDateType}}{{^isDateType}}{{#isString}}
+z.string()
+{{/isString}}{{^isString}}{{#isNumber}}
+z.number()
+{{/isNumber}}{{^isNumber}}{{#isInteger}}
+z.number()
+{{/isInteger}}{{^isInteger}}{{#isFloat}}
+z.number()
+{{/isFloat}}{{^isFloat}}{{#isDouble}}
+z.number()
+{{/isDouble}}{{^isDouble}}{{#isBoolean}}
+z.boolean()
+{{/isBoolean}}{{^isBoolean}}{{#hasReference}}{{^isPrimitiveType}}
+{{dataType}}Schema
+{{/isPrimitiveType}}{{#isPrimitiveType}}
+z.any()
+{{/isPrimitiveType}}{{/hasReference}}{{^hasReference}}
+z.any()
+{{/hasReference}}{{/isBoolean}}{{/isDouble}}{{/isFloat}}{{/isInteger}}{{/isNumber}}{{/isString}}{{/isDateType}}{{/isDateTimeType}}{{/isArray}}{{/isEnum}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}}

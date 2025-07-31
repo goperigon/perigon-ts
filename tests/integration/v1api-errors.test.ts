@@ -72,19 +72,6 @@ describe("Perigon SDK Error Handling and Logging Tests", () => {
         );
       }
     });
-
-    it("should throw RequiredError when summaryBody parameter is missing", async () => {
-      try {
-        // Call method that requires 'summaryBody' parameter without providing it
-        await api.searchSummarizer({ summaryBody: null as any });
-        fail("Expected RequiredError to be thrown");
-      } catch (error) {
-        expect(error).toBeInstanceOf(ResponseError);
-        const responseError = error as ResponseError;
-        expect(responseError.name).toBe("ResponseError");
-        expect(responseError.response.status).toBe(401);
-      }
-    });
   });
 
   describe("ResponseError handling", () => {

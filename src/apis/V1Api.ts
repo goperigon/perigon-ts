@@ -27,16 +27,21 @@ import type {
   WikipediaVectorSearchResult,
 } from "../models/index";
 import {
+  AllEndpointSortBySchema,
+  ArticleSearchParamsSchema,
   ArticlesVectorSearchResultSchema,
   CompanySearchResultSchema,
   JournalistSchema,
   JournalistSearchResultSchema,
   PeopleSearchResultSchema,
   QuerySearchResultSchema,
+  SortBySchema,
   SourceSearchResultSchema,
   StorySearchResultSchema,
+  SummaryBodySchema,
   SummarySearchResultSchema,
   TopicSearchResultSchema,
+  WikipediaSearchParamsSchema,
   WikipediaSearchResultSchema,
   WikipediaVectorSearchResultSchema,
 } from "../models/index";
@@ -89,15 +94,15 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
-  sortBy: z.any().optional(),
+  sortBy: AllEndpointSortBySchema.optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
@@ -279,15 +284,15 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * Latitude of the center point to search places
    */
-  lat: z.any().optional(),
+  lat: z.number().optional(),
   /**
    * Longitude of the center point to search places
    */
-  lon: z.any().optional(),
+  lon: z.number().optional(),
   /**
    * Maximum distance (in km) from starting point to search articles by tagged places
    */
-  maxDistance: z.any().optional(),
+  maxDistance: z.number().optional(),
   /**
    * Find articles published by sources that are located within a given city.
    */
@@ -307,15 +312,15 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * Latitude of the center point to search articles created by local publications.
    */
-  sourceLat: z.any().optional(),
+  sourceLat: z.number().optional(),
   /**
    * Latitude of the center point to search articles created by local publications.
    */
-  sourceLon: z.any().optional(),
+  sourceLon: z.number().optional(),
   /**
    * Maximum distance from starting point to search articles created by local publications.
    */
-  sourceMaxDistance: z.any().optional(),
+  sourceMaxDistance: z.number().optional(),
   /**
    * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
    */
@@ -367,27 +372,27 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentFrom: z.any().optional(),
+  positiveSentimentFrom: z.number().optional(),
   /**
    * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentTo: z.any().optional(),
+  positiveSentimentTo: z.number().optional(),
   /**
    * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentFrom: z.any().optional(),
+  neutralSentimentFrom: z.number().optional(),
   /**
    * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentTo: z.any().optional(),
+  neutralSentimentTo: z.number().optional(),
   /**
    * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentFrom: z.any().optional(),
+  negativeSentimentFrom: z.number().optional(),
   /**
    * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentTo: z.any().optional(),
+  negativeSentimentTo: z.number().optional(),
   /**
    * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
    */
@@ -403,11 +408,11 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
-  highlightFragmentSize: z.any().optional(),
+  highlightFragmentSize: z.number().optional(),
   /**
    * Controls the maximum number of highlighted fragments to return per field.
    */
-  highlightNumFragments: z.any().optional(),
+  highlightNumFragments: z.number().optional(),
   /**
    * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
@@ -452,11 +457,11 @@ export const SearchCompaniesQuerySchema = z.object({
   /**
    * Filter for companies with at least this many employees.
    */
-  numEmployeesFrom: z.any().optional(),
+  numEmployeesFrom: z.number().optional(),
   /**
    * Filter for companies with no more than this many employees.
    */
-  numEmployeesTo: z.any().optional(),
+  numEmployeesTo: z.number().optional(),
   /**
    * Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
    */
@@ -490,11 +495,11 @@ export const SearchCompaniesQuerySchema = z.object({
   /**
    * The number of companies to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
 });
 
 export const SearchCompaniesRequestSchema = z.object({
@@ -525,11 +530,11 @@ export const SearchJournalistsQuerySchema = z.object({
   /**
    * The number of journalists to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * Filter journalists by the publisher domains they write for. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
@@ -549,11 +554,11 @@ export const SearchJournalistsQuerySchema = z.object({
   /**
    * Filter for journalists who publish at least this many articles per month. Used to identify more active journalists.
    */
-  minMonthlyPosts: z.any().optional(),
+  minMonthlyPosts: z.number().optional(),
   /**
    * Filter for journalists who publish no more than this many articles per month.
    */
-  maxMonthlyPosts: z.any().optional(),
+  maxMonthlyPosts: z.number().optional(),
   /**
    * Filter journalists by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). Multiple values create an OR filter.
    */
@@ -606,11 +611,11 @@ export const SearchPeopleQuerySchema = z.object({
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of people to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
 });
 
 export const SearchPeopleRequestSchema = z.object({
@@ -635,15 +640,15 @@ export const SearchSourcesQuerySchema = z.object({
   /**
    * Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
    */
-  sortBy: z.any().optional(),
+  sortBy: SortBySchema.optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of sources to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * Filter for sources with at least this many monthly visitors. Used to target publishers by audience size.
    */
@@ -683,15 +688,15 @@ export const SearchSourcesQuerySchema = z.object({
   /**
    * Latitude coordinate for filtering local publications by geographic proximity. Used with sourceLon and sourceMaxDistance for radius search.
    */
-  sourceLat: z.any().optional(),
+  sourceLat: z.number().optional(),
   /**
    * Longitude coordinate for filtering local publications by geographic proximity. Used with sourceLat and sourceMaxDistance for radius search.
    */
-  sourceLon: z.any().optional(),
+  sourceLon: z.number().optional(),
   /**
    * Maximum distance in kilometers from the coordinates defined by sourceLat and sourceLon. Defines the radius for local publication searches.
    */
-  sourceMaxDistance: z.any().optional(),
+  sourceMaxDistance: z.number().optional(),
   /**
    * Filter sources by their primary content categories such as Politics, Tech, Sports, Business, or Finance. Returns sources that frequently cover these topics. Multiple values create an OR filter.
    */
@@ -744,15 +749,15 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
-  sortBy: z.any().optional(),
+  sortBy: SortBySchema.optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
    */
@@ -818,7 +823,7 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
    */
-  minUniqueSources: z.any().optional(),
+  minUniqueSources: z.number().optional(),
   /**
    * Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
    */
@@ -862,11 +867,11 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
    */
-  minClusterSize: z.any().optional(),
+  minClusterSize: z.number().optional(),
   /**
    * Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
    */
-  maxClusterSize: z.any().optional(),
+  maxClusterSize: z.number().optional(),
   /**
    * Filter to only include stories that have been assigned names. Defaults to true. Note that stories only receive names after they contain at least 5 unique articles.
    */
@@ -874,27 +879,27 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentFrom: z.any().optional(),
+  positiveSentimentFrom: z.number().optional(),
   /**
    * Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentTo: z.any().optional(),
+  positiveSentimentTo: z.number().optional(),
   /**
    * Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentFrom: z.any().optional(),
+  neutralSentimentFrom: z.number().optional(),
   /**
    * Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentTo: z.any().optional(),
+  neutralSentimentTo: z.number().optional(),
   /**
    * Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentFrom: z.any().optional(),
+  negativeSentimentFrom: z.number().optional(),
   /**
    * Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentTo: z.any().optional(),
+  negativeSentimentTo: z.number().optional(),
   /**
    * Parameter showStoryPageInfo
    */
@@ -914,11 +919,11 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
-  highlightFragmentSize: z.any().optional(),
+  highlightFragmentSize: z.number().optional(),
   /**
    * Controls the maximum number of highlighted fragments to return per field.
    */
-  highlightNumFragments: z.any().optional(),
+  highlightNumFragments: z.number().optional(),
   /**
    * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
@@ -971,15 +976,15 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
-  sortBy: z.any().optional(),
+  sortBy: AllEndpointSortBySchema.optional(),
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
@@ -1161,15 +1166,15 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * Latitude of the center point to search places
    */
-  lat: z.any().optional(),
+  lat: z.number().optional(),
   /**
    * Longitude of the center point to search places
    */
-  lon: z.any().optional(),
+  lon: z.number().optional(),
   /**
    * Maximum distance (in km) from starting point to search articles by tagged places
    */
-  maxDistance: z.any().optional(),
+  maxDistance: z.number().optional(),
   /**
    * Find articles published by sources that are located within a given city.
    */
@@ -1189,15 +1194,15 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * Latitude of the center point to search articles created by local publications.
    */
-  sourceLat: z.any().optional(),
+  sourceLat: z.number().optional(),
   /**
    * Latitude of the center point to search articles created by local publications.
    */
-  sourceLon: z.any().optional(),
+  sourceLon: z.number().optional(),
   /**
    * Maximum distance from starting point to search articles created by local publications.
    */
-  sourceMaxDistance: z.any().optional(),
+  sourceMaxDistance: z.number().optional(),
   /**
    * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
    */
@@ -1249,27 +1254,27 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentFrom: z.any().optional(),
+  positiveSentimentFrom: z.number().optional(),
   /**
    * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
-  positiveSentimentTo: z.any().optional(),
+  positiveSentimentTo: z.number().optional(),
   /**
    * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentFrom: z.any().optional(),
+  neutralSentimentFrom: z.number().optional(),
   /**
    * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
-  neutralSentimentTo: z.any().optional(),
+  neutralSentimentTo: z.number().optional(),
   /**
    * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentFrom: z.any().optional(),
+  negativeSentimentFrom: z.number().optional(),
   /**
    * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
-  negativeSentimentTo: z.any().optional(),
+  negativeSentimentTo: z.number().optional(),
   /**
    * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
    */
@@ -1285,11 +1290,11 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
-  highlightFragmentSize: z.any().optional(),
+  highlightFragmentSize: z.number().optional(),
   /**
    * Controls the maximum number of highlighted fragments to return per field.
    */
-  highlightNumFragments: z.any().optional(),
+  highlightNumFragments: z.number().optional(),
   /**
    * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
@@ -1309,7 +1314,7 @@ export const SearchSummarizerBodySchema = z.object({
    * Parameter summaryBody
    * @required
    */
-  summaryBody: z.any(),
+  summaryBody: SummaryBodySchema,
 });
 
 export const SearchSummarizerRequestSchema = z.object({
@@ -1337,11 +1342,11 @@ export const SearchTopicsQuerySchema = z.object({
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of topics to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
 });
 
 export const SearchTopicsRequestSchema = z.object({
@@ -1458,15 +1463,15 @@ export const SearchWikipediaQuerySchema = z.object({
   /**
    * The specific page of results to retrieve in the paginated response. Starts at 0.
    */
-  page: z.any().optional(),
+  page: z.number().optional(),
   /**
    * The number of articles to return per page in the paginated response.
    */
-  size: z.any().optional(),
+  size: z.number().optional(),
   /**
    * Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
    */
-  sortBy: z.any().optional(),
+  sortBy: SortBySchema.optional(),
 });
 
 export const SearchWikipediaRequestSchema = z.object({
@@ -1482,7 +1487,7 @@ export const VectorSearchArticlesBodySchema = z.object({
    * Parameter articleSearchParams
    * @required
    */
-  articleSearchParams: z.any(),
+  articleSearchParams: ArticleSearchParamsSchema,
 });
 
 export const VectorSearchArticlesRequestSchema = z.object({
@@ -1498,7 +1503,7 @@ export const VectorSearchWikipediaBodySchema = z.object({
    * Parameter wikipediaSearchParams
    * @required
    */
-  wikipediaSearchParams: z.any(),
+  wikipediaSearchParams: WikipediaSearchParamsSchema,
 });
 
 export const VectorSearchWikipediaRequestSchema = z.object({
