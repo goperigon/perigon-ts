@@ -15,7 +15,7 @@ export const {{classname}}Schema = z.object({
      {{/deprecated}}
      */
     {{/unescapedDescription}}
-    {{name}}: {{>zodFieldType}}{{^required}}.optional(){{/required}},
+    {{name}}: {{>zodFieldType}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
 {{/vars}}
 });
 
