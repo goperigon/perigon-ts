@@ -272,7 +272,7 @@ export const NewsClusterSchema = z.object({
   questions: z.array(QuestionSchema).optional().nullable(),
   uniqueSources: z.array(z.string()).optional().nullable(),
   selectedArticles: z
-    .array(z.never() /* Circular reference to ArticleSchema */)
+    .array(z.unknown() /* Circular reference to ArticleSchema */)
     .optional()
     .nullable(),
   sentiment: SentimentHolderSchema.optional().nullable(),
@@ -533,21 +533,21 @@ export const ArticleSearchFilterSchema = z.object({
    * Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
    */
   AND: z
-    .array(z.never()) /* Self-reference prevented */
+    .array(z.unknown()) /* Self-reference prevented */
     .optional()
     .nullable(),
   /**
    * Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
    */
   OR: z
-    .array(z.never()) /* Self-reference prevented */
+    .array(z.unknown()) /* Self-reference prevented */
     .optional()
     .nullable(),
   /**
    * A filter object for logical NOT operations
    */
   NOT: z
-    .array(z.never()) /* Self-reference prevented */
+    .array(z.unknown()) /* Self-reference prevented */
     .optional()
     .nullable(),
 });
@@ -1278,21 +1278,21 @@ export const WikipediaSearchFilterSchema = z.object({
    * Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
    */
   AND: z
-    .array(z.never()) /* Self-reference prevented */
+    .array(z.unknown()) /* Self-reference prevented */
     .optional()
     .nullable(),
   /**
    * Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
    */
   OR: z
-    .array(z.never()) /* Self-reference prevented */
+    .array(z.unknown()) /* Self-reference prevented */
     .optional()
     .nullable(),
   /**
    * A filter object for logical NOT operations
    */
   NOT: z
-    .array(z.never()) /* Self-reference prevented */
+    .array(z.unknown()) /* Self-reference prevented */
     .optional()
     .nullable(),
 });

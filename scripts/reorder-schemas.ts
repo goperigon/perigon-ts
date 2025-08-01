@@ -5,7 +5,7 @@ import { join } from "path";
 
 /**
  * Comprehensive script to reorder schema definitions to fix TypeScript dependency issues
- * Performs topological sorting of schema dependencies and handles circular references with z.never()
+ * Performs topological sorting of schema dependencies and handles circular references with z.unknown()
  */
 function main() {
   const modelsPath = join(process.cwd(), "src/models/index.ts");
@@ -238,7 +238,7 @@ function reorderSchemas(
   for (const schema of sortedSchemas) {
     let schemaContent = schema.definition;
 
-    // Handle circular dependencies with z.never() to prevent infinite recursion
+    // Handle circular dependencies with z.unknown() to prevent infinite recursion
     const deps = dependencies.get(schema.name) || new Set();
     for (const dep of deps) {
       const depSchema = sortedSchemas.find((s) => s.name === dep);
@@ -246,31 +246,31 @@ function reorderSchemas(
         depSchema &&
         sortedSchemas.indexOf(depSchema) > sortedSchemas.indexOf(schema)
       ) {
-        // This is a forward reference - replace with z.never() to break circular dependency
+        // This is a forward reference - replace with z.unknown() to break circular dependency
         const regex = new RegExp(`\\b${dep}\\b(?!\\.optional\\(\\))`, "g");
         schemaContent = schemaContent.replace(
           regex,
-          `z.never() /* Circular reference to ${dep} */`,
+          `z.unknown() /* Circular reference to ${dep} */`,
         );
       }
     }
 
-    // Handle self-references for recursive schemas with z.never() to prevent infinite recursion
+    // Handle self-references for recursive schemas with z.unknown() to prevent infinite recursion
     if (
       schema.name === "ArticleSearchFilterSchema" ||
       schema.name === "WikipediaSearchFilterSchema"
     ) {
       schemaContent = schemaContent.replace(
         new RegExp(`AND: z\\.array\\(${schema.name}\\)`, "g"),
-        `AND: z.array(z.never()) /* Self-reference prevented */`,
+        `AND: z.array(z.unknown()) /* Self-reference prevented */`,
       );
       schemaContent = schemaContent.replace(
         new RegExp(`OR: z\\.array\\(${schema.name}\\)`, "g"),
-        `OR: z.array(z.never()) /* Self-reference prevented */`,
+        `OR: z.array(z.unknown()) /* Self-reference prevented */`,
       );
       schemaContent = schemaContent.replace(
         new RegExp(`NOT: z\\.array\\(${schema.name}\\)`, "g"),
-        `NOT: z.array(z.never()) /* Self-reference prevented */`,
+        `NOT: z.array(z.unknown()) /* Self-reference prevented */`,
       );
     }
 
