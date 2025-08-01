@@ -600,7 +600,7 @@ export type ArticlesVectorSearchResult = z.infer<
   typeof ArticlesVectorSearchResultSchema
 >;
 
-export const IllegalParameterExceptionCauseStackTraceInnerSchema = z.object({
+export const InternalErrorExceptionCauseStackTraceInnerSchema = z.object({
   classLoaderName: z.string().optional(),
   moduleName: z.string().optional(),
   moduleVersion: z.string().optional(),
@@ -611,38 +611,38 @@ export const IllegalParameterExceptionCauseStackTraceInnerSchema = z.object({
   className: z.string().optional(),
 });
 
-export type IllegalParameterExceptionCauseStackTraceInner = z.infer<
-  typeof IllegalParameterExceptionCauseStackTraceInnerSchema
+export type InternalErrorExceptionCauseStackTraceInner = z.infer<
+  typeof InternalErrorExceptionCauseStackTraceInnerSchema
 >;
 
-export const IllegalParameterExceptionCauseSchema = z.object({
+export const InternalErrorExceptionCauseSchema = z.object({
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional(),
   message: z.string().optional(),
   localizedMessage: z.string().optional(),
 });
 
-export type IllegalParameterExceptionCause = z.infer<
-  typeof IllegalParameterExceptionCauseSchema
+export type InternalErrorExceptionCause = z.infer<
+  typeof InternalErrorExceptionCauseSchema
 >;
 
-export const IllegalParameterExceptionSuppressedInnerSchema = z.object({
+export const InternalErrorExceptionSuppressedInnerSchema = z.object({
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional(),
   message: z.string().optional(),
   localizedMessage: z.string().optional(),
 });
 
-export type IllegalParameterExceptionSuppressedInner = z.infer<
-  typeof IllegalParameterExceptionSuppressedInnerSchema
+export type InternalErrorExceptionSuppressedInner = z.infer<
+  typeof InternalErrorExceptionSuppressedInnerSchema
 >;
 
 export const AuthExceptionSchema = z.object({
-  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
+  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   statusCode: z
@@ -720,7 +720,7 @@ export const AuthExceptionSchema = z.object({
     .nullable(),
   message: z.string().optional().nullable(),
   suppressed: z
-    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .array(InternalErrorExceptionSuppressedInnerSchema)
     .optional()
     .nullable(),
   localizedMessage: z.string().optional().nullable(),
@@ -803,14 +803,14 @@ export const CompanySearchResultSchema = z.object({
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
 export const IllegalParameterExceptionSchema = z.object({
-  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
+  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
   suppressed: z
-    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .array(InternalErrorExceptionSuppressedInnerSchema)
     .optional()
     .nullable(),
   localizedMessage: z.string().optional().nullable(),
@@ -827,14 +827,14 @@ export const ImageHolderSchema = z.object({
 export type ImageHolder = z.infer<typeof ImageHolderSchema>;
 
 export const InternalErrorExceptionSchema = z.object({
-  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
+  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
   suppressed: z
-    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .array(InternalErrorExceptionSuppressedInnerSchema)
     .optional()
     .nullable(),
   localizedMessage: z.string().optional().nullable(),
@@ -855,14 +855,14 @@ export type JournalistSearchResult = z.infer<
 >;
 
 export const NotFoundExceptionSchema = z.object({
-  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
+  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
   suppressed: z
-    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .array(InternalErrorExceptionSuppressedInnerSchema)
     .optional()
     .nullable(),
   localizedMessage: z.string().optional().nullable(),
@@ -1088,9 +1088,9 @@ export const SummarySearchResultSchema = z.object({
 export type SummarySearchResult = z.infer<typeof SummarySearchResultSchema>;
 
 export const TooManyRequestsExceptionSchema = z.object({
-  cause: IllegalParameterExceptionCauseSchema.optional().nullable(),
+  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(IllegalParameterExceptionCauseStackTraceInnerSchema)
+    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   status: z
@@ -1168,7 +1168,7 @@ export const TooManyRequestsExceptionSchema = z.object({
     .nullable(),
   message: z.string().optional().nullable(),
   suppressed: z
-    .array(IllegalParameterExceptionSuppressedInnerSchema)
+    .array(InternalErrorExceptionSuppressedInnerSchema)
     .optional()
     .nullable(),
   localizedMessage: z.string().optional().nullable(),

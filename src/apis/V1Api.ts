@@ -106,45 +106,27 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  from: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  from: z.date().optional(),
   /**
    * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  to: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  to: z.date().optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
-  addDateFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  addDateFrom: z.date().optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  addDateTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  addDateTo: z.date().optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
-  refreshDateFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  refreshDateFrom: z.date().optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  refreshDateTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  refreshDateTo: z.date().optional(),
   /**
    * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
    */
@@ -465,17 +447,11 @@ export const SearchCompaniesQuerySchema = z.object({
   /**
    * Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
    */
-  ipoFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  ipoFrom: z.date().optional(),
   /**
    * Filter for companies that went public on or before this date. Accepts ISO 8601 format (e.g., 2023-12-31T23:59:59) or yyyy-mm-dd format.
    */
-  ipoTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  ipoTo: z.date().optional(),
   /**
    * Primary search query for filtering companies across name, alternative names, domains, and ticker symbols. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
@@ -566,17 +542,11 @@ export const SearchJournalistsQuerySchema = z.object({
   /**
    * Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  updatedAtFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  updatedAtFrom: z.date().optional(),
   /**
    * Filter for journalist profiles updated on or before this date. Accepts ISO 8601 format (e.g., 2023-03-01T23:59:59) or yyyy-mm-dd format.
    */
-  updatedAtTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  updatedAtTo: z.date().optional(),
   /**
    * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
@@ -761,45 +731,27 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
    */
-  from: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  from: z.date().optional(),
   /**
    * \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
    */
-  to: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  to: z.date().optional(),
   /**
    * Filter for stories created after this date. Alternative parameter for filtering by story creation date.
    */
-  initializedFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  initializedFrom: z.date().optional(),
   /**
    * Filter for stories created before this date. Alternative parameter for filtering by story creation date.
    */
-  initializedTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  initializedTo: z.date().optional(),
   /**
    * Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
    */
-  updatedFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  updatedFrom: z.date().optional(),
   /**
    * Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
    */
-  updatedTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  updatedTo: z.date().optional(),
   /**
    * Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
@@ -988,45 +940,27 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  from: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  from: z.date().optional(),
   /**
    * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  to: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  to: z.date().optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
-  addDateFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  addDateFrom: z.date().optional(),
   /**
    * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  addDateTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  addDateTo: z.date().optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
-  refreshDateFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  refreshDateFrom: z.date().optional(),
   /**
    * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
-  refreshDateTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  refreshDateTo: z.date().optional(),
   /**
    * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
    */
@@ -1419,31 +1353,19 @@ export const SearchWikipediaQuerySchema = z.object({
   /**
    * Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  wikiRevisionFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  wikiRevisionFrom: z.date().optional(),
   /**
    * Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  wikiRevisionTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  wikiRevisionTo: z.date().optional(),
   /**
    * Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  scrapedAtFrom: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  scrapedAtFrom: z.date().optional(),
   /**
    * Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
-  scrapedAtTo: z
-    .union([z.date(), z.string()])
-    .transform((val) => (val instanceof Date ? val.toISOString() : val))
-    .optional(),
+  scrapedAtTo: z.date().optional(),
   /**
    * Retrieve pages with the average number of views per day higher than the provided value.
    */

@@ -319,6 +319,7 @@ export type HTTPQuery = {
   [key: string]:
     | string
     | number
+    | Date
     | null
     | boolean
     | Array<string | number | null | boolean>
@@ -371,6 +372,7 @@ function querystringSingleKey(
     | null
     | undefined
     | boolean
+    | Date
     | Array<string | number | null | boolean>
     | Set<string | number | null | boolean>
     | HTTPQuery,

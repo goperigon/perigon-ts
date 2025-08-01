@@ -28,6 +28,7 @@ describeWithApiKey("Perigon API Integration Tests", () => {
       // Execute the API call with real parameters
       const result = await api.searchArticles({
         q: "technology",
+        from: new Date("2025-11-01"),
         size: 5,
       });
 
