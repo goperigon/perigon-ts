@@ -49,6 +49,116 @@ export class Configuration {
 
 export const DefaultConfig = new Configuration();
 
+export class FetchError extends Error {
+  override name: "FetchError" = "FetchError";
+  constructor(
+    public cause: Error,
+    msg?: string,
+  ) {
+    super(msg);
+  }
+}
+
+export class HttpError extends Error {
+  public readonly status: number;
+  public readonly statusText: string;
+  public readonly response: Response;
+  public readonly body?: any;
+
+  constructor(response: Response, body?: any) {
+    const message = `HTTP ${response.status}: ${response.statusText}`;
+    super(message);
+    this.name = "HttpError";
+    this.status = response.status;
+    this.statusText = response.statusText;
+    this.response = response;
+    this.body = body;
+  }
+}
+
+export class BadRequestError extends HttpError {
+  constructor(response: Response, body?: any) {
+    super(response, body);
+    this.name = "BadRequestError";
+    this.message =
+      body?.message || "Bad request - please check your input parameters";
+  }
+}
+
+export class UnauthorizedError extends HttpError {
+  constructor(response: Response, body?: any) {
+    super(response, body);
+    this.name = "UnauthorizedError";
+    this.message = "Authentication required - please check your credentials";
+  }
+}
+
+export class ForbiddenError extends HttpError {
+  constructor(response: Response, body?: any) {
+    super(response, body);
+    this.name = "ForbiddenError";
+    this.message = "Access denied - insufficient permissions";
+  }
+}
+
+export class NotFoundError extends HttpError {
+  constructor(response: Response, body?: any) {
+    super(response, body);
+    this.name = "NotFoundError";
+    this.message = body?.message || "Resource not found";
+  }
+}
+
+export class RateLimitError extends HttpError {
+  public readonly retryAfter?: number;
+
+  constructor(response: Response, body?: any) {
+    super(response, body);
+    this.name = "RateLimitError";
+    this.message = "Rate limit exceeded - please try again later";
+
+    // Extract retry-after header if present
+    const retryAfter = response.headers.get("retry-after");
+    if (retryAfter) {
+      this.retryAfter = parseInt(retryAfter, 10);
+    }
+  }
+}
+
+export class ServerError extends HttpError {
+  constructor(response: Response, body?: any) {
+    super(response, body);
+    this.name = "ServerError";
+    this.message = "Server error - please try again later";
+  }
+}
+
+export class NetworkError extends Error {
+  constructor(originalError: Error) {
+    super("Network error - please check your connection");
+    this.name = "NetworkError";
+    this.cause = originalError;
+  }
+}
+
+export function createHttpError(response: Response, body?: any): HttpError {
+  if (response.status === 400) {
+    return new BadRequestError(response, body);
+  } else if (response.status === 401) {
+    return new UnauthorizedError(response, body);
+  } else if (response.status === 403) {
+    return new ForbiddenError(response, body);
+  } else if (response.status === 404) {
+    return new NotFoundError(response, body);
+  } else if (response.status === 429) {
+    return new RateLimitError(response, body);
+  } else if (response.status > 499) {
+    return new ServerError(response, body);
+  } else {
+    return new HttpError(response, body);
+  }
+}
+
 /**
  * This is the base class for all generated API classes.
  */
@@ -111,9 +221,17 @@ export class BaseAPI {
     if (response && response.status >= 200 && response.status < 300) {
       return response;
     }
-    const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
-    (error as any).response = response;
-    throw error;
+    let body;
+    try {
+      const contentType = response.headers.get("content-type");
+      if (contentType?.includes("application/json")) {
+        body = await response.json();
+      }
+    } catch {
+      // If we can't parse, that's fine
+    }
+
+    throw createHttpError(response, body);
   }
 
   private async createFetchParams(
@@ -256,36 +374,6 @@ function isFormData(value: any): value is FormData {
   return typeof FormData !== "undefined" && value instanceof FormData;
 }
 
-export class ResponseError extends Error {
-  override name: "ResponseError" = "ResponseError";
-  constructor(
-    public response: Response,
-    msg?: string,
-  ) {
-    super(msg);
-  }
-}
-
-export class FetchError extends Error {
-  override name: "FetchError" = "FetchError";
-  constructor(
-    public cause: Error,
-    msg?: string,
-  ) {
-    super(msg);
-  }
-}
-
-export class RequiredError extends Error {
-  override name: "RequiredError" = "RequiredError";
-  constructor(
-    public field: string,
-    msg?: string,
-  ) {
-    super(msg);
-  }
-}
-
 export const COLLECTION_FORMATS = {
   csv: ",",
   ssv: " ",
@@ -393,27 +481,6 @@ export function exists(json: any, key: string) {
   return value !== null && value !== undefined;
 }
 
-export function mapValues(data: any, fn: (item: any) => any) {
-  const result: { [key: string]: any } = {};
-  for (const key of Object.keys(data)) {
-    result[key] = fn(data[key]);
-  }
-  return result;
-}
-
-export function canConsumeForm(consumes: Consume[]): boolean {
-  for (const consume of consumes) {
-    if ("multipart/form-data" === consume.contentType) {
-      return true;
-    }
-  }
-  return false;
-}
-
-export interface Consume {
-  contentType: string;
-}
-
 export interface RequestContext {
   fetch: FetchAPI;
   url: string;
@@ -439,48 +506,4 @@ export interface Middleware {
   pre?(context: RequestContext): Promise<FetchParams | void>;
   post?(context: ResponseContext): Promise<Response | void>;
   onError?(context: ErrorContext): Promise<Response | void>;
-}
-
-export interface ApiResponse<T> {
-  raw: Response;
-  value(): Promise<T>;
-}
-
-export interface ResponseTransformer<T> {
-  (json: any): T;
-}
-
-export class JSONApiResponse<T> {
-  constructor(
-    public raw: Response,
-    private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue,
-  ) {}
-
-  async value(): Promise<T> {
-    return this.transformer(await this.raw.json());
-  }
-}
-
-export class VoidApiResponse {
-  constructor(public raw: Response) {}
-
-  async value(): Promise<void> {
-    return undefined;
-  }
-}
-
-export class BlobApiResponse {
-  constructor(public raw: Response) {}
-
-  async value(): Promise<Blob> {
-    return await this.raw.blob();
-  }
-}
-
-export class TextApiResponse {
-  constructor(public raw: Response) {}
-
-  async value(): Promise<string> {
-    return await this.raw.text();
-  }
 }
