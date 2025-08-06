@@ -1,5 +1,3 @@
- {{>licenseInfo}}
-
  export const BASE_PATH = "{{{basePath}}}".replace(/\/+$/, "");
 
  export interface ConfigurationParameters {
@@ -117,7 +115,9 @@ export class BaseAPI {
         if (response && (response.status >= 200 && response.status < 300)) {
             return response;
         }
-        throw new ResponseError(response, 'Response returned an error code');
+        const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
+        (error as any).response = response;
+        throw error;
     }
 
     private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
