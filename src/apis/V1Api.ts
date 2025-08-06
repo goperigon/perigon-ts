@@ -1472,12 +1472,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return JournalistSchema.parse(raw);
   }
-
   /**
    * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
    * Articles
@@ -1509,12 +1506,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      QuerySearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return QuerySearchResultSchema.parse(raw);
   }
-
   /**
    * Browse or search for companies Perigon tracks using name, domain, ticker symbol, industry, and more. Supports Boolean search logic and filtering by metadata such as country, exchange, employee count, and IPO date.
    * Companies
@@ -1546,12 +1540,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      CompanySearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return CompanySearchResultSchema.parse(raw);
   }
-
   /**
    * Search journalists using broad search attributes. Our database contains over 230,000 journalists from around the world and is refreshed frequently.
    * Journalists
@@ -1583,12 +1574,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      JournalistSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return JournalistSearchResultSchema.parse(raw);
   }
-
   /**
    * Search and retrieve additional information on known persons that exist within Perigon\'s entity database and as referenced in any article response object. Our database contains over 650,000 people from around the world and is refreshed frequently. People data is derived from Wikidata and includes a wikidataId field that can be used to lookup even more information on Wikidata\'s website.
    * People
@@ -1620,12 +1608,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      PeopleSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return PeopleSearchResultSchema.parse(raw);
   }
-
   /**
    * Search and filter the 142,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
    * Sources
@@ -1657,12 +1642,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      SourceSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return SourceSearchResultSchema.parse(raw);
   }
-
   /**
    * Search and filter all news stories available via the Perigon API. Each story aggregates key information across related articles, including AI-generated names, summaries, and key points.
    * Stories
@@ -1694,12 +1676,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      StorySearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return StorySearchResultSchema.parse(raw);
   }
-
   /**
    * Produce a single, concise summary over the full corpus of articles matching your filters, using your prompt to guide which insights to highlight.
    * Search Summarizer
@@ -1733,12 +1712,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      SummarySearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return SummarySearchResultSchema.parse(raw);
   }
-
   /**
    * Search through all available Topics that exist within the Perigon Database.
    * Topics
@@ -1770,12 +1746,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      TopicSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return TopicSearchResultSchema.parse(raw);
   }
-
   /**
    * Search and filter all Wikipedia pages available via the Perigon API. The result includes a list of individual pages that were matched to your specific criteria.
    * Wikipedia
@@ -1807,12 +1780,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return WikipediaSearchResultSchema.parse(raw);
   }
-
   /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
    * Vector
@@ -1845,12 +1815,9 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      ArticlesVectorSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return ArticlesVectorSearchResultSchema.parse(raw);
   }
-
   /**
    * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
    * Vector
@@ -1883,9 +1850,7 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) =>
-      WikipediaVectorSearchResultSchema.parse(jsonValue),
-    );
-    return await apiResponse.value();
+    const raw = await response.json();
+    return WikipediaVectorSearchResultSchema.parse(raw);
   }
 }

@@ -563,11 +563,19 @@ export const ArticleSearchParamsSchema = z.object({
   /**
    * 'pubDateFrom' filter, will search articles published after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request
    */
-  pubDateFrom: z.string().optional().nullable(),
+  pubDateFrom: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
   /**
    * 'pubDateFrom' filter, will search articles published before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00
    */
-  pubDateTo: z.string().optional().nullable(),
+  pubDateTo: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
   /**
    * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is 'true'.
    */
@@ -1187,8 +1195,16 @@ export type TopicLabels = z.infer<typeof TopicLabelsSchema>;
 
 export const TopicDtoSchema = z.object({
   id: z.number().optional().nullable(),
-  createdAt: z.string().optional().nullable(),
-  updatedAt: z.string().optional().nullable(),
+  createdAt: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  updatedAt: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
   name: z.string().optional().nullable(),
   labels: TopicLabelsSchema.optional().nullable(),
 });
@@ -1308,11 +1324,19 @@ export const WikipediaSearchParamsSchema = z.object({
   /**
    * 'wikiRevisionFrom' filter, will search pages modified after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
-  wikiRevisionFrom: z.string().optional().nullable(),
+  wikiRevisionFrom: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
   /**
    * 'wikiRevisionFrom' filter, will search pages modified before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
-  wikiRevisionTo: z.string().optional().nullable(),
+  wikiRevisionTo: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
   /**
    * 'pageviewsFrom' filter, will search pages with at least the provided number of views per day.
    */
