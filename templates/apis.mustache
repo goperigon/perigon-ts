@@ -150,47 +150,8 @@ export class {{classname}} extends runtime.BaseAPI {
         }, initOverrides);
 
         {{#returnType}}
-        {{#returnTypeIsPrimitive}}
-        {{#isMap}}
-        const apiResponse = new runtime.JSONApiResponse<any>(response);
-        {{/isMap}}
-        {{#isArray}}
-        const apiResponse = new runtime.JSONApiResponse<any>(response);
-        {{/isArray}}
-        {{#returnSimpleType}}
-        const apiResponse = this.isJsonMime(response.headers.get('content-type')) 
-            ? new runtime.JSONApiResponse<{{returnType}}>(response)
-            : new runtime.TextApiResponse(response) as any;
-        {{/returnSimpleType}}
-        {{/returnTypeIsPrimitive}}
-        {{^returnTypeIsPrimitive}}
-        {{#isArray}}
-        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => {{#uniqueItems}}new Set({{/uniqueItems}}jsonValue.map({{returnBaseType}}FromJSON){{/withoutRuntimeChecks}}){{#uniqueItems}}){{/uniqueItems}};
-        {{/isArray}}
-        {{^isArray}}
-        {{#isMap}}
-        const apiResponse = new runtime.JSONApiResponse(response{{^withoutRuntimeChecks}}, (jsonValue) => runtime.mapValues(jsonValue, {{returnBaseType}}FromJSON){{/withoutRuntimeChecks}});
-        {{/isMap}}
-        {{^isMap}}
-        const apiResponse = new runtime.JSONApiResponse(response, (jsonValue) => {{returnBaseType}}Schema.parse(jsonValue));
-        {{/isMap}}
-        {{/isArray}}
-        {{/returnTypeIsPrimitive}}
-        {{#isResponseOptional}}
-        switch (response.status) {
-            {{#responses}}
-            {{#is2xx}}
-            case {{code}}:
-                return {{#dataType}}await apiResponse.value(){{/dataType}}{{^dataType}}null{{/dataType}};
-            {{/is2xx}}
-            {{/responses}}
-            default:
-                return await apiResponse.value();
-        }
-        {{/isResponseOptional}}
-        {{^isResponseOptional}}
-        return await apiResponse.value();
-        {{/isResponseOptional}}
+        const raw = await response.json()
+        return {{returnBaseType}}Schema.parse(raw);
         {{/returnType}}
         {{^returnType}}
         // void return type

@@ -563,11 +563,11 @@ export const ArticleSearchParamsSchema = z.object({
   /**
    * 'pubDateFrom' filter, will search articles published after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request
    */
-  pubDateFrom: z.string().optional().nullable(),
+  pubDateFrom: z.date().optional().nullable(),
   /**
    * 'pubDateFrom' filter, will search articles published before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00
    */
-  pubDateTo: z.string().optional().nullable(),
+  pubDateTo: z.date().optional().nullable(),
   /**
    * Whether to return reprints in the response or not. Reprints are usually wired articles from sources like AP or Reuters that are reprinted in multiple sources at the same time. By default, this parameter is 'true'.
    */
@@ -600,7 +600,7 @@ export type ArticlesVectorSearchResult = z.infer<
   typeof ArticlesVectorSearchResultSchema
 >;
 
-export const InternalErrorExceptionCauseStackTraceInnerSchema = z.object({
+export const AuthExceptionCauseStackTraceInnerSchema = z.object({
   classLoaderName: z.string().optional(),
   moduleName: z.string().optional(),
   moduleVersion: z.string().optional(),
@@ -611,38 +611,32 @@ export const InternalErrorExceptionCauseStackTraceInnerSchema = z.object({
   className: z.string().optional(),
 });
 
-export type InternalErrorExceptionCauseStackTraceInner = z.infer<
-  typeof InternalErrorExceptionCauseStackTraceInnerSchema
+export type AuthExceptionCauseStackTraceInner = z.infer<
+  typeof AuthExceptionCauseStackTraceInnerSchema
 >;
 
-export const InternalErrorExceptionCauseSchema = z.object({
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional(),
+export const AuthExceptionCauseSchema = z.object({
+  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
   message: z.string().optional(),
   localizedMessage: z.string().optional(),
 });
 
-export type InternalErrorExceptionCause = z.infer<
-  typeof InternalErrorExceptionCauseSchema
->;
+export type AuthExceptionCause = z.infer<typeof AuthExceptionCauseSchema>;
 
-export const InternalErrorExceptionSuppressedInnerSchema = z.object({
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional(),
+export const AuthExceptionSuppressedInnerSchema = z.object({
+  stackTrace: z.array(AuthExceptionCauseStackTraceInnerSchema).optional(),
   message: z.string().optional(),
   localizedMessage: z.string().optional(),
 });
 
-export type InternalErrorExceptionSuppressedInner = z.infer<
-  typeof InternalErrorExceptionSuppressedInnerSchema
+export type AuthExceptionSuppressedInner = z.infer<
+  typeof AuthExceptionSuppressedInnerSchema
 >;
 
 export const AuthExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
+    .array(AuthExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   statusCode: z
@@ -719,10 +713,7 @@ export const AuthExceptionSchema = z.object({
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -803,16 +794,13 @@ export const CompanySearchResultSchema = z.object({
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
 export const IllegalParameterExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
+    .array(AuthExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -827,16 +815,13 @@ export const ImageHolderSchema = z.object({
 export type ImageHolder = z.infer<typeof ImageHolderSchema>;
 
 export const InternalErrorExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
+    .array(AuthExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -855,16 +840,13 @@ export type JournalistSearchResult = z.infer<
 >;
 
 export const NotFoundExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
+    .array(AuthExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -1088,9 +1070,9 @@ export const SummarySearchResultSchema = z.object({
 export type SummarySearchResult = z.infer<typeof SummarySearchResultSchema>;
 
 export const TooManyRequestsExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
+  cause: AuthExceptionCauseSchema.optional().nullable(),
   stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
+    .array(AuthExceptionCauseStackTraceInnerSchema)
     .optional()
     .nullable(),
   status: z
@@ -1167,10 +1149,7 @@ export const TooManyRequestsExceptionSchema = z.object({
     .optional()
     .nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
+  suppressed: z.array(AuthExceptionSuppressedInnerSchema).optional().nullable(),
   localizedMessage: z.string().optional().nullable(),
 });
 
@@ -1187,8 +1166,8 @@ export type TopicLabels = z.infer<typeof TopicLabelsSchema>;
 
 export const TopicDtoSchema = z.object({
   id: z.number().optional().nullable(),
-  createdAt: z.string().optional().nullable(),
-  updatedAt: z.string().optional().nullable(),
+  createdAt: z.date().optional().nullable(),
+  updatedAt: z.date().optional().nullable(),
   name: z.string().optional().nullable(),
   labels: TopicLabelsSchema.optional().nullable(),
 });
@@ -1308,11 +1287,11 @@ export const WikipediaSearchParamsSchema = z.object({
   /**
    * 'wikiRevisionFrom' filter, will search pages modified after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
-  wikiRevisionFrom: z.string().optional().nullable(),
+  wikiRevisionFrom: z.date().optional().nullable(),
   /**
    * 'wikiRevisionFrom' filter, will search pages modified before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
-  wikiRevisionTo: z.string().optional().nullable(),
+  wikiRevisionTo: z.date().optional().nullable(),
   /**
    * 'pageviewsFrom' filter, will search pages with at least the provided number of views per day.
    */
