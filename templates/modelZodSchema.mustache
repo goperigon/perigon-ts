@@ -32,7 +32,7 @@ export type {{classname}} = z.infer<typeof {{classname}}Schema>;
 export enum {{classname}}{{enumName}} {
 {{#allowableValues}}
     {{#enumVars}}
-    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+    {{name}} = {{{value}}}{{^-last}},{{/-last}}
     {{/enumVars}}
 {{/allowableValues}}
 }
@@ -43,7 +43,7 @@ export enum {{classname}}{{enumName}} {
 export const {{classname}}{{enumName}} = {
 {{#allowableValues}}
     {{#enumVars}}
-    {{{name}}}: {{{value}}}{{^-last}},{{/-last}}
+    {{name}}: {{{value}}}{{^-last}},{{/-last}}
     {{/enumVars}}
 {{/allowableValues}}
 } as const;

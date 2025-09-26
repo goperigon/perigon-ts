@@ -3,7 +3,7 @@
  {{#isEnum}}
  * @type {{{datatypeWithEnum}}}
  {{#allowableValues}}
- * @values {{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}
+ * @values {{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}
  {{/allowableValues}}
  {{/isEnum}}
  {{#required}}
@@ -11,10 +11,10 @@
  {{/required}}
  */
 {{paramName}}: {{#isEnum}}
-z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
+z.enum([{{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
 {{/isEnum}}{{^isEnum}}{{#isArray}}
 z.array({{#items}}{{#isEnum}}
-z.enum([{{#allowableValues}}{{#enumVars}}'{{{value}}}'{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
+z.enum([{{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
 {{/isEnum}}{{^isEnum}}{{#isString}}
 z.string()
 {{/isString}}{{^isString}}{{#isNumber}}
