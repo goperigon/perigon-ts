@@ -161,16 +161,7 @@ async function main() {
       );
     });
 
-    // Example 5: Search for non-existing journalist
-
-    const journalists = await perigon.searchJournalists({
-      id: "NONE",
-      size: 1,
-    });
-
-    console.log("No Journalists found: ", journalists);
-
-    // Example 6: Wikipedia Search
+    // Example 5: Wikipedia Search
     console.log("📚 Example 6: Wikipedia Search");
     console.log('Searching Wikipedia pages about "machine learning"...\n');
 

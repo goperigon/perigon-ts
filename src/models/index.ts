@@ -334,6 +334,7 @@ export const ArticleSchema = z.object({
   title: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   content: z.string().optional().nullable(),
+  enContentWordCount: z.number().optional().nullable(),
   medium: z.string().optional().nullable(),
   links: z.array(z.string()).optional().nullable(),
   labels: z.array(LabelHolderSchema).optional().nullable(),
@@ -569,7 +570,7 @@ export const ArticleSearchParamsSchema = z.object({
     .optional()
     .nullable(),
   /**
-   * 'pubDateFrom' filter, will search articles published before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00
+   * 'pubDateTo' filter, will search articles published before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00
    */
   pubDateTo: z
     .union([z.string().date(), z.string().datetime()])
@@ -607,134 +608,6 @@ export const ArticlesVectorSearchResultSchema = z.object({
 export type ArticlesVectorSearchResult = z.infer<
   typeof ArticlesVectorSearchResultSchema
 >;
-
-export const InternalErrorExceptionCauseStackTraceInnerSchema = z.object({
-  classLoaderName: z.string().optional(),
-  moduleName: z.string().optional(),
-  moduleVersion: z.string().optional(),
-  methodName: z.string().optional(),
-  fileName: z.string().optional(),
-  lineNumber: z.number().optional(),
-  nativeMethod: z.boolean().optional(),
-  className: z.string().optional(),
-});
-
-export type InternalErrorExceptionCauseStackTraceInner = z.infer<
-  typeof InternalErrorExceptionCauseStackTraceInnerSchema
->;
-
-export const InternalErrorExceptionCauseSchema = z.object({
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional(),
-  message: z.string().optional(),
-  localizedMessage: z.string().optional(),
-});
-
-export type InternalErrorExceptionCause = z.infer<
-  typeof InternalErrorExceptionCauseSchema
->;
-
-export const InternalErrorExceptionSuppressedInnerSchema = z.object({
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional(),
-  message: z.string().optional(),
-  localizedMessage: z.string().optional(),
-});
-
-export type InternalErrorExceptionSuppressedInner = z.infer<
-  typeof InternalErrorExceptionSuppressedInnerSchema
->;
-
-export const AuthExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional()
-    .nullable(),
-  statusCode: z
-    .enum([
-      "100 CONTINUE",
-      "101 SWITCHING_PROTOCOLS",
-      "102 PROCESSING",
-      "103 CHECKPOINT",
-      "200 OK",
-      "201 CREATED",
-      "202 ACCEPTED",
-      "203 NON_AUTHORITATIVE_INFORMATION",
-      "204 NO_CONTENT",
-      "205 RESET_CONTENT",
-      "206 PARTIAL_CONTENT",
-      "207 MULTI_STATUS",
-      "208 ALREADY_REPORTED",
-      "226 IM_USED",
-      "300 MULTIPLE_CHOICES",
-      "301 MOVED_PERMANENTLY",
-      "302 FOUND",
-      "302 MOVED_TEMPORARILY",
-      "303 SEE_OTHER",
-      "304 NOT_MODIFIED",
-      "305 USE_PROXY",
-      "307 TEMPORARY_REDIRECT",
-      "308 PERMANENT_REDIRECT",
-      "400 BAD_REQUEST",
-      "401 UNAUTHORIZED",
-      "402 PAYMENT_REQUIRED",
-      "403 FORBIDDEN",
-      "404 NOT_FOUND",
-      "405 METHOD_NOT_ALLOWED",
-      "406 NOT_ACCEPTABLE",
-      "407 PROXY_AUTHENTICATION_REQUIRED",
-      "408 REQUEST_TIMEOUT",
-      "409 CONFLICT",
-      "410 GONE",
-      "411 LENGTH_REQUIRED",
-      "412 PRECONDITION_FAILED",
-      "413 PAYLOAD_TOO_LARGE",
-      "413 REQUEST_ENTITY_TOO_LARGE",
-      "414 URI_TOO_LONG",
-      "414 REQUEST_URI_TOO_LONG",
-      "415 UNSUPPORTED_MEDIA_TYPE",
-      "416 REQUESTED_RANGE_NOT_SATISFIABLE",
-      "417 EXPECTATION_FAILED",
-      "418 I_AM_A_TEAPOT",
-      "419 INSUFFICIENT_SPACE_ON_RESOURCE",
-      "420 METHOD_FAILURE",
-      "421 DESTINATION_LOCKED",
-      "422 UNPROCESSABLE_ENTITY",
-      "423 LOCKED",
-      "424 FAILED_DEPENDENCY",
-      "425 TOO_EARLY",
-      "426 UPGRADE_REQUIRED",
-      "428 PRECONDITION_REQUIRED",
-      "429 TOO_MANY_REQUESTS",
-      "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-      "451 UNAVAILABLE_FOR_LEGAL_REASONS",
-      "500 INTERNAL_SERVER_ERROR",
-      "501 NOT_IMPLEMENTED",
-      "502 BAD_GATEWAY",
-      "503 SERVICE_UNAVAILABLE",
-      "504 GATEWAY_TIMEOUT",
-      "505 HTTP_VERSION_NOT_SUPPORTED",
-      "506 VARIANT_ALSO_NEGOTIATES",
-      "507 INSUFFICIENT_STORAGE",
-      "508 LOOP_DETECTED",
-      "509 BANDWIDTH_LIMIT_EXCEEDED",
-      "510 NOT_EXTENDED",
-      "511 NETWORK_AUTHENTICATION_REQUIRED",
-    ])
-    .optional()
-    .nullable(),
-  message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
-  localizedMessage: z.string().optional().nullable(),
-});
-
-export type AuthException = z.infer<typeof AuthExceptionSchema>;
 
 export const SymbolHolderSchema = z.object({
   symbol: z.string().optional().nullable(),
@@ -810,47 +683,19 @@ export const CompanySearchResultSchema = z.object({
 
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
-export const IllegalParameterExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional()
-    .nullable(),
+export const ErrorResponseSchema = z.object({
+  status: z.number().optional().nullable(),
   message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
-  localizedMessage: z.string().optional().nullable(),
+  timestamp: z.number().optional().nullable(),
 });
 
-export type IllegalParameterException = z.infer<
-  typeof IllegalParameterExceptionSchema
->;
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
 export const ImageHolderSchema = z.object({
   url: z.string().optional().nullable(),
 });
 
 export type ImageHolder = z.infer<typeof ImageHolderSchema>;
-
-export const InternalErrorExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional()
-    .nullable(),
-  message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
-  localizedMessage: z.string().optional().nullable(),
-});
-
-export type InternalErrorException = z.infer<
-  typeof InternalErrorExceptionSchema
->;
 
 export const JournalistSearchResultSchema = z.object({
   status: z.number(),
@@ -861,22 +706,6 @@ export const JournalistSearchResultSchema = z.object({
 export type JournalistSearchResult = z.infer<
   typeof JournalistSearchResultSchema
 >;
-
-export const NotFoundExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional()
-    .nullable(),
-  message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
-  localizedMessage: z.string().optional().nullable(),
-});
-
-export type NotFoundException = z.infer<typeof NotFoundExceptionSchema>;
 
 export const WikidataDateHolderSchema = z.object({
   time: z.string().optional().nullable(),
@@ -1023,6 +852,35 @@ export const SourceSearchResultSchema = z.object({
 
 export type SourceSearchResult = z.infer<typeof SourceSearchResultSchema>;
 
+export const StatResultSchema = z.object({
+  status: z.number().optional().nullable(),
+  results: z.array(z.unknown()).optional().nullable(),
+});
+
+export type StatResult = z.infer<typeof StatResultSchema>;
+
+export const StoryHistoryRecordSchema = z.object({
+  clusterId: z.string().optional().nullable(),
+  createdAt: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  triggeredAt: z.string().optional().nullable(),
+  summary: z.string().optional().nullable(),
+  shortSummary: z.string().optional().nullable(),
+  changelog: z.string().optional().nullable(),
+  keyPoints: z.array(KeyPointSchema).optional().nullable(),
+  questions: z.array(QuestionSchema).optional().nullable(),
+});
+
+export type StoryHistoryRecord = z.infer<typeof StoryHistoryRecordSchema>;
+
+export const StoryHistoryResultSchema = z.object({
+  status: z.number(),
+  numResults: z.number(),
+  results: z.array(StoryHistoryRecordSchema),
+});
+
+export type StoryHistoryResult = z.infer<typeof StoryHistoryResultSchema>;
+
 export const StorySearchResultSchema = z.object({
   status: z.number(),
   numResults: z.number(),
@@ -1094,97 +952,6 @@ export const SummarySearchResultSchema = z.object({
 });
 
 export type SummarySearchResult = z.infer<typeof SummarySearchResultSchema>;
-
-export const TooManyRequestsExceptionSchema = z.object({
-  cause: InternalErrorExceptionCauseSchema.optional().nullable(),
-  stackTrace: z
-    .array(InternalErrorExceptionCauseStackTraceInnerSchema)
-    .optional()
-    .nullable(),
-  status: z
-    .enum([
-      "100 CONTINUE",
-      "101 SWITCHING_PROTOCOLS",
-      "102 PROCESSING",
-      "103 CHECKPOINT",
-      "200 OK",
-      "201 CREATED",
-      "202 ACCEPTED",
-      "203 NON_AUTHORITATIVE_INFORMATION",
-      "204 NO_CONTENT",
-      "205 RESET_CONTENT",
-      "206 PARTIAL_CONTENT",
-      "207 MULTI_STATUS",
-      "208 ALREADY_REPORTED",
-      "226 IM_USED",
-      "300 MULTIPLE_CHOICES",
-      "301 MOVED_PERMANENTLY",
-      "302 FOUND",
-      "302 MOVED_TEMPORARILY",
-      "303 SEE_OTHER",
-      "304 NOT_MODIFIED",
-      "305 USE_PROXY",
-      "307 TEMPORARY_REDIRECT",
-      "308 PERMANENT_REDIRECT",
-      "400 BAD_REQUEST",
-      "401 UNAUTHORIZED",
-      "402 PAYMENT_REQUIRED",
-      "403 FORBIDDEN",
-      "404 NOT_FOUND",
-      "405 METHOD_NOT_ALLOWED",
-      "406 NOT_ACCEPTABLE",
-      "407 PROXY_AUTHENTICATION_REQUIRED",
-      "408 REQUEST_TIMEOUT",
-      "409 CONFLICT",
-      "410 GONE",
-      "411 LENGTH_REQUIRED",
-      "412 PRECONDITION_FAILED",
-      "413 PAYLOAD_TOO_LARGE",
-      "413 REQUEST_ENTITY_TOO_LARGE",
-      "414 URI_TOO_LONG",
-      "414 REQUEST_URI_TOO_LONG",
-      "415 UNSUPPORTED_MEDIA_TYPE",
-      "416 REQUESTED_RANGE_NOT_SATISFIABLE",
-      "417 EXPECTATION_FAILED",
-      "418 I_AM_A_TEAPOT",
-      "419 INSUFFICIENT_SPACE_ON_RESOURCE",
-      "420 METHOD_FAILURE",
-      "421 DESTINATION_LOCKED",
-      "422 UNPROCESSABLE_ENTITY",
-      "423 LOCKED",
-      "424 FAILED_DEPENDENCY",
-      "425 TOO_EARLY",
-      "426 UPGRADE_REQUIRED",
-      "428 PRECONDITION_REQUIRED",
-      "429 TOO_MANY_REQUESTS",
-      "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-      "451 UNAVAILABLE_FOR_LEGAL_REASONS",
-      "500 INTERNAL_SERVER_ERROR",
-      "501 NOT_IMPLEMENTED",
-      "502 BAD_GATEWAY",
-      "503 SERVICE_UNAVAILABLE",
-      "504 GATEWAY_TIMEOUT",
-      "505 HTTP_VERSION_NOT_SUPPORTED",
-      "506 VARIANT_ALSO_NEGOTIATES",
-      "507 INSUFFICIENT_STORAGE",
-      "508 LOOP_DETECTED",
-      "509 BANDWIDTH_LIMIT_EXCEEDED",
-      "510 NOT_EXTENDED",
-      "511 NETWORK_AUTHENTICATION_REQUIRED",
-    ])
-    .optional()
-    .nullable(),
-  message: z.string().optional().nullable(),
-  suppressed: z
-    .array(InternalErrorExceptionSuppressedInnerSchema)
-    .optional()
-    .nullable(),
-  localizedMessage: z.string().optional().nullable(),
-});
-
-export type TooManyRequestsException = z.infer<
-  typeof TooManyRequestsExceptionSchema
->;
 
 export const TopicLabelsSchema = z.object({
   category: z.string().optional().nullable(),
