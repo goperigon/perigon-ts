@@ -20,6 +20,8 @@ import type {
   PeopleSearchResult,
   QuerySearchResult,
   SourceSearchResult,
+  StatResult,
+  StoryHistoryResult,
   StorySearchResult,
   SummarySearchResult,
   TopicSearchResult,
@@ -37,6 +39,8 @@ import {
   QuerySearchResultSchema,
   SortBySchema,
   SourceSearchResultSchema,
+  StatResultSchema,
+  StoryHistoryResultSchema,
   StorySearchResultSchema,
   SummaryBodySchema,
   SummarySearchResultSchema,
@@ -62,349 +66,610 @@ export type GetJournalistByIdRequest = z.input<
   typeof GetJournalistByIdRequestSchema
 >;
 
-export const SearchArticlesQuerySchema = z.object({
+export const GetStoryCountsQuerySchema = z.object({
   /**
-   * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Primary search query for filtering stories based on their name, summary, and key points. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q: z.string().optional(),
   /**
-   * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically within story names. Supports Boolean operators, exact phrases with quotes, and wildcards for matching name variations.
    */
-  title: z.string().optional(),
+  name: z.string().optional(),
   /**
-   * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
-   */
-  desc: z.string().optional(),
-  /**
-   * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
-   */
-  content: z.string().optional(),
-  /**
-   * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
-   */
-  url: z.string().optional(),
-  /**
-   * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
-   */
-  articleId: z.array(z.string()).optional(),
-  /**
-   * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
+   * String Array. Filter to specific stories using their unique identifiers. Each clusterId represents a distinct story that groups related articles. Multiple values create an OR filter.
    */
   clusterId: z.array(z.string()).optional(),
   /**
-   * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
+   * String Array. Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
    */
-  sortBy: AllEndpointSortBySchema.optional(),
+  excludeClusterId: z.array(z.string()).optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * String. Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
+   */
+  sortBy: SortBySchema.optional(),
+  /**
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of articles to return per page in the paginated response.
+   * Integer. The number of articles to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
    */
   from: z.date().optional(),
   /**
-   * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
    */
   to: z.date().optional(),
   /**
-   * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for stories created after this date. Alternative parameter for filtering by story creation date.
    */
-  addDateFrom: z.date().optional(),
+  initializedFrom: z.date().optional(),
   /**
-   * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for stories created before this date. Alternative parameter for filtering by story creation date.
    */
-  addDateTo: z.date().optional(),
+  initializedTo: z.date().optional(),
   /**
-   * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
    */
-  refreshDateFrom: z.date().optional(),
+  updatedFrom: z.date().optional(),
   /**
-   * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
    */
-  refreshDateTo: z.date().optional(),
+  updatedTo: z.date().optional(),
   /**
-   * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
-   */
-  medium: z.array(z.string()).optional(),
-  /**
-   * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
-   */
-  source: z.array(z.string()).optional(),
-  /**
-   * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
-   */
-  sourceGroup: z.array(z.string()).optional(),
-  /**
-   * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
-   */
-  excludeSourceGroup: z.array(z.string()).optional(),
-  /**
-   * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
-   */
-  excludeSource: z.array(z.string()).optional(),
-  /**
-   * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
-   */
-  paywall: z.boolean().optional(),
-  /**
-   * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
-   */
-  byline: z.array(z.string()).optional(),
-  /**
-   * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
-   */
-  author: z.array(z.string()).optional(),
-  /**
-   * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
-   */
-  excludeAuthor: z.array(z.string()).optional(),
-  /**
-   * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
-   */
-  journalistId: z.array(z.string()).optional(),
-  /**
-   * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
-   */
-  excludeJournalistId: z.array(z.string()).optional(),
-  /**
-   * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
-   */
-  language: z.array(z.string()).optional(),
-  /**
-   * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
-   */
-  excludeLanguage: z.array(z.string()).optional(),
-  /**
-   * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
-   */
-  searchTranslation: z.boolean().optional(),
-  /**
-   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
-   */
-  label: z.array(z.string()).optional(),
-  /**
-   * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
-   */
-  excludeLabel: z.array(z.string()).optional(),
-  /**
-   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
-   */
-  category: z.array(z.string()).optional(),
-  /**
-   * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
-   */
-  excludeCategory: z.array(z.string()).optional(),
-  /**
-   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
+   * String Array. Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
   topic: z.array(z.string()).optional(),
   /**
-   * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
+   * String Array. Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
    */
-  excludeTopic: z.array(z.string()).optional(),
+  category: z.array(z.string()).optional(),
   /**
-   * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
-   */
-  linkTo: z.string().optional(),
-  /**
-   * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
-   */
-  showReprints: z.boolean().optional(),
-  /**
-   * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
-   */
-  reprintGroupId: z.string().optional(),
-  /**
-   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  city: z.array(z.string()).optional(),
-  /**
-   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
-   */
-  excludeCity: z.array(z.string()).optional(),
-  /**
-   * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  area: z.array(z.string()).optional(),
-  /**
-   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  state: z.array(z.string()).optional(),
-  /**
-   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
-   */
-  excludeState: z.array(z.string()).optional(),
-  /**
-   * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
-   */
-  county: z.array(z.string()).optional(),
-  /**
-   * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
-   */
-  excludeCounty: z.array(z.string()).optional(),
-  /**
-   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  locationsCountry: z.array(z.string()).optional(),
-  /**
-   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
-   */
-  country: z.array(z.string()).optional(),
-  /**
-   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
-   */
-  excludeLocationsCountry: z.array(z.string()).optional(),
-  /**
-   * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
-   */
-  location: z.array(z.string()).optional(),
-  /**
-   * Latitude of the center point to search places
-   */
-  lat: z.number().optional(),
-  /**
-   * Longitude of the center point to search places
-   */
-  lon: z.number().optional(),
-  /**
-   * Maximum distance (in km) from starting point to search articles by tagged places
-   */
-  maxDistance: z.number().optional(),
-  /**
-   * Find articles published by sources that are located within a given city.
-   */
-  sourceCity: z.array(z.string()).optional(),
-  /**
-   * Find articles published by sources that are located within a given county.
-   */
-  sourceCounty: z.array(z.string()).optional(),
-  /**
-   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
-   */
-  sourceCountry: z.array(z.string()).optional(),
-  /**
-   * Find articles published by sources that are located within a given state.
-   */
-  sourceState: z.array(z.string()).optional(),
-  /**
-   * Latitude of the center point to search articles created by local publications.
-   */
-  sourceLat: z.number().optional(),
-  /**
-   * Latitude of the center point to search articles created by local publications.
-   */
-  sourceLon: z.number().optional(),
-  /**
-   * Maximum distance from starting point to search articles created by local publications.
-   */
-  sourceMaxDistance: z.number().optional(),
-  /**
-   * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
-   */
-  personWikidataId: z.array(z.string()).optional(),
-  /**
-   * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
-   */
-  excludePersonWikidataId: z.array(z.string()).optional(),
-  /**
-   * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
-   */
-  personName: z.array(z.string()).optional(),
-  /**
-   * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
-   */
-  excludePersonName: z.array(z.string()).optional(),
-  /**
-   * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
-   */
-  companyId: z.array(z.string()).optional(),
-  /**
-   * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
-   */
-  excludeCompanyId: z.array(z.string()).optional(),
-  /**
-   * Filter articles by company name mentions. Performs an exact match on company names.
-   */
-  companyName: z.string().optional(),
-  /**
-   * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
-   */
-  companyDomain: z.array(z.string()).optional(),
-  /**
-   * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
-   */
-  excludeCompanyDomain: z.array(z.string()).optional(),
-  /**
-   * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
-   */
-  companySymbol: z.array(z.string()).optional(),
-  /**
-   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
-   */
-  excludeCompanySymbol: z.array(z.string()).optional(),
-  /**
-   * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
-   */
-  showNumResults: z.boolean().optional(),
-  /**
-   * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
-   */
-  positiveSentimentFrom: z.number().optional(),
-  /**
-   * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
-   */
-  positiveSentimentTo: z.number().optional(),
-  /**
-   * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
-   */
-  neutralSentimentFrom: z.number().optional(),
-  /**
-   * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
-   */
-  neutralSentimentTo: z.number().optional(),
-  /**
-   * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
-   */
-  negativeSentimentFrom: z.number().optional(),
-  /**
-   * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
-   */
-  negativeSentimentTo: z.number().optional(),
-  /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
+   * String Array. Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
    */
   taxonomy: z.array(z.string()).optional(),
   /**
-   * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   * String Array. Filter stories that contain articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). A story will match if it contains at least one article from any of the specified sources. Multiple values create an OR filter.
    */
-  prefixTaxonomy: z.string().optional(),
+  source: z.array(z.string()).optional(),
   /**
-   * When set to true, enables text highlighting in search results.
+   * String Array. Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
+   */
+  sourceGroup: z.array(z.string()).optional(),
+  /**
+   * Integer. Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
+   */
+  minUniqueSources: z.number().optional(),
+  /**
+   * String Array. Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
+   */
+  personWikidataId: z.array(z.string()).optional(),
+  /**
+   * String. Filter stories by exact name matches of top mentioned people. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
+   */
+  personName: z.string().optional(),
+  /**
+   * String Array. Filter stories by identifiers of top mentioned companies. Returns stories where these companies appear prominently. For a complete list of tracked companies, refer to the /companies endpoint.
+   */
+  companyId: z.array(z.string()).optional(),
+  /**
+   * String. Filter stories by names of top mentioned companies. Performs an exact match on company names in the topCompanies field.
+   */
+  companyName: z.string().optional(),
+  /**
+   * String Array. Filter stories by domains of top mentioned companies (e.g., apple.com). Returns stories where companies with these domains appear prominently. For available company entities, consult the /companies endpoint.
+   */
+  companyDomain: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter stories by stock symbols of top mentioned companies. Returns stories where companies with these symbols appear prominently. For available company entities and their symbols, consult the /companies endpoint.
+   */
+  companySymbol: z.array(z.string()).optional(),
+  /**
+   * String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  country: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter local news by state. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  state: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter local news by city. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  city: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter local news by area. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  area: z.array(z.string()).optional(),
+  /**
+   * Integer. Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
+   */
+  minClusterSize: z.number().optional(),
+  /**
+   * Integer. Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
+   */
+  maxClusterSize: z.number().optional(),
+  /**
+   * Boolean. Filter to only include stories that have been assigned names. Defaults to true. Note that stories only receive names after they contain at least 5 unique articles.
+   */
+  nameExists: z.boolean().optional(),
+  /**
+   * Float. Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   */
+  positiveSentimentFrom: z.number().optional(),
+  /**
+   * Float. Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   */
+  positiveSentimentTo: z.number().optional(),
+  /**
+   * Float. Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   */
+  neutralSentimentFrom: z.number().optional(),
+  /**
+   * Float. Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   */
+  neutralSentimentTo: z.number().optional(),
+  /**
+   * Float. Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   */
+  negativeSentimentFrom: z.number().optional(),
+  /**
+   * Float. Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   */
+  negativeSentimentTo: z.number().optional(),
+  /**
+   * Boolean.
+   */
+  showStoryPageInfo: z.boolean().optional(),
+  /**
+   * Boolean. Show total number of results. By default set to false, will cap result count at 10000.
+   */
+  showNumResults: z.boolean().optional(),
+  /**
+   * Boolean. Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
+   */
+  showDuplicates: z.boolean().optional(),
+  /**
+   * Boolean. When set to true, enables text highlighting in search results.
    */
   showHighlighting: z.boolean().optional(),
   /**
-   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   * Integer. Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
   highlightFragmentSize: z.number().optional(),
   /**
-   * Controls the maximum number of highlighted fragments to return per field.
+   * Integer. Controls the maximum number of highlighted fragments to return per field.
    */
   highlightNumFragments: z.number().optional(),
   /**
-   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
   highlightPreTag: z.string().optional(),
   /**
-   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
    */
   highlightPostTag: z.string().optional(),
   /**
-   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   */
+  highlightQ: z.string().optional(),
+  /**
+   * Boolean. Preview 5 articles from the cluster.
+   */
+  expandArticles: z.boolean().optional(),
+  /**
+   * String. The value for \&#39;splitBy\&#39; must be one of the following: HOUR, DAY, WEEK, MONTH, or NONE.
+   * @type SplitByEnum
+   * @values 'HOUR', 'DAY', 'WEEK', 'MONTH', 'NONE'
+   * @required
+   */
+  splitBy: z.enum(["HOUR", "DAY", "WEEK", "MONTH", "NONE"]),
+});
+
+export const GetStoryCountsRequestSchema = z.object({
+  ...GetStoryCountsQuerySchema.shape,
+});
+
+export type GetStoryCountsRequest = z.input<typeof GetStoryCountsRequestSchema>;
+
+export const GetStoryHistoryQuerySchema = z.object({
+  /**
+   * String Array. Filter to specific story. Passing a cluster ID will filter results to only the content found within the cluster.
+   */
+  clusterId: z.array(z.string()).optional(),
+  /**
+   * Date. \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   */
+  from: z.date().optional(),
+  /**
+   * Date. \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59.
+   */
+  to: z.date().optional(),
+  /**
+   * String. Sort stories by count, creation date (createdAt), story refresh trigger date (triggeredAt).
+   * @type SortByEnum
+   * @values 'createdAt', 'triggeredAt'
+   */
+  sortBy: z.enum(["createdAt", "triggeredAt"]).optional(),
+  /**
+   * Integer. Zero-based page number. From 0 to 10000. See the Pagination section for limitations.
+   */
+  page: z.number().optional(),
+  /**
+   * Integer. Number of stories results per page, from 0 to 100.
+   */
+  size: z.number().optional(),
+  /**
+   * Boolean. Filter to only include clusters that have a changelog or not.
+   */
+  changelogExists: z.boolean().optional(),
+});
+
+export const GetStoryHistoryRequestSchema = z.object({
+  ...GetStoryHistoryQuerySchema.shape,
+});
+
+export type GetStoryHistoryRequest = z.input<
+  typeof GetStoryHistoryRequestSchema
+>;
+
+export const SearchArticlesQuerySchema = z.object({
+  /**
+   * String. Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   */
+  q: z.string().optional(),
+  /**
+   * String. Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   */
+  title: z.string().optional(),
+  /**
+   * String. Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+   */
+  desc: z.string().optional(),
+  /**
+   * String. Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
+   */
+  content: z.string().optional(),
+  /**
+   * String. Search within article summary fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+   */
+  summary: z.string().optional(),
+  /**
+   * String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   */
+  url: z.string().optional(),
+  /**
+   * String Array. Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
+   */
+  articleId: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
+   */
+  clusterId: z.array(z.string()).optional(),
+  /**
+   * String. Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
+   */
+  sortBy: AllEndpointSortBySchema.optional(),
+  /**
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Integer. The number of articles to return per page in the paginated response.
+   */
+  size: z.number().optional(),
+  /**
+   * Date. Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Date. Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Date. Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   */
+  addDateFrom: z.date().optional(),
+  /**
+   * Date. Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   */
+  addDateTo: z.date().optional(),
+  /**
+   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   */
+  refreshDateFrom: z.date().optional(),
+  /**
+   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   */
+  refreshDateTo: z.date().optional(),
+  /**
+   * String Array. Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
+   */
+  medium: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
+   */
+  source: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
+   */
+  sourceGroup: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
+   */
+  excludeSourceGroup: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
+   */
+  excludeSource: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles using watchlists of people and companies. Multiple values create an OR filter to include articles mentioning any entity from the specified watchlists.
+   */
+  watchlist: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles mentioning entities from specified watchlists. Multiple values create an AND-exclude filter, removing content mentioning any entity from the specified watchlists.
+   */
+  excludeWatchlist: z.array(z.string()).optional(),
+  /**
+   * Boolean. Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
+   */
+  paywall: z.boolean().optional(),
+  /**
+   * String Array. Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
+   */
+  byline: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
+   */
+  author: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
+   */
+  excludeAuthor: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
+   */
+  journalistId: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
+   */
+  excludeJournalistId: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
+   */
+  language: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
+   */
+  excludeLanguage: z.array(z.string()).optional(),
+  /**
+   * Boolean. Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
+   */
+  searchTranslation: z.boolean().optional(),
+  /**
+   * String Array. Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
+   */
+  label: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
+   */
+  excludeLabel: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   */
+  category: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
+   */
+  excludeCategory: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
+   */
+  topic: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
+   */
+  excludeTopic: z.array(z.string()).optional(),
+  /**
+   * String. Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
+   */
+  linkTo: z.string().optional(),
+  /**
+   * Boolean. Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
+   */
+  showReprints: z.boolean().optional(),
+  /**
+   * String. Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
+   */
+  reprintGroupId: z.string().optional(),
+  /**
+   * String Array. Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  city: z.array(z.string()).optional(),
+  /**
+   * String Array. A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+   */
+  excludeCity: z.array(z.string()).optional(),
+  /**
+   * String Array. Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  area: z.array(z.string()).optional(),
+  /**
+   * String Array. Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  state: z.array(z.string()).optional(),
+  /**
+   * String Array. A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+   */
+  excludeState: z.array(z.string()).optional(),
+  /**
+   * String Array. A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
+   */
+  county: z.array(z.string()).optional(),
+  /**
+   * String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   */
+  excludeCounty: z.array(z.string()).optional(),
+  /**
+   * String Array. Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  locationsCountry: z.array(z.string()).optional(),
+  /**
+   * String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   */
+  country: z.array(z.string()).optional(),
+  /**
+   * String Array. Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+   */
+  excludeLocationsCountry: z.array(z.string()).optional(),
+  /**
+   * String Array. Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   */
+  location: z.array(z.string()).optional(),
+  /**
+   * Float. Latitude of the center point to search places
+   */
+  lat: z.number().optional(),
+  /**
+   * Float. Longitude of the center point to search places
+   */
+  lon: z.number().optional(),
+  /**
+   * Float. Maximum distance (in km) from starting point to search articles by tagged places
+   */
+  maxDistance: z.number().optional(),
+  /**
+   * String Array. Find articles published by sources that are located within a given city.
+   */
+  sourceCity: z.array(z.string()).optional(),
+  /**
+   * String Array. Find articles published by sources that are located within a given county.
+   */
+  sourceCounty: z.array(z.string()).optional(),
+  /**
+   * String Array. Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+   */
+  sourceCountry: z.array(z.string()).optional(),
+  /**
+   * String Array. Find articles published by sources that are located within a given state.
+   */
+  sourceState: z.array(z.string()).optional(),
+  /**
+   * Float. Latitude of the center point to search articles created by local publications.
+   */
+  sourceLat: z.number().optional(),
+  /**
+   * Float. Latitude of the center point to search articles created by local publications.
+   */
+  sourceLon: z.number().optional(),
+  /**
+   * Float. Maximum distance from starting point to search articles created by local publications.
+   */
+  sourceMaxDistance: z.number().optional(),
+  /**
+   * String Array. Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
+   */
+  personWikidataId: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
+   */
+  excludePersonWikidataId: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
+   */
+  personName: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
+   */
+  excludePersonName: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
+   */
+  companyId: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
+   */
+  excludeCompanyId: z.array(z.string()).optional(),
+  /**
+   * String. Filter articles by company name mentions. Performs an exact match on company names.
+   */
+  companyName: z.string().optional(),
+  /**
+   * String Array. Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
+   */
+  companyDomain: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
+   */
+  excludeCompanyDomain: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
+   */
+  companySymbol: z.array(z.string()).optional(),
+  /**
+   * String Array. A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+   */
+  excludeCompanySymbol: z.array(z.string()).optional(),
+  /**
+   * Boolean. Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
+   */
+  showNumResults: z.boolean().optional(),
+  /**
+   * Float. Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   */
+  positiveSentimentFrom: z.number().optional(),
+  /**
+   * Float. Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   */
+  positiveSentimentTo: z.number().optional(),
+  /**
+   * Float. Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   */
+  neutralSentimentFrom: z.number().optional(),
+  /**
+   * Float. Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   */
+  neutralSentimentTo: z.number().optional(),
+  /**
+   * Float. Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   */
+  negativeSentimentFrom: z.number().optional(),
+  /**
+   * Float. Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   */
+  negativeSentimentTo: z.number().optional(),
+  /**
+   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
+   */
+  taxonomy: z.array(z.string()).optional(),
+  /**
+   * String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   */
+  prefixTaxonomy: z.string().optional(),
+  /**
+   * Boolean. When set to true, enables text highlighting in search results.
+   */
+  showHighlighting: z.boolean().optional(),
+  /**
+   * Integer. Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   */
+  highlightFragmentSize: z.number().optional(),
+  /**
+   * Integer. Controls the maximum number of highlighted fragments to return per field.
+   */
+  highlightNumFragments: z.number().optional(),
+  /**
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   */
+  highlightPreTag: z.string().optional(),
+  /**
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   */
+  highlightPostTag: z.string().optional(),
+  /**
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
    */
   highlightQ: z.string().optional(),
 });
@@ -417,63 +682,63 @@ export type SearchArticlesRequest = z.input<typeof SearchArticlesRequestSchema>;
 
 export const SearchCompaniesQuerySchema = z.object({
   /**
-   * Filter by unique company identifiers. Multiple values create an OR filter.
+   * String Array. Filter by unique company identifiers. Multiple values create an OR filter.
    */
   id: z.array(z.string()).optional(),
   /**
-   * Filter by company stock ticker symbols (e.g., AAPL, MSFT, GOOGL). Multiple values create an OR filter.
+   * String Array. Filter by company stock ticker symbols (e.g., AAPL, MSFT, GOOGL). Multiple values create an OR filter.
    */
   symbol: z.array(z.string()).optional(),
   /**
-   * Filter by company domains or websites (e.g., apple.com, microsoft.com). Multiple values create an OR filter.
+   * String Array. Filter by company domains or websites (e.g., apple.com, microsoft.com). Multiple values create an OR filter.
    */
   domain: z.array(z.string()).optional(),
   /**
-   * Filter by company headquarters country. Multiple values create an OR filter.
+   * String Array. Filter by company headquarters country. Multiple values create an OR filter.
    */
   country: z.array(z.string()).optional(),
   /**
-   * Filter by stock exchange where companies are listed (e.g., NASDAQ, NYSE). Multiple values create an OR filter.
+   * String Array. Filter by stock exchange where companies are listed (e.g., NASDAQ, NYSE). Multiple values create an OR filter.
    */
   exchange: z.array(z.string()).optional(),
   /**
-   * Filter for companies with at least this many employees.
+   * Integer. Filter for companies with at least this many employees.
    */
   numEmployeesFrom: z.number().optional(),
   /**
-   * Filter for companies with no more than this many employees.
+   * Integer. Filter for companies with no more than this many employees.
    */
   numEmployeesTo: z.number().optional(),
   /**
-   * Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for companies that went public on or after this date. Accepts ISO 8601 format (e.g., 2023-01-01T00:00:00) or yyyy-mm-dd format.
    */
   ipoFrom: z.date().optional(),
   /**
-   * Filter for companies that went public on or before this date. Accepts ISO 8601 format (e.g., 2023-12-31T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for companies that went public on or before this date. Accepts ISO 8601 format (e.g., 2023-12-31T23:59:59) or yyyy-mm-dd format.
    */
   ipoTo: z.date().optional(),
   /**
-   * Primary search query for filtering companies across name, alternative names, domains, and ticker symbols. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Primary search query for filtering companies across name, alternative names, domains, and ticker symbols. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q: z.string().optional(),
   /**
-   * Search within company names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Search within company names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name: z.string().optional(),
   /**
-   * Filter by company industry classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Filter by company industry classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   industry: z.string().optional(),
   /**
-   * Filter by company sector classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Filter by company sector classifications. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   sector: z.string().optional(),
   /**
-   * The number of companies to return per page in the paginated response.
+   * Integer. The number of companies to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
 });
@@ -488,67 +753,67 @@ export type SearchCompaniesRequest = z.input<
 
 export const SearchJournalistsQuerySchema = z.object({
   /**
-   * Filter by unique journalist identifiers. Multiple values create an OR filter to find journalists matching any of the specified IDs.
+   * String Array. Filter by unique journalist identifiers. Multiple values create an OR filter to find journalists matching any of the specified IDs.
    */
   id: z.array(z.string()).optional(),
   /**
-   * Primary search query for filtering journalists based on their name, title, and Twitter bio. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Primary search query for filtering journalists based on their name, title, and Twitter bio. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q: z.string().optional(),
   /**
-   * Search specifically within journalist names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Search specifically within journalist names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name: z.string().optional(),
   /**
-   * Filter journalists by their exact Twitter handle, without the @ symbol.
+   * String. Filter journalists by their exact Twitter handle, without the @ symbol.
    */
   twitter: z.string().optional(),
   /**
-   * The number of journalists to return per page in the paginated response.
+   * Integer. The number of journalists to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * Filter journalists by the publisher domains they write for. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
+   * String Array. Filter journalists by the publisher domains they write for. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
   source: z.array(z.string()).optional(),
   /**
-   * Filter journalists by the topics they frequently cover. Multiple values create an OR filter to find journalists covering any of the specified topics.
+   * String Array. Filter journalists by the top topics they cover. Topics are more specific themes that the article is about. Examples of topics: \&#39;Economy\&#39;, \&#39;Real Estate\&#39;, \&#39;Cryptocurrency\&#39;. If multiple parameters are passed, they will be applied as OR operations. (Searches inside the topCategories data field.)
    */
   topic: z.array(z.string()).optional(),
   /**
-   * Filter journalists by the content categories they typically write about (e.g., Politics, Tech, Sports, Business). Multiple values create an OR filter.
+   * String Array. Filter journalists by the top categories they cover. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. (Searches inside the topCategories data field.)
    */
   category: z.array(z.string()).optional(),
   /**
-   * Filter journalists by the type of content they typically produce (e.g., Opinion, Paid-news, Non-news). Multiple values create an OR filter.
+   * String Array. Filter journalists by the most common label tagged to the articles they publish. This accepts labels like \&#39;Opinion\&#39; or \&#39;Pop Culture\&#39;. (Searches the topLabels data field.)
    */
   label: z.array(z.string()).optional(),
   /**
-   * Filter for journalists who publish at least this many articles per month. Used to identify more active journalists.
+   * Integer. Filter for journalists who publish at least this many articles per month. Used to identify more active journalists.
    */
   minMonthlyPosts: z.number().optional(),
   /**
-   * Filter for journalists who publish no more than this many articles per month.
+   * Integer. Filter for journalists who publish no more than this many articles per month.
    */
   maxMonthlyPosts: z.number().optional(),
   /**
-   * Filter journalists by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). Multiple values create an OR filter.
+   * String Array. Filter journalists by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). Multiple values create an OR filter.
    */
   country: z.array(z.string()).optional(),
   /**
-   * Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   updatedAtFrom: z.date().optional(),
   /**
-   * Filter for journalist profiles updated on or before this date. Accepts ISO 8601 format (e.g., 2023-03-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for journalist profiles updated on or before this date. Accepts ISO 8601 format (e.g., 2023-03-01T23:59:59) or yyyy-mm-dd format.
    */
   updatedAtTo: z.date().optional(),
   /**
-   * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
+   * Boolean. Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
   showNumResults: z.boolean().optional(),
 });
@@ -563,27 +828,27 @@ export type SearchJournalistsRequest = z.input<
 
 export const SearchPeopleQuerySchema = z.object({
   /**
-   * Search by person\&#39;s name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Search by person\&#39;s name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name: z.string().optional(),
   /**
-   * Filter by Wikidata entity IDs (e.g., Q7747, Q937). These are unique identifiers from Wikidata.org that precisely identify public figures and eliminate name ambiguity. Multiple values create an OR filter.
+   * String Array. Filter by Wikidata entity IDs (e.g., Q7747, Q937). These are unique identifiers from Wikidata.org that precisely identify public figures and eliminate name ambiguity. Multiple values create an OR filter.
    */
   wikidataId: z.array(z.string()).optional(),
   /**
-   * Filter by Wikidata occupation IDs (e.g., Q82955 for politician, Q33999 for actor, Q19546 for businessman). Finds people with specific professions. Multiple values create an OR filter.
+   * String Array. Filter by Wikidata occupation IDs (e.g., Q82955 for politician, Q33999 for actor, Q19546 for businessman). Finds people with specific professions. Multiple values create an OR filter.
    */
   occupationId: z.array(z.string()).optional(),
   /**
-   * Search by occupation name (e.g., politician, actor, CEO, athlete). Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Search by occupation name (e.g., politician, actor, CEO, athlete). Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   occupationLabel: z.string().optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of people to return per page in the paginated response.
+   * Integer. The number of people to return per page in the paginated response.
    */
   size: z.number().optional(),
 });
@@ -596,99 +861,99 @@ export type SearchPeopleRequest = z.input<typeof SearchPeopleRequestSchema>;
 
 export const SearchSourcesQuerySchema = z.object({
   /**
-   * Filter by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com, us?.nytimes.com). Multiple values create an OR filter.
+   * String Array. Filter by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com, us?.nytimes.com). Multiple values create an OR filter.
    */
   domain: z.array(z.string()).optional(),
   /**
-   * Search by source name or alternative names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Search by source name or alternative names. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name: z.string().optional(),
   /**
-   * Filter by predefined publisher bundles (e.g., top100, top50tech). Returns all sources within the specified group. See documentation for available source groups.
+   * String. Filter by predefined publisher bundles (e.g., top100, top50tech). Returns all sources within the specified group. See documentation for available source groups.
    */
   sourceGroup: z.string().optional(),
   /**
-   * Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
+   * String. Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
    */
   sortBy: SortBySchema.optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of sources to return per page in the paginated response.
+   * Integer. The number of sources to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * Filter for sources with at least this many monthly visitors. Used to target publishers by audience size.
+   * Integer. Filter for sources with at least this many monthly visitors. Used to target publishers by audience size.
    */
   minMonthlyVisits: z.any().optional(),
   /**
-   * Filter for sources with no more than this many monthly visitors. Used to target publishers by audience size.
+   * Integer. Filter for sources with no more than this many monthly visitors. Used to target publishers by audience size.
    */
   maxMonthlyVisits: z.any().optional(),
   /**
-   * Filter for sources that publish at least this many articles per month. Used to target publishers by content volume.
+   * Integer. Filter for sources that publish at least this many articles per month. Used to target publishers by content volume.
    */
   minMonthlyPosts: z.any().optional(),
   /**
-   * Filter for sources that publish no more than this many articles per month. Used to target publishers by content volume.
+   * Integer. Filter for sources that publish no more than this many articles per month. Used to target publishers by content volume.
    */
   maxMonthlyPosts: z.any().optional(),
   /**
-   * Filter sources by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
+   * String Array. Filter sources by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
   country: z.array(z.string()).optional(),
   /**
-   * Filter for local publications based in specific countries. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
+   * String Array. Filter for local publications based in specific countries. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
   sourceCountry: z.array(z.string()).optional(),
   /**
-   * Filter for local publications based in specific states or regions. Uses standard two-letter state codes in lowercase (e.g., ca, ny, tx). See documentation for supported state codes. Multiple values create an OR filter.
+   * String Array. Filter for local publications based in specific states or regions. Uses standard two-letter state codes in lowercase (e.g., ca, ny, tx). See documentation for supported state codes. Multiple values create an OR filter.
    */
   sourceState: z.array(z.string()).optional(),
   /**
-   * Filter for local publications based in specific counties. Multiple values create an OR filter.
+   * String Array. Filter for local publications based in specific counties. Multiple values create an OR filter.
    */
   sourceCounty: z.array(z.string()).optional(),
   /**
-   * Filter for local publications based in specific cities. Multiple values create an OR filter.
+   * String Array. Filter for local publications based in specific cities. Multiple values create an OR filter.
    */
   sourceCity: z.array(z.string()).optional(),
   /**
-   * Latitude coordinate for filtering local publications by geographic proximity. Used with sourceLon and sourceMaxDistance for radius search.
+   * Float. Latitude coordinate for filtering local publications by geographic proximity. Used with sourceLon and sourceMaxDistance for radius search.
    */
   sourceLat: z.number().optional(),
   /**
-   * Longitude coordinate for filtering local publications by geographic proximity. Used with sourceLat and sourceMaxDistance for radius search.
+   * Float. Longitude coordinate for filtering local publications by geographic proximity. Used with sourceLat and sourceMaxDistance for radius search.
    */
   sourceLon: z.number().optional(),
   /**
-   * Maximum distance in kilometers from the coordinates defined by sourceLat and sourceLon. Defines the radius for local publication searches.
+   * Float. Maximum distance in kilometers from the coordinates defined by sourceLat and sourceLon. Defines the radius for local publication searches.
    */
   sourceMaxDistance: z.number().optional(),
   /**
-   * Filter sources by their primary content categories such as Politics, Tech, Sports, Business, or Finance. Returns sources that frequently cover these topics. Multiple values create an OR filter.
+   * String Array. Filter sources by their primary content categories such as Politics, Tech, Sports, Business, or Finance. Returns sources that frequently cover these topics. Multiple values create an OR filter.
    */
   category: z.array(z.string()).optional(),
   /**
-   * Filter sources by their frequently covered topics (e.g., Markets, Cryptocurrency, Climate Change). Returns sources where the specified topic is among their top 10 covered areas. Multiple values create an OR filter.
+   * String Array. Filter sources by their frequently covered topics (e.g., Markets, Cryptocurrency, Climate Change). Returns sources where the specified topic is among their top 10 covered areas. Multiple values create an OR filter.
    */
   topic: z.array(z.string()).optional(),
   /**
-   * Filter sources by their content label patterns (e.g., Opinion, Paid-news, Non-news). Returns sources where the specified label is common in their published content. See documentation for all available labels. Multiple values create an OR filter.
+   * String Array. Filter sources by their content label patterns (e.g., Opinion, Paid-news, Non-news). Returns sources where the specified label is common in their published content. See documentation for all available labels. Multiple values create an OR filter.
    */
   label: z.array(z.string()).optional(),
   /**
-   * Filter by paywall status. Set to true to find sources with paywalls, or false to find sources without paywalls.
+   * Boolean. Filter by paywall status. Set to true to find sources with paywalls, or false to find sources without paywalls.
    */
   paywall: z.boolean().optional(),
   /**
-   * Controls whether subdomains are included as separate results. When true (default), subdomains appear as distinct sources. When false, results are consolidated to parent domains only.
+   * Boolean. Controls whether subdomains are included as separate results. When true (default), subdomains appear as distinct sources. When false, results are consolidated to parent domains only.
    */
   showSubdomains: z.boolean().optional(),
   /**
-   * Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
+   * Boolean. Controls whether to return the exact result count. When false (default), counts are capped at 10,000 for performance reasons. Set to true for precise counts in smaller result sets.
    */
   showNumResults: z.boolean().optional(),
 });
@@ -701,193 +966,197 @@ export type SearchSourcesRequest = z.input<typeof SearchSourcesRequestSchema>;
 
 export const SearchStoriesQuerySchema = z.object({
   /**
-   * Primary search query for filtering stories based on their name, summary, and key points. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Primary search query for filtering stories based on their name, summary, and key points. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q: z.string().optional(),
   /**
-   * Search specifically within story names. Supports Boolean operators, exact phrases with quotes, and wildcards for matching name variations.
+   * String. Search specifically within story names. Supports Boolean operators, exact phrases with quotes, and wildcards for matching name variations.
    */
   name: z.string().optional(),
   /**
-   * Filter to specific stories using their unique identifiers. Each clusterId represents a distinct story that groups related articles. Multiple values create an OR filter.
+   * String Array. Filter to specific stories using their unique identifiers. Each clusterId represents a distinct story that groups related articles. Multiple values create an OR filter.
    */
   clusterId: z.array(z.string()).optional(),
   /**
-   * Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
+   * String Array. Excludes specific stories from the results by their unique identifiers. Use this parameter to filter out unwanted or previously seen stories.
    */
   excludeClusterId: z.array(z.string()).optional(),
   /**
-   * Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
+   * String. Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
   sortBy: SortBySchema.optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of articles to return per page in the paginated response.
+   * Integer. The number of articles to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   * Date. \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
    */
   from: z.date().optional(),
   /**
-   * \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
+   * Date. \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
    */
   to: z.date().optional(),
   /**
-   * Filter for stories created after this date. Alternative parameter for filtering by story creation date.
+   * Date. Filter for stories created after this date. Alternative parameter for filtering by story creation date.
    */
   initializedFrom: z.date().optional(),
   /**
-   * Filter for stories created before this date. Alternative parameter for filtering by story creation date.
+   * Date. Filter for stories created before this date. Alternative parameter for filtering by story creation date.
    */
   initializedTo: z.date().optional(),
   /**
-   * Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
+   * Date. Filter for stories that received new articles after this date. Useful for tracking developing news events or evolving storylines.
    */
   updatedFrom: z.date().optional(),
   /**
-   * Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
+   * Date. Filter for stories that received new articles before this date. Useful for tracking developing news events or evolving storylines.
    */
   updatedTo: z.date().optional(),
   /**
-   * Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
+   * String Array. Filter stories by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and stories can include multiple topics based on their constituent articles. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
   topic: z.array(z.string()).optional(),
   /**
-   * Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
+   * String Array. Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
    */
   category: z.array(z.string()).optional(),
   /**
-   * Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
+   * String Array. Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
    */
   taxonomy: z.array(z.string()).optional(),
   /**
-   * Filter stories that contain articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). A story will match if it contains at least one article from any of the specified sources. Multiple values create an OR filter.
+   * String Array. Filter stories that contain articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). A story will match if it contains at least one article from any of the specified sources. Multiple values create an OR filter.
    */
   source: z.array(z.string()).optional(),
   /**
-   * Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
+   * String Array. Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
    */
   sourceGroup: z.array(z.string()).optional(),
   /**
-   * Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
+   * Integer. Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
    */
   minUniqueSources: z.number().optional(),
   /**
-   * Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
+   * String Array. Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
    */
   personWikidataId: z.array(z.string()).optional(),
   /**
-   * Filter stories by exact name matches of top mentioned people. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
+   * String. Filter stories by exact name matches of top mentioned people. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
   personName: z.string().optional(),
   /**
-   * Filter stories by identifiers of top mentioned companies. Returns stories where these companies appear prominently. For a complete list of tracked companies, refer to the /companies endpoint.
+   * String Array. Filter stories by identifiers of top mentioned companies. Returns stories where these companies appear prominently. For a complete list of tracked companies, refer to the /companies endpoint.
    */
   companyId: z.array(z.string()).optional(),
   /**
-   * Filter stories by names of top mentioned companies. Performs an exact match on company names in the topCompanies field.
+   * String. Filter stories by names of top mentioned companies. Performs an exact match on company names in the topCompanies field.
    */
   companyName: z.string().optional(),
   /**
-   * Filter stories by domains of top mentioned companies (e.g., apple.com). Returns stories where companies with these domains appear prominently. For available company entities, consult the /companies endpoint.
+   * String Array. Filter stories by domains of top mentioned companies (e.g., apple.com). Returns stories where companies with these domains appear prominently. For available company entities, consult the /companies endpoint.
    */
   companyDomain: z.array(z.string()).optional(),
   /**
-   * Filter stories by stock symbols of top mentioned companies. Returns stories where companies with these symbols appear prominently. For available company entities and their symbols, consult the /companies endpoint.
+   * String Array. Filter stories by stock symbols of top mentioned companies. Returns stories where companies with these symbols appear prominently. For available company entities and their symbols, consult the /companies endpoint.
    */
   companySymbol: z.array(z.string()).optional(),
   /**
-   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
    */
   country: z.array(z.string()).optional(),
   /**
-   * Filter local news by state. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filter local news by state. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
    */
   state: z.array(z.string()).optional(),
   /**
-   * Filter local news by city. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filter local news by city. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
    */
   city: z.array(z.string()).optional(),
   /**
-   * Filter local news by area. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filter local news by area. Applies only to local news, when this param is passed non-local news will not be returned. If multiple parameters are passed, they will be applied as OR operations.
    */
   area: z.array(z.string()).optional(),
   /**
-   * Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
+   * Integer. Filter by minimum cluster size. Minimum cluster size filter applies to number of unique articles.
    */
   minClusterSize: z.number().optional(),
   /**
-   * Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
+   * Integer. Filter by maximum cluster size. Maximum cluster size filter applies to number of unique articles in the cluster.
    */
   maxClusterSize: z.number().optional(),
   /**
-   * Filter to only include stories that have been assigned names. Defaults to true. Note that stories only receive names after they contain at least 5 unique articles.
+   * Boolean. Filter to only include stories that have been assigned names. Defaults to true. Note that stories only receive names after they contain at least 5 unique articles.
    */
   nameExists: z.boolean().optional(),
   /**
-   * Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Float. Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom: z.number().optional(),
   /**
-   * Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Float. Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo: z.number().optional(),
   /**
-   * Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Float. Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom: z.number().optional(),
   /**
-   * Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Float. Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo: z.number().optional(),
   /**
-   * Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Float. Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom: z.number().optional(),
   /**
-   * Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Float. Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * Parameter showStoryPageInfo
+   * Boolean.
    */
   showStoryPageInfo: z.boolean().optional(),
   /**
-   * Show total number of results. By default set to false, will cap result count at 10000.
+   * Boolean. Show total number of results. By default set to false, will cap result count at 10000.
    */
   showNumResults: z.boolean().optional(),
   /**
-   * Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
+   * Boolean. Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
    */
   showDuplicates: z.boolean().optional(),
   /**
-   * When set to true, enables text highlighting in search results.
+   * Boolean. When set to true, enables text highlighting in search results.
    */
   showHighlighting: z.boolean().optional(),
   /**
-   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   * Integer. Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
   highlightFragmentSize: z.number().optional(),
   /**
-   * Controls the maximum number of highlighted fragments to return per field.
+   * Integer. Controls the maximum number of highlighted fragments to return per field.
    */
   highlightNumFragments: z.number().optional(),
   /**
-   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
   highlightPreTag: z.string().optional(),
   /**
-   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
    */
   highlightPostTag: z.string().optional(),
   /**
-   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
    */
   highlightQ: z.string().optional(),
+  /**
+   * Boolean. Preview 5 articles from the cluster.
+   */
+  expandArticles: z.boolean().optional(),
 });
 
 export const SearchStoriesRequestSchema = z.object({
@@ -898,347 +1167,359 @@ export type SearchStoriesRequest = z.input<typeof SearchStoriesRequestSchema>;
 
 export const SearchSummarizerQuerySchema = z.object({
   /**
-   * Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q: z.string().optional(),
   /**
-   * Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically within article headlines/titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   title: z.string().optional(),
   /**
-   * Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+   * String. Search within article description fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
    */
   desc: z.string().optional(),
   /**
-   * Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
+   * String. Search within the full article body content. Supports Boolean logic, exact phrase matching with quotes, and wildcards for comprehensive content searching.
    */
   content: z.string().optional(),
   /**
-   * Search within article URLs to find content from specific website sections or domains. Supports wildcards (* and ?) for partial URL matching.
+   * String. Search within article summary fields. Supports Boolean expressions, exact phrase matching with quotes, and wildcards for flexible pattern matching.
+   */
+  summary: z.string().optional(),
+  /**
+   * String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
    */
   url: z.string().optional(),
   /**
-   * Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
+   * String Array. Retrieve specific news articles by their unique article identifiers. Multiple IDs can be provided to return a collection of specific articles.
    */
   articleId: z.array(z.string()).optional(),
   /**
-   * Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
+   * String Array. Filter results to only show content within a specific related content cluster. Returns articles grouped together as part of Perigon Stories based on topic relevance.
    */
   clusterId: z.array(z.string()).optional(),
   /**
-   * Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
+   * String. Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
   sortBy: AllEndpointSortBySchema.optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of articles to return per page in the paginated response.
+   * Integer. The number of articles to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   from: z.date().optional(),
   /**
-   * Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles published before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   to: z.date().optional(),
   /**
-   * Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom: z.date().optional(),
   /**
-   * Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo: z.date().optional(),
   /**
-   * Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom: z.date().optional(),
   /**
-   * Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo: z.date().optional(),
   /**
-   * Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
+   * String Array. Filter articles by their primary medium type. Accepts Article for written content or Video for video-based stories. Multiple values create an OR filter.
    */
   medium: z.array(z.string()).optional(),
   /**
-   * Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
+   * String Array. Filter articles by specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an OR filter.
    */
   source: z.array(z.string()).optional(),
   /**
-   * Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
+   * String Array. Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
    */
   sourceGroup: z.array(z.string()).optional(),
   /**
-   * Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
+   * String Array. Exclude articles from specified Perigon source groups. Multiple values create an AND-exclude filter, removing content from publishers in any of the specified bundles (e.g., top10, top100).
    */
   excludeSourceGroup: z.array(z.string()).optional(),
   /**
-   * Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
+   * String Array. Exclude articles from specific publisher domains or subdomains. Supports wildcards (* and ?) for pattern matching (e.g., *.cnn.com). Multiple values create an AND-exclude filter.
    */
   excludeSource: z.array(z.string()).optional(),
   /**
-   * Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
+   * String Array. Filter articles using watchlists of people and companies. Multiple values create an OR filter to include articles mentioning any entity from the specified watchlists.
+   */
+  watchlist: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles mentioning entities from specified watchlists. Multiple values create an AND-exclude filter, removing content mentioning any entity from the specified watchlists.
+   */
+  excludeWatchlist: z.array(z.string()).optional(),
+  /**
+   * Boolean. Filter to show only results where the source has a paywall (true) or does not have a paywall (false).
    */
   paywall: z.boolean().optional(),
   /**
-   * Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
+   * String Array. Filter articles by author bylines. Works as an exact match for each author name provided. Multiple values create an OR filter to find articles by any of the specified authors.
    */
   byline: z.array(z.string()).optional(),
   /**
-   * Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
+   * String Array. Filter articles by specific author names. Works as an exact match for each name. Multiple values create an OR filter to find articles by any of the specified authors.
    */
   author: z.array(z.string()).optional(),
   /**
-   * Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
+   * String Array. Exclude articles written by specific authors. Any article with an author name matching an entry in this list will be omitted from results. Multiple values create an AND-exclude filter.
    */
   excludeAuthor: z.array(z.string()).optional(),
   /**
-   * Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
+   * String Array. Filter by unique journalist identifiers which can be found through the Journalist API or in the matchedAuthors field. Multiple values create an OR filter.
    */
   journalistId: z.array(z.string()).optional(),
   /**
-   * Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
+   * String Array. Exclude articles written by specific journalists identified by their unique IDs. Multiple values create an AND-exclude filter.
    */
   excludeJournalistId: z.array(z.string()).optional(),
   /**
-   * Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
+   * String Array. Filter articles by their language using ISO-639 two-letter codes (e.g., en, es, fr). Multiple values create an OR filter.
    */
   language: z.array(z.string()).optional(),
   /**
-   * Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
+   * String Array. Exclude articles in specific languages using ISO-639 two-letter codes. Multiple values create an AND-exclude filter.
    */
   excludeLanguage: z.array(z.string()).optional(),
   /**
-   * Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
+   * Boolean. Expand search to include translated content fields for non-English articles. When true, searches translated title, description, and content fields.
    */
   searchTranslation: z.boolean().optional(),
   /**
-   * Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
+   * String Array. Filter articles by editorial labels such as Opinion, Paid-news, Non-news, Fact Check, or Press Release. Multiple values create an OR filter.
    */
   label: z.array(z.string()).optional(),
   /**
-   * Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
+   * String Array. Exclude articles with specific editorial labels. Multiple values create an AND-exclude filter, removing all content with any of these labels.
    */
   excludeLabel: z.array(z.string()).optional(),
   /**
-   * Filter by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized articles. Multiple values create an OR filter.
+   * String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
    */
   category: z.array(z.string()).optional(),
   /**
-   * Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
+   * String Array. Exclude articles with specific categories. Multiple values create an AND-exclude filter, removing all content with any of these categories.
    */
   excludeCategory: z.array(z.string()).optional(),
   /**
-   * Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
+   * String Array. Filter by specific topics such as Markets, Crime, Cryptocurrency, or College Sports. Topics are more granular than categories, and articles can have multiple topics. Use the /topics endpoint for a complete list of available topics. Multiple values create an OR filter.
    */
   topic: z.array(z.string()).optional(),
   /**
-   * Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
+   * String Array. Exclude articles with specific topics. Multiple values create an AND-exclude filter, removing all content with any of these topics.
    */
   excludeTopic: z.array(z.string()).optional(),
   /**
-   * Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
+   * String. Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
    */
   linkTo: z.string().optional(),
   /**
-   * Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
+   * Boolean. Controls whether to include reprinted content in results. When true (default), shows syndicated articles from wire services like AP or Reuters that appear on multiple sites.
    */
   showReprints: z.boolean().optional(),
   /**
-   * Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
+   * String. Returns all articles in a specific reprint group, including the original article and all its known reprints. Use when you want to see all versions of the same content.
    */
   reprintGroupId: z.string().optional(),
   /**
-   * Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filters articles where a specified city plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the urban area in question. If multiple parameters are passed, they will be applied as OR operations.
    */
   city: z.array(z.string()).optional(),
   /**
-   * A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
+   * String Array. A list of cities to exclude from the results. Articles that are associated with any of the specified cities will be filtered out.
    */
   excludeCity: z.array(z.string()).optional(),
   /**
-   * Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filters articles where a specified area, such as a neighborhood, borough, or district, plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the area in question. If multiple parameters are passed, they will be applied as OR operations.
    */
   area: z.array(z.string()).optional(),
   /**
-   * Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filters articles where a specified state plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the state in question. If multiple parameters are passed, they will be applied as OR operations.
    */
   state: z.array(z.string()).optional(),
   /**
-   * A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
+   * String Array. A list of states to exclude. Articles that include, or are associated with, any of the states provided here will be filtered out. This is especially useful if you want to ignore news tied to certain geographical areas (e.g., US states).
    */
   excludeState: z.array(z.string()).optional(),
   /**
-   * A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
+   * String Array. A list of counties to include (or specify) in the search results. This field filters the returned articles based on the county associated with the event or news. Only articles tagged with one of these counties will be included.
    */
   county: z.array(z.string()).optional(),
   /**
-   * Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   * String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
    */
   excludeCounty: z.array(z.string()).optional(),
   /**
-   * Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Filters articles where a specified country plays a central role in the content, beyond mere mentions, to ensure the results are deeply relevant to the country in question. If multiple parameters are passed, they will be applied as OR operations.
    */
   locationsCountry: z.array(z.string()).optional(),
   /**
-   * Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
+   * String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
    */
   country: z.array(z.string()).optional(),
   /**
-   * Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
+   * String Array. Excludes articles where a specified country plays a central role in the content, ensuring results are not deeply relevant to the country in question. If multiple parameters are passed, they will be applied as AND operations, excluding articles relevant to any of the specified countries.
    */
   excludeLocationsCountry: z.array(z.string()).optional(),
   /**
-   * Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   * String Array. Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
    */
   location: z.array(z.string()).optional(),
   /**
-   * Latitude of the center point to search places
+   * Float. Latitude of the center point to search places
    */
   lat: z.number().optional(),
   /**
-   * Longitude of the center point to search places
+   * Float. Longitude of the center point to search places
    */
   lon: z.number().optional(),
   /**
-   * Maximum distance (in km) from starting point to search articles by tagged places
+   * Float. Maximum distance (in km) from starting point to search articles by tagged places
    */
   maxDistance: z.number().optional(),
   /**
-   * Find articles published by sources that are located within a given city.
+   * String Array. Find articles published by sources that are located within a given city.
    */
   sourceCity: z.array(z.string()).optional(),
   /**
-   * Find articles published by sources that are located within a given county.
+   * String Array. Find articles published by sources that are located within a given county.
    */
   sourceCounty: z.array(z.string()).optional(),
   /**
-   * Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
+   * String Array. Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
    */
   sourceCountry: z.array(z.string()).optional(),
   /**
-   * Find articles published by sources that are located within a given state.
+   * String Array. Find articles published by sources that are located within a given state.
    */
   sourceState: z.array(z.string()).optional(),
   /**
-   * Latitude of the center point to search articles created by local publications.
+   * Float. Latitude of the center point to search articles created by local publications.
    */
   sourceLat: z.number().optional(),
   /**
-   * Latitude of the center point to search articles created by local publications.
+   * Float. Latitude of the center point to search articles created by local publications.
    */
   sourceLon: z.number().optional(),
   /**
-   * Maximum distance from starting point to search articles created by local publications.
+   * Float. Maximum distance from starting point to search articles created by local publications.
    */
   sourceMaxDistance: z.number().optional(),
   /**
-   * Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
+   * String Array. Filter articles by Wikidata IDs of mentioned people. Refer to the /people endpoint for a complete list of tracked individuals.
    */
   personWikidataId: z.array(z.string()).optional(),
   /**
-   * Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
+   * String Array. Exclude articles mentioning people with specific Wikidata IDs. Creates an AND-exclude filter to remove content about these individuals. Uses precise identifiers to avoid name ambiguity.
    */
   excludePersonWikidataId: z.array(z.string()).optional(),
   /**
-   * Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
+   * String Array. Filter articles by exact person name matches. Does not support Boolean or complex logic. For available person entities, consult the /people endpoint.
    */
   personName: z.array(z.string()).optional(),
   /**
-   * Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
+   * String Array. Exclude articles mentioning specific people by name. Creates an AND-exclude filter to remove content about these individuals.
    */
   excludePersonName: z.array(z.string()).optional(),
   /**
-   * Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
+   * String Array. Filter articles by company identifiers. For a complete list of tracked companies, refer to the /companies endpoint.
    */
   companyId: z.array(z.string()).optional(),
   /**
-   * Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
+   * String Array. Exclude articles mentioning companies with specific identifiers. Creates an AND-exclude filter to remove content about these corporate entities.
    */
   excludeCompanyId: z.array(z.string()).optional(),
   /**
-   * Filter articles by company name mentions. Performs an exact match on company names.
+   * String. Filter articles by company name mentions. Performs an exact match on company names.
    */
   companyName: z.string().optional(),
   /**
-   * Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
+   * String Array. Filter articles by company domains (e.g., apple.com). For available company entities, consult the /companies endpoint.
    */
   companyDomain: z.array(z.string()).optional(),
   /**
-   * Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
+   * String Array. Exclude articles related to companies with specific domains. Creates an AND-exclude filter to remove content about these companies.
    */
   excludeCompanyDomain: z.array(z.string()).optional(),
   /**
-   * Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
+   * String Array. Filter articles by company stock symbols. For available company entities and their symbols, consult the /companies endpoint.
    */
   companySymbol: z.array(z.string()).optional(),
   /**
-   * A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
+   * String Array. A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
    */
   excludeCompanySymbol: z.array(z.string()).optional(),
   /**
-   * Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
+   * Boolean. Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
    */
   showNumResults: z.boolean().optional(),
   /**
-   * Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Float. Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom: z.number().optional(),
   /**
-   * Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Float. Filter articles with a positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo: z.number().optional(),
   /**
-   * Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Float. Filter articles with a neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom: z.number().optional(),
   /**
-   * Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Float. Filter articles with a neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo: z.number().optional(),
   /**
-   * Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Float. Filter articles with a negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom: z.number().optional(),
   /**
-   * Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Float. Filter articles with a negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
+   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
    */
   taxonomy: z.array(z.string()).optional(),
   /**
-   * Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   * String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
    */
   prefixTaxonomy: z.string().optional(),
   /**
-   * When set to true, enables text highlighting in search results.
+   * Boolean. When set to true, enables text highlighting in search results.
    */
   showHighlighting: z.boolean().optional(),
   /**
-   * Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
+   * Integer. Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
    */
   highlightFragmentSize: z.number().optional(),
   /**
-   * Controls the maximum number of highlighted fragments to return per field.
+   * Integer. Controls the maximum number of highlighted fragments to return per field.
    */
   highlightNumFragments: z.number().optional(),
   /**
-   * Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
    */
   highlightPreTag: z.string().optional(),
   /**
-   * Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
    */
   highlightPostTag: z.string().optional(),
   /**
-   * Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
    */
   highlightQ: z.string().optional(),
 });
@@ -1262,23 +1543,23 @@ export type SearchSummarizerRequest = z.input<
 
 export const SearchTopicsQuerySchema = z.object({
   /**
-   * Search for topics by exact name or partial text match. Does not support wildcards. Examples include Markets, Cryptocurrency, Climate Change, etc.
+   * String. Search for topics by exact name or partial text match. Does not support wildcards. Examples include Markets, Cryptocurrency, Climate Change, etc.
    */
   name: z.string().optional(),
   /**
-   * Filter topics by broad article categories such as Politics, Tech, Sports, Business, Finance, Entertainment, etc.
+   * String. Filter topics by broad article categories such as Politics, Tech, Sports, Business, Finance, Entertainment, etc.
    */
   category: z.string().optional(),
   /**
-   * Filter topics by their specific subcategory. Subcategories provide more granular classification beyond the main category, such as TV or Event.
+   * String. Filter topics by their specific subcategory. Subcategories provide more granular classification beyond the main category, such as TV or Event.
    */
   subcategory: z.string().optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of topics to return per page in the paginated response.
+   * Integer. The number of topics to return per page in the paginated response.
    */
   size: z.number().optional(),
 });
@@ -1291,109 +1572,121 @@ export type SearchTopicsRequest = z.input<typeof SearchTopicsRequestSchema>;
 
 export const SearchWikipediaQuerySchema = z.object({
   /**
-   * Primary search query for filtering pages based on their title, summary, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Primary search query for filtering pages based on their title, summary, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   q: z.string().optional(),
   /**
-   * Search specifically within page titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically within page titles. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   title: z.string().optional(),
   /**
-   * Search specifically within page summary. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically within page summary. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   summary: z.string().optional(),
   /**
-   * Search specifically within the page\&#39;s content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically within the page\&#39;s content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   text: z.string().optional(),
   /**
-   * Search specifically across page\&#39;s references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically across page\&#39;s references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   reference: z.string().optional(),
   /**
-   * Retrieve specific pages by their unique Perigon identifiers. Multiple IDs can be provided to return a collection of specific pages.
+   * String Array. Retrieve specific pages by their unique Perigon identifiers. Multiple IDs can be provided to return a collection of specific pages.
    */
   id: z.array(z.string()).optional(),
   /**
-   * Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages.
+   * Integer Array. Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages.
    */
   wikiPageId: z.array(z.number()).optional(),
   /**
-   * Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
+   * Integer Array. Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
    */
   wikiRevisionId: z.array(z.number()).optional(),
   /**
-   * Retrieve pages only from specified wiki projects. Currently, the only accepted value is &#x60;enwiki&#x60;.
+   * String Array. Retrieve pages only from specified wiki projects. Currently, the only accepted value is &#x60;enwiki&#x60;.
    */
   wikiCode: z.array(z.string()).optional(),
   /**
-   * Retrieve pages only from specified wiki namespace. Currently, only the main namespace (0) is available.
+   * Integer Array. Retrieve pages only from specified wiki namespace. Currently, only the main namespace (0) is available.
    */
   wikiNamespace: z.array(z.number()).optional(),
   /**
-   * Retrieve pages by the ids corresponding to their Wikidata entities.
+   * String Array. Retrieve pages by the ids corresponding to their Wikidata entities.
    */
   wikidataId: z.array(z.string()).optional(),
   /**
-   * Retrieve all pages whose Wikidata entities are instances of these provided ids.
+   * String Array. Retrieve all pages whose Wikidata entities are instances of these provided ids.
    */
   wikidataInstanceOfId: z.array(z.string()).optional(),
   /**
-   * Retrieve all pages whose Wikidata entities are instances of these ids (provided as labels).
+   * String Array. Retrieve all pages whose Wikidata entities are instances of these ids (provided as labels).
    */
   wikidataInstanceOfLabel: z.array(z.string()).optional(),
   /**
-   * Retrieve all pages for specified categories.
+   * String Array. Retrieve all pages for specified categories.
    */
   category: z.array(z.string()).optional(),
   /**
-   * Retrieve pages containing provided section ids. Each section ID is unique.
+   * String Array. Retrieve pages containing provided section ids. Each section ID is unique.
    */
   sectionId: z.array(z.string()).optional(),
   /**
-   * Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Retrieve pages modified after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   wikiRevisionFrom: z.date().optional(),
   /**
-   * Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Retrieve pages modified before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   wikiRevisionTo: z.date().optional(),
   /**
-   * Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Retrieve pages scraped after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   scrapedAtFrom: z.date().optional(),
   /**
-   * Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Retrieve pages scraped before this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   scrapedAtTo: z.date().optional(),
   /**
-   * Retrieve pages with the average number of views per day higher than the provided value.
+   * Integer. Retrieve pages with the average number of views per day higher than the provided value.
    */
   pageviewsFrom: z.any().optional(),
   /**
-   * Retrieve pages with the average number of views per day lower than the provided value.
+   * Integer. Retrieve pages with the average number of views per day lower than the provided value.
    */
   pageviewsTo: z.any().optional(),
   /**
-   * Retrieve pages that have any viewership statistics available for them. If &#x60;false&#x60; (the default) - return all pages.
+   * Boolean. Retrieve pages that have any viewership statistics available for them. If &#x60;false&#x60; (the default) - return all pages.
    */
   withPageviews: z.boolean().optional(),
   /**
-   * Whether to show the total number of all matched pages. Default value is false which makes queries a bit more efficient but also counts up to 10000 pages.
+   * Boolean. Whether to show the total number of all matched pages. Default value is false which makes queries a bit more efficient but also counts up to 10000 pages.
    */
   showNumResults: z.boolean().optional(),
   /**
-   * The specific page of results to retrieve in the paginated response. Starts at 0.
+   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
   page: z.number().optional(),
   /**
-   * The number of articles to return per page in the paginated response.
+   * Integer. The number of articles to return per page in the paginated response.
    */
   size: z.number().optional(),
   /**
-   * Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
+   * String. Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
+   * @type SortByEnum
+   * @values 'relevance', 'revisionTsDesc', 'revisionTsAsc', 'pageViewsDesc', 'pageViewsAsc', 'scrapedAtDesc', 'scrapedAtAsc'
    */
-  sortBy: SortBySchema.optional(),
+  sortBy: z
+    .enum([
+      "relevance",
+      "revisionTsDesc",
+      "revisionTsAsc",
+      "pageViewsDesc",
+      "pageViewsAsc",
+      "scrapedAtDesc",
+      "scrapedAtAsc",
+    ])
+    .optional(),
 });
 
 export const SearchWikipediaRequestSchema = z.object({
@@ -1442,7 +1735,7 @@ export type VectorSearchWikipediaRequest = z.input<
 export class V1Api extends runtime.BaseAPI {
   /**
    * Find additional details on a journalist by using the journalist ID found in an article response object.
-   * Journalists ID
+   * Journalists by ID
    */
   async getJournalistById(
     requestParameters: GetJournalistByIdRequest,
@@ -1476,8 +1769,75 @@ export class V1Api extends runtime.BaseAPI {
     return JournalistSchema.parse(raw);
   }
   /**
+   * Get statistics on story counts over time intervals. Supports filtering by various story attributes and grouping by different time intervals (hour, day, week, month).
+   * Story Count Statistics
+   */
+  async getStoryCounts(
+    requestParameters: GetStoryCountsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<StatResult> {
+    const params = GetStoryCountsRequestSchema.parse(requestParameters);
+    const queryParameters = GetStoryCountsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/stories/stats`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return StatResultSchema.parse(raw);
+  }
+  /**
+   * Story History
+   */
+  async getStoryHistory(
+    requestParameters: GetStoryHistoryRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<StoryHistoryResult> {
+    const params = GetStoryHistoryRequestSchema.parse(requestParameters);
+    const queryParameters = GetStoryHistoryQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/stories/history`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return StoryHistoryResultSchema.parse(raw);
+  }
+  /**
    * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
-   * Articles
+   * All Articles
    */
   async searchArticles(
     requestParameters: SearchArticlesRequest = {},
@@ -1646,7 +2006,7 @@ export class V1Api extends runtime.BaseAPI {
     return SourceSearchResultSchema.parse(raw);
   }
   /**
-   * Search and filter all news stories available via the Perigon API. Each story aggregates key information across related articles, including AI-generated names, summaries, and key points.
+   * Track evolving narratives and top news headlines with the \'**Stories**\' endpoint — it returns structured clusters of related articles with summaries, key points, sentiment scores, and metadata on top people, companies, topics, countries, and categories. Use it to monitor how news stories develop over time, who and what they impact, and where they\'re gaining traction globally.  Each story represents a cluster of related articles grouped during processing. Articles are assigned to a single story, identified by the `clusterId` field. Once a story reaches five articles, a story title is automatically generated based on its content. Stories update as new coverage is processed and key details evolve.  To fetch all articles within a specific story, query the `/articles/all` endpoint using the `clusterId` parameter.
    * Stories
    */
   async searchStories(
@@ -1785,7 +2145,7 @@ export class V1Api extends runtime.BaseAPI {
   }
   /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
-   * Vector
+   * News (Vector)
    */
   async vectorSearchArticles(
     requestParameters: VectorSearchArticlesRequest,
@@ -1820,7 +2180,7 @@ export class V1Api extends runtime.BaseAPI {
   }
   /**
    * Perform a natural language search over Wikipedia pages using semantic relevance. The result includes a list of page sections most closely matched to your query intent.
-   * Vector
+   * Wikipedia (Vector)
    */
   async vectorSearchWikipedia(
     requestParameters: VectorSearchWikipediaRequest,
@@ -1854,3 +2214,39 @@ export class V1Api extends runtime.BaseAPI {
     return WikipediaVectorSearchResultSchema.parse(raw);
   }
 }
+
+/**
+ * @export
+ */
+export const GetStoryCountsSplitByEnum = {
+  Hour: "HOUR",
+  Day: "DAY",
+  Week: "WEEK",
+  Month: "MONTH",
+  None: "NONE",
+} as const;
+export type GetStoryCountsSplitByEnum =
+  (typeof GetStoryCountsSplitByEnum)[keyof typeof GetStoryCountsSplitByEnum];
+/**
+ * @export
+ */
+export const GetStoryHistorySortByEnum = {
+  CreatedAt: "createdAt",
+  TriggeredAt: "triggeredAt",
+} as const;
+export type GetStoryHistorySortByEnum =
+  (typeof GetStoryHistorySortByEnum)[keyof typeof GetStoryHistorySortByEnum];
+/**
+ * @export
+ */
+export const SearchWikipediaSortByEnum = {
+  Relevance: "relevance",
+  RevisionTsDesc: "revisionTsDesc",
+  RevisionTsAsc: "revisionTsAsc",
+  PageViewsDesc: "pageViewsDesc",
+  PageViewsAsc: "pageViewsAsc",
+  ScrapedAtDesc: "scrapedAtDesc",
+  ScrapedAtAsc: "scrapedAtAsc",
+} as const;
+export type SearchWikipediaSortByEnum =
+  (typeof SearchWikipediaSortByEnum)[keyof typeof SearchWikipediaSortByEnum];
