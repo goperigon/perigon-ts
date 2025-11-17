@@ -927,7 +927,7 @@ export const SummaryBodySchema = z.object({
       "gpt-4.1-mini",
       "gpt-4.1-nano",
       "llama-3.3-70b-versatile",
-      "deepseek-r1-distill-llama-70b",
+      "openai/gpt-oss-120b",
     ])
     .optional()
     .nullable(),
