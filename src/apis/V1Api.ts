@@ -545,17 +545,33 @@ export const SearchArticlesQuerySchema = z.object({
    */
   sourceCity: z.array(z.string()).optional(),
   /**
+   * String Array. Excludes articles published by sources that are located within the specified cities.
+   */
+  excludeSourceCity: z.array(z.string()).optional(),
+  /**
    * String Array. Find articles published by sources that are located within a given county.
    */
   sourceCounty: z.array(z.string()).optional(),
+  /**
+   * String Array. Excludes articles published by sources that are located within the specified counties.
+   */
+  excludeSourceCounty: z.array(z.string()).optional(),
   /**
    * String Array. Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
    */
   sourceCountry: z.array(z.string()).optional(),
   /**
+   * String Array. Excludes articles published by sources that are located within the specified countries. Must be 2 character country codes (e.g., us, gb).
+   */
+  excludeSourceCountry: z.array(z.string()).optional(),
+  /**
    * String Array. Find articles published by sources that are located within a given state.
    */
   sourceState: z.array(z.string()).optional(),
+  /**
+   * String Array. Excludes articles published by sources that are located within the specified states.
+   */
+  excludeSourceState: z.array(z.string()).optional(),
   /**
    * Float. Latitude of the center point to search articles created by local publications.
    */
@@ -1395,17 +1411,33 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   sourceCity: z.array(z.string()).optional(),
   /**
+   * String Array. Excludes articles published by sources that are located within the specified cities.
+   */
+  excludeSourceCity: z.array(z.string()).optional(),
+  /**
    * String Array. Find articles published by sources that are located within a given county.
    */
   sourceCounty: z.array(z.string()).optional(),
+  /**
+   * String Array. Excludes articles published by sources that are located within the specified counties.
+   */
+  excludeSourceCounty: z.array(z.string()).optional(),
   /**
    * String Array. Find articles published by sources that are located within a given country. Must be 2 character country code (i.e. us, gb, etc).
    */
   sourceCountry: z.array(z.string()).optional(),
   /**
+   * String Array. Excludes articles published by sources that are located within the specified countries. Must be 2 character country codes (e.g., us, gb).
+   */
+  excludeSourceCountry: z.array(z.string()).optional(),
+  /**
    * String Array. Find articles published by sources that are located within a given state.
    */
   sourceState: z.array(z.string()).optional(),
+  /**
+   * String Array. Excludes articles published by sources that are located within the specified states.
+   */
+  excludeSourceState: z.array(z.string()).optional(),
   /**
    * Float. Latitude of the center point to search articles created by local publications.
    */
@@ -1972,7 +2004,7 @@ export class V1Api extends runtime.BaseAPI {
     return PeopleSearchResultSchema.parse(raw);
   }
   /**
-   * Search and filter the 142,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
+   * Search and filter the 200,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
    * Sources
    */
   async searchSources(
