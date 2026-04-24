@@ -145,12 +145,14 @@ export class ServerError extends HttpError {
 }
 
 export class NetworkError extends Error {
-  public readonly originalError: Error;
+  // Declared explicitly so the class compiles under `target: es2020`
+  // (where `Error.cause` is not part of the lib definitions).
+  public readonly cause: Error;
 
   constructor(originalError: Error) {
     super('Network error - please check your connection');
     this.name = 'NetworkError';
-    this.originalError = originalError;
+    this.cause = originalError;
   }
 }
 
