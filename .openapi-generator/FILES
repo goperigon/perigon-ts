@@ -1,9 +1,7 @@
-.gitignore
-README.md
-package.json
+src/apis/SourceGroupsApi.ts
 src/apis/V1Api.ts
+src/apis/WatchlistsApi.ts
 src/apis/index.ts
 src/index.ts
 src/models/index.ts
 src/runtime.ts
-tsconfig.json

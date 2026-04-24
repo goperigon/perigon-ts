@@ -255,22 +255,26 @@ function reorderSchemas(
       }
     }
 
-    // Handle self-references for recursive schemas with z.unknown() to prevent infinite recursion
-    if (
-      schema.name === "ArticleSearchFilterSchema" ||
-      schema.name === "WikipediaSearchFilterSchema"
-    ) {
-      schemaContent = schemaContent.replace(
-        new RegExp(`AND: z\\.array\\(${schema.name}\\)`, "g"),
-        `AND: z.array(z.unknown()) /* Self-reference prevented */`,
+    // Handle self-references for any recursive schema with z.unknown() to
+    // prevent infinite recursion at the type level. Matches both bare
+    // `z.array(X)` and suffixed `z.array(X).optional().nullable()` forms.
+    if (schema.definition.includes(schema.name)) {
+      const selfArrayRe = new RegExp(
+        `z\\.array\\(\\s*${schema.name}\\s*\\)`,
+        "g",
       );
       schemaContent = schemaContent.replace(
-        new RegExp(`OR: z\\.array\\(${schema.name}\\)`, "g"),
-        `OR: z.array(z.unknown()) /* Self-reference prevented */`,
+        selfArrayRe,
+        `z.array(z.unknown()) /* Self-reference to ${schema.name} prevented */`,
+      );
+      // Also handle direct (non-array) self references: `field: X.optional()` etc.
+      const selfDirectRe = new RegExp(
+        `(:\\s*)${schema.name}(?=\\.|,|\\s|$)`,
+        "g",
       );
       schemaContent = schemaContent.replace(
-        new RegExp(`NOT: z\\.array\\(${schema.name}\\)`, "g"),
-        `NOT: z.array(z.unknown()) /* Self-reference prevented */`,
+        selfDirectRe,
+        `$1z.unknown() /* Self-reference to ${schema.name} prevented */`,
       );
     }
 

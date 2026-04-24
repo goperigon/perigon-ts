@@ -25,6 +25,14 @@
 tsconfig.esm.json
 .npmignore
 
+# Hand-maintained files: the generator's templates for these drift from the
+# real project conventions (e.g. ragged package.json, stale README). Keep
+# them under version control instead of regenerating.
+package.json
+README.md
+tsconfig.json
+.gitignore
+
 # Ignore individual model files since we're generating everything in index.ts
 src/models/*.ts
 !src/models/index.ts

@@ -1,0 +1,6 @@
+{
+  "$description": "Schema-name -> list of property names to hide from the generated SDK. The spec preprocessor injects `x-internal: true` on each listed property, which the modelZodSchema.mustache template respects by omitting the property from its generated Zod schema (and therefore from the inferred TypeScript type). Remove an entry here to re-expose a field.",
+  "Article": ["vectors"],
+  "ScoredDataArticle": ["vectors"],
+  "ScoredDataWikiData": ["vectors"]
+}

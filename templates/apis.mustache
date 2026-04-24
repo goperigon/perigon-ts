@@ -2,6 +2,10 @@
 
 import * as runtime from '../runtime{{importFileExtension}}';
 import { z } from 'zod';
+// Namespace import so that body-parameter $ref schemas always resolve,
+// even when the generator omits them from the operation's `imports` list
+// (happens when an operation is tagged with more than one tag).
+import * as Models from '../models/index{{importFileExtension}}';
 {{#imports.0}}
 import type {
   {{#imports}}
@@ -79,7 +83,7 @@ export class {{classname}} extends runtime.BaseAPI {
      * @deprecated
      {{/isDeprecated}}
      */
-    async {{nickname}}({{#allParams.0}}requestParameters: {{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}void{{/returnType}}> {
+    async {{nickname}}({{#allParams.0}}requestParameters: {{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}unknown{{/returnType}}> {
         {{#allParams.0}}
         const params = {{operationIdCamelCase}}RequestSchema.parse(requestParameters);
         {{#queryParams.0}}
@@ -150,11 +154,18 @@ export class {{classname}} extends runtime.BaseAPI {
         }, initOverrides);
 
         {{#returnType}}
-        const raw = await response.json()
+        const raw = await response.json();
         return {{returnBaseType}}Schema.parse(raw);
         {{/returnType}}
         {{^returnType}}
-        // void return type
+        // Upstream spec omits a 2xx success schema for this operation.
+        // Parse the JSON response if available and return it as `unknown`
+        // so callers can narrow at the call site.
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json() as unknown;
+        }
+        return undefined as unknown;
         {{/returnType}}
     }
     {{/operation}}

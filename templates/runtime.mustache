@@ -145,10 +145,12 @@ export class ServerError extends HttpError {
 }
 
 export class NetworkError extends Error {
+  public readonly originalError: Error;
+
   constructor(originalError: Error) {
     super('Network error - please check your connection');
     this.name = 'NetworkError';
-    this.cause = originalError;
+    this.originalError = originalError;
   }
 }
 

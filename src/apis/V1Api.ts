@@ -12,6 +12,10 @@
 
 import * as runtime from "../runtime";
 import { z } from "zod";
+// Namespace import so that body-parameter $ref schemas always resolve,
+// even when the generator omits them from the operation's `imports` list
+// (happens when an operation is tagged with more than one tag).
+import * as Models from "../models/index";
 import type {
   ArticlesVectorSearchResult,
   CompanySearchResult,
@@ -29,26 +33,85 @@ import type {
   WikipediaVectorSearchResult,
 } from "../models/index";
 import {
-  AllEndpointSortBySchema,
-  ArticleSearchParamsSchema,
   ArticlesVectorSearchResultSchema,
   CompanySearchResultSchema,
   JournalistSchema,
   JournalistSearchResultSchema,
   PeopleSearchResultSchema,
   QuerySearchResultSchema,
-  SortBySchema,
   SourceSearchResultSchema,
   StatResultSchema,
   StoryHistoryResultSchema,
   StorySearchResultSchema,
-  SummaryBodySchema,
   SummarySearchResultSchema,
   TopicSearchResultSchema,
-  WikipediaSearchParamsSchema,
   WikipediaSearchResultSchema,
   WikipediaVectorSearchResultSchema,
 } from "../models/index";
+
+export const CreateSourceGroupBodySchema = z.object({
+  /**
+   * Parameter createSourceGroupParams
+   * @required
+   */
+  createSourceGroupParams: Models.CreateSourceGroupParamsSchema,
+});
+
+export const CreateSourceGroupRequestSchema = z.object({
+  ...CreateSourceGroupBodySchema.shape,
+});
+
+export type CreateSourceGroupRequest = z.input<
+  typeof CreateSourceGroupRequestSchema
+>;
+
+export const CreateWatchlistBodySchema = z.object({
+  /**
+   * Parameter createWatchlistParams
+   * @required
+   */
+  createWatchlistParams: Models.CreateWatchlistParamsSchema,
+});
+
+export const CreateWatchlistRequestSchema = z.object({
+  ...CreateWatchlistBodySchema.shape,
+});
+
+export type CreateWatchlistRequest = z.input<
+  typeof CreateWatchlistRequestSchema
+>;
+
+export const DeleteSourceGroupPathSchema = z.object({
+  /**
+   * Parameter id
+   * @required
+   */
+  id: z.number(),
+});
+
+export const DeleteSourceGroupRequestSchema = z.object({
+  ...DeleteSourceGroupPathSchema.shape,
+});
+
+export type DeleteSourceGroupRequest = z.input<
+  typeof DeleteSourceGroupRequestSchema
+>;
+
+export const DeleteWatchlistPathSchema = z.object({
+  /**
+   * Parameter id
+   * @required
+   */
+  id: z.number(),
+});
+
+export const DeleteWatchlistRequestSchema = z.object({
+  ...DeleteWatchlistPathSchema.shape,
+});
+
+export type DeleteWatchlistRequest = z.input<
+  typeof DeleteWatchlistRequestSchema
+>;
 
 export const GetJournalistByIdPathSchema = z.object({
   /**
@@ -65,6 +128,20 @@ export const GetJournalistByIdRequestSchema = z.object({
 export type GetJournalistByIdRequest = z.input<
   typeof GetJournalistByIdRequestSchema
 >;
+
+export const GetSourceGroupPathSchema = z.object({
+  /**
+   * Parameter id
+   * @required
+   */
+  id: z.number(),
+});
+
+export const GetSourceGroupRequestSchema = z.object({
+  ...GetSourceGroupPathSchema.shape,
+});
+
+export type GetSourceGroupRequest = z.input<typeof GetSourceGroupRequestSchema>;
 
 export const GetStoryCountsQuerySchema = z.object({
   /**
@@ -86,7 +163,7 @@ export const GetStoryCountsQuerySchema = z.object({
   /**
    * String. Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
-  sortBy: SortBySchema.optional(),
+  sortBy: Models.SortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -315,6 +392,120 @@ export type GetStoryHistoryRequest = z.input<
   typeof GetStoryHistoryRequestSchema
 >;
 
+export const GetWatchlistPathSchema = z.object({
+  /**
+   * Parameter id
+   * @required
+   */
+  id: z.number(),
+});
+
+export const GetWatchlistRequestSchema = z.object({
+  ...GetWatchlistPathSchema.shape,
+});
+
+export type GetWatchlistRequest = z.input<typeof GetWatchlistRequestSchema>;
+
+export const ListSourceGroupsQuerySchema = z.object({
+  /**
+   * Parameter name
+   */
+  name: z.string().optional(),
+  /**
+   * Parameter domain
+   */
+  domain: z.string().optional(),
+  /**
+   * The page number to retrieve.   _Starting from 0_.   _Default value 0_.
+   */
+  page: z.string().optional(),
+  /**
+   * The number of items per page.   _Must be at least 1_.   _Default value 10_.
+   */
+  size: z.string().optional(),
+  /**
+   * Field to sort by.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * The sort order for the results.   _Available values: \&#39;asc\&#39; or \&#39;desc\&#39;_.
+   * @required
+   */
+  sortOrder: z.string(),
+});
+
+export const ListSourceGroupsRequestSchema = z.object({
+  ...ListSourceGroupsQuerySchema.shape,
+});
+
+export type ListSourceGroupsRequest = z.input<
+  typeof ListSourceGroupsRequestSchema
+>;
+
+export const ListWatchlistsQuerySchema = z.object({
+  /**
+   * Filter watchlists by name (case-insensitive, partial match)
+   */
+  name: z.string().optional(),
+  /**
+   * The page number to retrieve.   _Starting from 0_.   _Default value 0_.
+   */
+  page: z.string().optional(),
+  /**
+   * The number of items per page.   _Must be at least 1_.   _Default value 10_.
+   */
+  size: z.string().optional(),
+  /**
+   * Field to sort by.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * The sort order for the results.   _Available values: \&#39;asc\&#39; or \&#39;desc\&#39;_.
+   * @required
+   */
+  sortOrder: z.string(),
+});
+
+export const ListWatchlistsRequestSchema = z.object({
+  ...ListWatchlistsQuerySchema.shape,
+});
+
+export type ListWatchlistsRequest = z.input<typeof ListWatchlistsRequestSchema>;
+
+export const ResolveSourceGroupsQuerySchema = z.object({
+  /**
+   * Source group names to resolve (max 100)
+   */
+  name: z.array(z.string()).optional(),
+});
+
+export const ResolveSourceGroupsRequestSchema = z.object({
+  ...ResolveSourceGroupsQuerySchema.shape,
+});
+
+export type ResolveSourceGroupsRequest = z.input<
+  typeof ResolveSourceGroupsRequestSchema
+>;
+
+export const ResolveWatchlistsQuerySchema = z.object({
+  /**
+   * Watchlist names to resolve (max 100)
+   */
+  name: z.array(z.string()).optional(),
+});
+
+export const ResolveWatchlistsRequestSchema = z.object({
+  ...ResolveWatchlistsQuerySchema.shape,
+});
+
+export type ResolveWatchlistsRequest = z.input<
+  typeof ResolveWatchlistsRequestSchema
+>;
+
 export const SearchArticlesQuerySchema = z.object({
   /**
    * String. Primary search query for filtering articles based on their title, description, and content. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
@@ -351,7 +542,7 @@ export const SearchArticlesQuerySchema = z.object({
   /**
    * String. Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
-  sortBy: AllEndpointSortBySchema.optional(),
+  sortBy: Models.AllEndpointSortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -657,7 +848,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
+   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)
    */
   taxonomy: z.array(z.string()).optional(),
   /**
@@ -891,7 +1082,7 @@ export const SearchSourcesQuerySchema = z.object({
   /**
    * String. Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
    */
-  sortBy: SortBySchema.optional(),
+  sortBy: Models.SortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -903,19 +1094,19 @@ export const SearchSourcesQuerySchema = z.object({
   /**
    * Integer. Filter for sources with at least this many monthly visitors. Used to target publishers by audience size.
    */
-  minMonthlyVisits: z.any().optional(),
+  minMonthlyVisits: z.number().optional(),
   /**
    * Integer. Filter for sources with no more than this many monthly visitors. Used to target publishers by audience size.
    */
-  maxMonthlyVisits: z.any().optional(),
+  maxMonthlyVisits: z.number().optional(),
   /**
    * Integer. Filter for sources that publish at least this many articles per month. Used to target publishers by content volume.
    */
-  minMonthlyPosts: z.any().optional(),
+  minMonthlyPosts: z.number().optional(),
   /**
    * Integer. Filter for sources that publish no more than this many articles per month. Used to target publishers by content volume.
    */
-  maxMonthlyPosts: z.any().optional(),
+  maxMonthlyPosts: z.number().optional(),
   /**
    * String Array. Filter sources by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). See documentation for supported country codes. Multiple values create an OR filter.
    */
@@ -1000,7 +1191,7 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * String. Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
-  sortBy: SortBySchema.optional(),
+  sortBy: Models.SortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -1217,7 +1408,7 @@ export const SearchSummarizerQuerySchema = z.object({
   /**
    * String. Determines the article sorting order. Options include relevance (default), date/pubDate (newest publication date first), reverseDate (oldest publication date first), addDate (newest ingestion date first), reverseAddDate (oldest ingestion date first), and refreshDate (most recently updated in system first, often identical to addDate).
    */
-  sortBy: AllEndpointSortBySchema.optional(),
+  sortBy: Models.AllEndpointSortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -1523,7 +1714,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://cloud.google.com/natural-language/docs/categories)
+   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)
    */
   taxonomy: z.array(z.string()).optional(),
   /**
@@ -1561,7 +1752,7 @@ export const SearchSummarizerBodySchema = z.object({
    * Parameter summaryBody
    * @required
    */
-  summaryBody: SummaryBodySchema,
+  summaryBody: Models.SummaryBodySchema,
 });
 
 export const SearchSummarizerRequestSchema = z.object({
@@ -1682,11 +1873,11 @@ export const SearchWikipediaQuerySchema = z.object({
   /**
    * Integer. Retrieve pages with the average number of views per day higher than the provided value.
    */
-  pageviewsFrom: z.any().optional(),
+  pageviewsFrom: z.number().optional(),
   /**
    * Integer. Retrieve pages with the average number of views per day lower than the provided value.
    */
-  pageviewsTo: z.any().optional(),
+  pageviewsTo: z.number().optional(),
   /**
    * Boolean. Retrieve pages that have any viewership statistics available for them. If &#x60;false&#x60; (the default) - return all pages.
    */
@@ -1729,12 +1920,62 @@ export type SearchWikipediaRequest = z.input<
   typeof SearchWikipediaRequestSchema
 >;
 
+export const UpdateSourceGroupBodySchema = z.object({
+  /**
+   * Parameter patchSourceGroupParams
+   * @required
+   */
+  patchSourceGroupParams: Models.PatchSourceGroupParamsSchema,
+});
+
+export const UpdateSourceGroupPathSchema = z.object({
+  /**
+   * Parameter id
+   * @required
+   */
+  id: z.number(),
+});
+
+export const UpdateSourceGroupRequestSchema = z.object({
+  ...UpdateSourceGroupBodySchema.shape,
+  ...UpdateSourceGroupPathSchema.shape,
+});
+
+export type UpdateSourceGroupRequest = z.input<
+  typeof UpdateSourceGroupRequestSchema
+>;
+
+export const UpdateWatchlistBodySchema = z.object({
+  /**
+   * Parameter updateWatchlistParams
+   * @required
+   */
+  updateWatchlistParams: Models.UpdateWatchlistParamsSchema,
+});
+
+export const UpdateWatchlistPathSchema = z.object({
+  /**
+   * Parameter id
+   * @required
+   */
+  id: z.number(),
+});
+
+export const UpdateWatchlistRequestSchema = z.object({
+  ...UpdateWatchlistBodySchema.shape,
+  ...UpdateWatchlistPathSchema.shape,
+});
+
+export type UpdateWatchlistRequest = z.input<
+  typeof UpdateWatchlistRequestSchema
+>;
+
 export const VectorSearchArticlesBodySchema = z.object({
   /**
    * Parameter articleSearchParams
    * @required
    */
-  articleSearchParams: ArticleSearchParamsSchema,
+  articleSearchParams: Models.ArticleSearchParamsSchema,
 });
 
 export const VectorSearchArticlesRequestSchema = z.object({
@@ -1750,7 +1991,7 @@ export const VectorSearchWikipediaBodySchema = z.object({
    * Parameter wikipediaSearchParams
    * @required
    */
-  wikipediaSearchParams: WikipediaSearchParamsSchema,
+  wikipediaSearchParams: Models.WikipediaSearchParamsSchema,
 });
 
 export const VectorSearchWikipediaRequestSchema = z.object({
@@ -1765,6 +2006,170 @@ export type VectorSearchWikipediaRequest = z.input<
  *
  */
 export class V1Api extends runtime.BaseAPI {
+  /**
+   * Create a new source group under the organization associated with the API key.
+   * Create source group
+   */
+  async createSourceGroup(
+    requestParameters: CreateSourceGroupRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = CreateSourceGroupRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/sourceGroups`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.createSourceGroupParams,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * Create a new watchlist under the organization associated with the API key. A watchlist can contain up to 100 combined people and companies.
+   * Create watchlist
+   */
+  async createWatchlist(
+    requestParameters: CreateWatchlistRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = CreateWatchlistRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/watchlists`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.createWatchlistParams,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * Delete a source group owned by the organization associated with the API key.
+   * Delete source group
+   */
+  async deleteSourceGroup(
+    requestParameters: DeleteSourceGroupRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = DeleteSourceGroupRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/sourceGroups/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
+        method: "DELETE",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * Delete a watchlist owned by the organization associated with the API key. A watchlist cannot be deleted if it is attached to active signals.
+   * Delete watchlist
+   */
+  async deleteWatchlist(
+    requestParameters: DeleteWatchlistRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = DeleteWatchlistRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/watchlists/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
+        method: "DELETE",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
   /**
    * Find additional details on a journalist by using the journalist ID found in an article response object.
    * Journalists by ID
@@ -1799,6 +2204,47 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return JournalistSchema.parse(raw);
+  }
+  /**
+   * Retrieve a source group by ID. Only returns source groups owned by the organization associated with the API key.
+   * Get source group
+   */
+  async getSourceGroup(
+    requestParameters: GetSourceGroupRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = GetSourceGroupRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/sourceGroups/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
   }
   /**
    * Get statistics on story counts over time intervals. Supports filtering by various story attributes and grouping by different time intervals (hour, day, week, month).
@@ -1866,6 +2312,207 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return StoryHistoryResultSchema.parse(raw);
+  }
+  /**
+   * Retrieve a watchlist by ID. Only returns watchlists owned by the organization associated with the API key.
+   * Get watchlist
+   */
+  async getWatchlist(
+    requestParameters: GetWatchlistRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = GetWatchlistRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/watchlists/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * List source groups owned by the organization associated with the API key, as well as publicly visible source groups. Supports filtering by name and domain.
+   * List source groups
+   */
+  async listSourceGroups(
+    requestParameters: ListSourceGroupsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = ListSourceGroupsRequestSchema.parse(requestParameters);
+    const queryParameters = ListSourceGroupsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/sourceGroups`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * List watchlists owned by the organization associated with the API key, as well as publicly visible watchlists. Supports filtering by name.
+   * List watchlists
+   */
+  async listWatchlists(
+    requestParameters: ListWatchlistsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = ListWatchlistsRequestSchema.parse(requestParameters);
+    const queryParameters = ListWatchlistsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/watchlists`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * Resolve source groups by name. For each name, returns the organization\'s private source group if one exists, otherwise falls back to the matching public source group.
+   * Resolve source groups
+   */
+  async resolveSourceGroups(
+    requestParameters: ResolveSourceGroupsRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = ResolveSourceGroupsRequestSchema.parse(requestParameters);
+    const queryParameters = ResolveSourceGroupsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/sourceGroups/resolve`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * Resolve watchlists by name. For each name, returns the organization\'s private watchlist if one exists, otherwise falls back to the matching public watchlist.
+   * Resolve watchlists
+   */
+  async resolveWatchlists(
+    requestParameters: ResolveWatchlistsRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = ResolveWatchlistsRequestSchema.parse(requestParameters);
+    const queryParameters = ResolveWatchlistsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/watchlists/resolve`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
   }
   /**
    * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
@@ -2174,6 +2821,94 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return WikipediaSearchResultSchema.parse(raw);
+  }
+  /**
+   * Partially update a source group owned by the organization associated with the API key. Only provided fields will be updated.
+   * Update source group
+   */
+  async updateSourceGroup(
+    requestParameters: UpdateSourceGroupRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = UpdateSourceGroupRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/sourceGroups/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
+        method: "PATCH",
+        headers: headerParameters,
+
+        body: params.patchSourceGroupParams,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
+  }
+  /**
+   * Partially update a watchlist owned by the organization associated with the API key. Only provided fields will be updated.
+   * Update watchlist
+   */
+  async updateWatchlist(
+    requestParameters: UpdateWatchlistRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<unknown> {
+    const params = UpdateWatchlistRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/watchlists/{id}`.replace(
+          `{${"id"}}`,
+          encodeURIComponent(String(params.id)),
+        ),
+        method: "PATCH",
+        headers: headerParameters,
+
+        body: params.updateWatchlistParams,
+      },
+      initOverrides,
+    );
+
+    // Upstream spec omits a 2xx success schema for this operation.
+    // Parse the JSON response if available and return it as `unknown`
+    // so callers can narrow at the call site.
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return (await response.json()) as unknown;
+    }
+    return undefined as unknown;
   }
   /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.

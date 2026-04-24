@@ -177,6 +177,7 @@ export const KeyPointSchema = z.object({
 export type KeyPoint = z.infer<typeof KeyPointSchema>;
 
 export const LocationCountSchema = z.object({
+  country: z.string().optional().nullable(),
   state: z.string().optional().nullable(),
   county: z.string().optional().nullable(),
   city: z.string().optional().nullable(),
@@ -534,21 +535,27 @@ export const ArticleSearchFilterSchema = z.object({
    * Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
    */
   AND: z
-    .array(z.unknown()) /* Self-reference prevented */
+    .array(
+      z.unknown(),
+    ) /* Self-reference to ArticleSearchFilterSchema prevented */
     .optional()
     .nullable(),
   /**
    * Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
    */
   OR: z
-    .array(z.unknown()) /* Self-reference prevented */
+    .array(
+      z.unknown(),
+    ) /* Self-reference to ArticleSearchFilterSchema prevented */
     .optional()
     .nullable(),
   /**
    * A filter object for logical NOT operations
    */
   NOT: z
-    .array(z.unknown()) /* Self-reference prevented */
+    .array(
+      z.unknown(),
+    ) /* Self-reference to ArticleSearchFilterSchema prevented */
     .optional()
     .nullable(),
 });
@@ -686,29 +693,22 @@ export const CompanySearchResultSchema = z.object({
 
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
-export const ErrorResponseSchema = z.object({
-  status: z.number().optional().nullable(),
-  message: z.string().optional().nullable(),
-  timestamp: z.number().optional().nullable(),
+export const CreateSourceGroupParamsSchema = z.object({
+  name: z.string(),
+  displayName: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  domains: z.array(z.string()),
 });
 
-export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
+export type CreateSourceGroupParams = z.infer<
+  typeof CreateSourceGroupParamsSchema
+>;
 
 export const ImageHolderSchema = z.object({
   url: z.string().optional().nullable(),
 });
 
 export type ImageHolder = z.infer<typeof ImageHolderSchema>;
-
-export const JournalistSearchResultSchema = z.object({
-  status: z.number(),
-  numResults: z.number(),
-  results: z.array(JournalistSchema),
-});
-
-export type JournalistSearchResult = z.infer<
-  typeof JournalistSearchResultSchema
->;
 
 export const WikidataDateHolderSchema = z.object({
   time: z.string().optional().nullable(),
@@ -768,6 +768,95 @@ export const PersonSchema = z.object({
 });
 
 export type Person = z.infer<typeof PersonSchema>;
+
+export const WatchlistCompanySchema = z.object({
+  name: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  id: z.string().optional().nullable(),
+  domain: z.string().optional().nullable(),
+  aliases: z.array(z.string()).optional().nullable(),
+});
+
+export type WatchlistCompany = z.infer<typeof WatchlistCompanySchema>;
+
+export const WatchlistPersonSchema = z.object({
+  name: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  aliases: z.array(z.string()).optional().nullable(),
+  wikidataId: z.string().optional().nullable(),
+});
+
+export type WatchlistPerson = z.infer<typeof WatchlistPersonSchema>;
+
+export const CreateWatchlistParamsSchema = z.object({
+  /**
+   * Unique name for the watchlist within the organization
+   */
+  name: z.string(),
+  /**
+   * Display name for the watchlist
+   */
+  displayName: z.string().optional().nullable(),
+  /**
+   * Description of the watchlist
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * List of people to include in the watchlist
+   */
+  people: z.array(WatchlistPersonSchema),
+  /**
+   * List of companies to include in the watchlist
+   */
+  companies: z.array(WatchlistCompanySchema),
+  /**
+   * Whether the watchlist is visible in the UI
+   */
+  visible: z.boolean().optional().nullable(),
+});
+
+export type CreateWatchlistParams = z.infer<typeof CreateWatchlistParamsSchema>;
+
+export const ErrorResponseSchema = z.object({
+  status: z.number().optional().nullable(),
+  message: z.string().optional().nullable(),
+  timestamp: z.number().optional().nullable(),
+});
+
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
+
+export const JournalistSearchResultSchema = z.object({
+  status: z.number(),
+  numResults: z.number(),
+  results: z.array(JournalistSchema),
+});
+
+export type JournalistSearchResult = z.infer<
+  typeof JournalistSearchResultSchema
+>;
+
+export const PatchSourceGroupParamsSchema = z.object({
+  /**
+   * Unique name for the source group within the organization
+   */
+  name: z.string().optional().nullable(),
+  /**
+   * Display name for the source group
+   */
+  displayName: z.string().optional().nullable(),
+  /**
+   * Description of the source group
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * List of domains included in the source group
+   */
+  domains: z.array(z.string()).optional().nullable(),
+});
+
+export type PatchSourceGroupParams = z.infer<
+  typeof PatchSourceGroupParamsSchema
+>;
 
 export const PeopleSearchResultSchema = z.object({
   status: z.number(),
@@ -921,11 +1010,14 @@ export const SummaryBodySchema = z.object({
    */
   model: z
     .enum([
+      "gpt-5.4-mini",
+      "gpt-5.4-nano",
+      "gpt-5-mini",
+      "gpt-5-nano",
       "gpt-4o",
       "gpt-4o-mini",
       "gpt-4.1",
       "gpt-4.1-mini",
-      "gpt-4.1-nano",
       "llama-3.3-70b-versatile",
       "openai/gpt-oss-120b",
     ])
@@ -987,6 +1079,35 @@ export const TopicSearchResultSchema = z.object({
 });
 
 export type TopicSearchResult = z.infer<typeof TopicSearchResultSchema>;
+
+export const UpdateWatchlistParamsSchema = z.object({
+  /**
+   * New name for the watchlist
+   */
+  name: z.string().optional().nullable(),
+  /**
+   * New display name for the watchlist
+   */
+  displayName: z.string().optional().nullable(),
+  /**
+   * New description for the watchlist
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Updated list of people to include in the watchlist
+   */
+  people: z.array(WatchlistPersonSchema).optional().nullable(),
+  /**
+   * Updated list of companies to include in the watchlist
+   */
+  companies: z.array(WatchlistCompanySchema).optional().nullable(),
+  /**
+   * Whether the watchlist is visible in the UI
+   */
+  visible: z.boolean().optional().nullable(),
+});
+
+export type UpdateWatchlistParams = z.infer<typeof UpdateWatchlistParamsSchema>;
 
 export const WikiPageSectionHolderSchema = z.object({
   id: z.string().optional().nullable(),
@@ -1064,21 +1185,27 @@ export const WikipediaSearchFilterSchema = z.object({
    * Adds additional AND filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the AND logical operator.
    */
   AND: z
-    .array(z.unknown()) /* Self-reference prevented */
+    .array(
+      z.unknown(),
+    ) /* Self-reference to WikipediaSearchFilterSchema prevented */
     .optional()
     .nullable(),
   /**
    * Adds additional OR filter objects. These objects must be of the same type as the original filter object and will be combined with the existing filter using the OR logical operator.
    */
   OR: z
-    .array(z.unknown()) /* Self-reference prevented */
+    .array(
+      z.unknown(),
+    ) /* Self-reference to WikipediaSearchFilterSchema prevented */
     .optional()
     .nullable(),
   /**
    * A filter object for logical NOT operations
    */
   NOT: z
-    .array(z.unknown()) /* Self-reference prevented */
+    .array(
+      z.unknown(),
+    ) /* Self-reference to WikipediaSearchFilterSchema prevented */
     .optional()
     .nullable(),
 });
