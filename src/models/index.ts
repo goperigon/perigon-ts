@@ -295,6 +295,7 @@ export const NewsClusterSchema = z.object({
   locations: z.array(LocationCountSchema).optional().nullable(),
   topLocations: z.array(LocationHolderSchema).optional().nullable(),
   highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
+  sourceDiversity: z.number().optional().nullable(),
 });
 
 export type NewsCluster = z.infer<typeof NewsClusterSchema>;

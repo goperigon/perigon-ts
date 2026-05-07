@@ -221,6 +221,10 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   minUniqueSources: z.number().optional(),
   /**
+   * Float. Minimum ratio of unique sources to unique articles (uniqueSources / uniqueCount). Filters out stories dominated by a single publisher. For example, a value of 0.05 requires at least 1 unique source per 20 articles. Not applied by default.
+   */
+  minSourceDiversity: z.number().optional(),
+  /**
    * String Array. Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
    */
   personWikidataId: z.array(z.string()).optional(),
@@ -1248,6 +1252,10 @@ export const SearchStoriesQuerySchema = z.object({
    * Integer. Specifies the minimum number of unique sources required for a story to appear in results. Higher values return more significant stories covered by multiple publications. Default is 3.
    */
   minUniqueSources: z.number().optional(),
+  /**
+   * Float. Minimum ratio of unique sources to unique articles (uniqueSources / uniqueCount). Filters out stories dominated by a single publisher. For example, a value of 0.05 requires at least 1 unique source per 20 articles. Not applied by default.
+   */
+  minSourceDiversity: z.number().optional(),
   /**
    * String Array. Filter stories by Wikidata IDs of top mentioned people. Returns stories where these individuals appear prominently. Refer to the /people endpoint for a complete list of tracked individuals.
    */
