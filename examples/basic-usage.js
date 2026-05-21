@@ -9,7 +9,7 @@
  *
  * Before running this example:
  * 1. Install the SDK: npm install @goperigon/perigon-ts
- * 2. Get an API key from https://www.goperigon.com/
+ * 2. Get an API key from https://perigon.io/
  * 3. Set your API key as an environment variable: PERIGON_API_KEY=your_api_key_here
  * 4. Run: node examples/basic-usage.js
  */

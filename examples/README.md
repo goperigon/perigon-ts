@@ -7,7 +7,7 @@ This folder contains practical examples demonstrating how to use the Perigon Typ
 ### Prerequisites
 
 1. **Get a Perigon API Key**
-   - Sign up at [goperigon.com](https://www.goperigon.com/)
+   - Sign up at [perigon.io](https://perigon.io/)
    - Get your API key from the dashboard
 
 2. **Set Environment Variable**
@@ -140,7 +140,7 @@ import { V1Api, Configuration } from "@goperigon/perigon-ts";
 
 const configuration = new Configuration({
   apiKey: () => Promise.resolve(process.env.PERIGON_API_KEY),
-  basePath: "https://api.goperigon.com", // Optional: custom endpoint
+  basePath: "https://api.perigon.io", // Optional: custom endpoint
   middleware: [
     /* custom middleware */
   ], // Optional: request/response middleware
