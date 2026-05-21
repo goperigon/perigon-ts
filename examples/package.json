@@ -7,11 +7,13 @@
     "basic": "node basic-usage.js",
     "advanced": "node advanced-usage.js",
     "setup": "npm install && echo 'Please set your PERIGON_API_KEY environment variable'",
-    "help": "echo 'Available commands: npm run basic, npm run advanced, npm run setup'"
+    "help": "echo 'Available commands: npm run basic, npm run advanced, npm run setup'",
+    "webhooks": "node webhooks.js"
   },
   "dependencies": {
     "@goperigon/perigon-ts": "file:../",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.2.1"
   },
   "keywords": [
     "perigon",
