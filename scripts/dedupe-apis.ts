@@ -38,7 +38,7 @@ function main(): void {
 
   writeFileSync(
     join(APIS_DIR, INDEX),
-    "/* tslint:disable */\n\nexport * from './V1Api';\n",
+    "/* tslint:disable */\n\nexport * from './V1Api';\nexport * from './Webhooks';\n",
     "utf-8",
   );
   console.log("✅ Rewrote src/apis/index.ts to export only V1Api");
