@@ -68,6 +68,12 @@ export class WebhookSignatureProvider {
       );
     }
 
+    if (Array.isArray(header)) {
+      throw new SignatureVerificationError(
+        `Unexpected: An array was passed as a header, which should not be possible for the ${WEBHOOK_HEADER} header.`,
+      );
+    }
+
     const decoded =
       header instanceof Uint8Array ? this.decoder.decode(header) : header;
 
