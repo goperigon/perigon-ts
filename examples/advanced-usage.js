@@ -57,11 +57,12 @@ async function main() {
 
     const summaryResult = await perigon.searchSummarizer({
       summaryBody: {
-        summaryType: "keyPoints", // or 'paragraph'
-        language: "en",
+        prompt: "Summarize these articles as a short list of key points.",
+        maxArticleCount: 10,
+        returnedArticleCount: 10,
       },
       q: "cryptocurrency bitcoin",
-      size: 10,
+      language: ["en"],
       sortBy: "date",
     });
 
@@ -80,8 +81,8 @@ async function main() {
     console.log(`Found ${companies.numResults} companies:`);
     companies.results.forEach((company, index) => {
       console.log(`  ${index + 1}. ${company.name}`);
-      console.log(`     Domain: ${company.domain || "N/A"}`);
-      console.log(`     Symbol: ${company.symbol || "N/A"}`);
+      console.log(`     Domains: ${company.domains?.join(", ") || "N/A"}`);
+      console.log(`     Symbols: ${company.symbols?.join(", ") || "N/A"}`);
       console.log(`     Industry: ${company.industry || "N/A"}`);
       console.log(`     Country: ${company.country || "N/A"}\n`);
     });
@@ -100,7 +101,7 @@ async function main() {
     console.log(`Found ${positiveArticles.numResults} positive articles:`);
     positiveArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
-      console.log(`     Source: ${article.source?.name || "Unknown"}`);
+      console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
       console.log(
         `     Sentiment: Positive ${article.sentiment?.positive || "N/A"}`,
       );
@@ -128,8 +129,10 @@ async function main() {
     console.log(`Found ${geoArticles.numResults} US-based articles:`);
     geoArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
-      console.log(`     Source: ${article.source?.name || "Unknown"}`);
-      console.log(`     Country: ${article.source?.country || "N/A"}`);
+      console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
+      console.log(
+        `     Country: ${article.source?.location?.country ?? "N/A"}`,
+      );
       console.log(
         `     Categories: ${article.categories?.join(", ") || "N/A"}\n`,
       );
@@ -150,11 +153,11 @@ async function main() {
     });
 
     console.log(`Found ${aiStories.numResults} high-engagement stories:`);
-    aiStories.stories?.forEach((story, index) => {
+    aiStories.results?.forEach((story, index) => {
       console.log(`  ${index + 1}. ${story.name}`);
       console.log(`     Summary: ${story.summary || "No summary available"}`);
       console.log(
-        `     Articles: ${story.articleCount} from ${story.uniqueSourceCount} sources`,
+        `     Articles: ${story.totalCount ?? 0} from ${story.uniqueSources?.length ?? 0} sources`,
       );
       console.log(`     Topics: ${story.topics?.join(", ") || "N/A"}`);
       console.log(
@@ -187,7 +190,7 @@ async function main() {
     );
     complexSearch.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
-      console.log(`     Source: ${article.source?.name || "Unknown"}`);
+      console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
       console.log(
         `     Categories: ${article.categories?.join(", ") || "N/A"}`,
       );

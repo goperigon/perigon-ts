@@ -12,24 +12,6 @@
 
 import { z } from "zod";
 
-export const SortBySchema = z.enum([
-  "createdAt",
-  "updatedAt",
-  "relevance",
-  "count",
-  "totalCount",
-]);
-
-export type SortBy = z.infer<typeof SortBySchema>;
-
-export const SortBy = {
-  CreatedAt: "createdAt",
-  UpdatedAt: "updatedAt",
-  Relevance: "relevance",
-  Count: "count",
-  TotalCount: "totalCount",
-} as const;
-
 export const AllEndpointSortBySchema = z.enum([
   "relevance",
   "date",
@@ -53,13 +35,22 @@ export const AllEndpointSortBy = {
 } as const;
 
 export const CategoryHolderSchema = z.object({
+  /**
+   * Content category assigned to the article.
+   */
   name: z.string().optional().nullable(),
 });
 
 export type CategoryHolder = z.infer<typeof CategoryHolderSchema>;
 
 export const CategoryWithScoreHolderSchema = z.object({
+  /**
+   * Full taxonomy category path.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Confidence score for the category assignment.
+   */
   score: z.number().optional().nullable(),
 });
 
@@ -68,174 +59,416 @@ export type CategoryWithScoreHolder = z.infer<
 >;
 
 export const CompanyHolderSchema = z.object({
+  /**
+   * Unique Perigon identifier for the company.
+   */
   id: z.string().optional().nullable(),
+  /**
+   * Company name.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Domains associated with the company.
+   */
   domains: z.array(z.string()).optional().nullable(),
+  /**
+   * Stock symbols associated with the company.
+   */
   symbols: z.array(z.string()).optional().nullable(),
 });
 
 export type CompanyHolder = z.infer<typeof CompanyHolderSchema>;
 
 export const EntityHolderSchema = z.object({
+  /**
+   * Text value of the extracted entity.
+   */
   data: z.string().optional().nullable(),
+  /**
+   * Entity type, such as PERSON, ORGANIZATION, or LOCATION.
+   */
   type: z.string().optional().nullable(),
+  /**
+   * Number of times the entity appears in the article.
+   */
   mentions: z.number().optional().nullable(),
 });
 
 export type EntityHolder = z.infer<typeof EntityHolderSchema>;
 
 export const EventTypeHolderSchema = z.object({
+  /**
+   * Detected event name.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Detected event classification.
+   */
   type: z.string().optional().nullable(),
 });
 
 export type EventTypeHolder = z.infer<typeof EventTypeHolderSchema>;
 
 export const IdNameHolderSchema = z.object({
+  /**
+   * Unique identifier for the matched record.
+   */
   id: z.string().optional().nullable(),
+  /**
+   * Display name of the matched record.
+   */
   name: z.string().optional().nullable(),
 });
 
 export type IdNameHolder = z.infer<typeof IdNameHolderSchema>;
 
 export const LocationHolderSchema = z.object({
+  /**
+   * Country central to the article.
+   */
   country: z.string().optional().nullable(),
+  /**
+   * State or region central to the article.
+   */
   state: z.string().optional().nullable(),
+  /**
+   * County central to the article.
+   */
   county: z.string().optional().nullable(),
+  /**
+   * City central to the article.
+   */
   city: z.string().optional().nullable(),
+  /**
+   * Neighborhood, borough, or district central to the article.
+   */
   area: z.string().optional().nullable(),
 });
 
 export type LocationHolder = z.infer<typeof LocationHolderSchema>;
 
 export const NameCountSchema = z.object({
+  /**
+   * Name of the aggregated value.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Number of matching records for the value.
+   */
   count: z.number().optional().nullable(),
 });
 
 export type NameCount = z.infer<typeof NameCountSchema>;
 
 export const JournalistSchema = z.object({
+  /**
+   * Unique Perigon identifier for the journalist.
+   */
   id: z.string().optional().nullable(),
+  primaryRecordId: z.string().optional().nullable(),
+  /**
+   * Common display name of the journalist.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Full name of the journalist.
+   */
   fullName: z.string().optional().nullable(),
+  /**
+   * Professional headline associated with the journalist.
+   */
   headline: z.string().optional().nullable(),
+  /**
+   * Biographical description of the journalist.
+   */
   description: z.string().optional().nullable(),
+  /**
+   * Professional title of the journalist.
+   */
   title: z.string().optional().nullable(),
+  /**
+   * Journalist's email.
+   */
+  email: z.string().optional().nullable(),
+  /**
+   * Locations associated with the journalist.
+   */
   locations: z.array(LocationHolderSchema).optional().nullable(),
+  /**
+   * Date and time the journalist record was last refreshed, in ISO 8601 format.
+   */
   updatedAt: z.string().optional().nullable(),
+  /**
+   * Topics most frequently covered by the journalist.
+   */
   topTopics: z.array(NameCountSchema).optional().nullable(),
+  /**
+   * Publishers most frequently associated with the journalist.
+   */
   topSources: z.array(NameCountSchema).optional().nullable(),
+  /**
+   * Categories most frequently covered by the journalist.
+   */
   topCategories: z.array(NameCountSchema).optional().nullable(),
+  /**
+   * Editorial labels most frequently associated with the journalist's articles.
+   */
   topLabels: z.array(NameCountSchema).optional().nullable(),
+  /**
+   * Countries most frequently associated with the journalist's articles.
+   */
   topCountries: z.array(NameCountSchema).optional().nullable(),
+  /**
+   * Average number of articles published by the journalist per month.
+   */
   avgMonthlyPosts: z.number().optional().nullable(),
+  /**
+   * Journalist's X or Twitter handle.
+   */
   twitterHandle: z.string().optional().nullable(),
+  /**
+   * Biography from the journalist's X or Twitter profile.
+   */
   twitterBio: z.string().optional().nullable(),
+  /**
+   * Profile image URL for the journalist.
+   */
   imageUrl: z.string().optional().nullable(),
+  /**
+   * LinkedIn profile URL for the journalist.
+   */
   linkedinUrl: z.string().optional().nullable(),
+  /**
+   * LinkedIn connection count for the journalist, when available.
+   */
   linkedinConnections: z.number().optional().nullable(),
+  /**
+   * LinkedIn follower count for the journalist, when available.
+   */
   linkedinFollowers: z.number().optional().nullable(),
+  /**
+   * Facebook profile URL for the journalist.
+   */
   facebookUrl: z.string().optional().nullable(),
+  /**
+   * Instagram profile URL for the journalist.
+   */
   instagramUrl: z.string().optional().nullable(),
+  /**
+   * Personal or professional website URL for the journalist.
+   */
   websiteUrl: z.string().optional().nullable(),
+  /**
+   * Blog URL for the journalist.
+   */
   blogUrl: z.string().optional().nullable(),
+  /**
+   * Tumblr profile URL for the journalist.
+   */
   tumblrUrl: z.string().optional().nullable(),
+  /**
+   * YouTube channel URL for the journalist.
+   */
   youtubeUrl: z.string().optional().nullable(),
 });
 
 export type Journalist = z.infer<typeof JournalistSchema>;
 
 export const KeywordHolderSchema = z.object({
+  /**
+   * Keyword extracted from the article.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Relative relevance weight of the keyword.
+   */
   weight: z.number().optional().nullable(),
 });
 
 export type KeywordHolder = z.infer<typeof KeywordHolderSchema>;
 
 export const LabelHolderSchema = z.object({
+  /**
+   * Editorial label assigned to the article.
+   */
   name: z.string().optional().nullable(),
 });
 
 export type LabelHolder = z.infer<typeof LabelHolderSchema>;
 
 export const CompanyCountSchema = z.object({
+  /**
+   * Unique Perigon identifier for the company.
+   */
   id: z.string().optional().nullable(),
+  /**
+   * Company name.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Domains associated with the company.
+   */
   domains: z.array(z.string()).optional().nullable(),
+  /**
+   * Stock symbols associated with the company.
+   */
   symbols: z.array(z.string()).optional().nullable(),
+  /**
+   * Number of story articles mentioning the company.
+   */
   count: z.number().optional().nullable(),
 });
 
 export type CompanyCount = z.infer<typeof CompanyCountSchema>;
 
 export const KeyPointSchema = z.object({
+  /**
+   * A key fact or development identified in the content.
+   */
   point: z.string().optional().nullable(),
+  /**
+   * Article IDs supporting the key point.
+   */
   references: z.array(z.string()).optional().nullable(),
 });
 
 export type KeyPoint = z.infer<typeof KeyPointSchema>;
 
 export const LocationCountSchema = z.object({
+  /**
+   * Country associated with the story.
+   */
   country: z.string().optional().nullable(),
+  /**
+   * State or region associated with the story.
+   */
   state: z.string().optional().nullable(),
+  /**
+   * County associated with the story.
+   */
   county: z.string().optional().nullable(),
+  /**
+   * City associated with the story.
+   */
   city: z.string().optional().nullable(),
+  /**
+   * Neighborhood, borough, or district associated with the story.
+   */
   area: z.string().optional().nullable(),
+  /**
+   * Number of story articles associated with the location.
+   */
   count: z.number().optional().nullable(),
 });
 
 export type LocationCount = z.infer<typeof LocationCountSchema>;
 
 export const PersonCountSchema = z.object({
+  /**
+   * Wikidata identifier for the person.
+   */
   wikidataId: z.string().optional().nullable(),
+  /**
+   * Person name.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Number of story articles mentioning the person.
+   */
   count: z.number().optional().nullable(),
 });
 
 export type PersonCount = z.infer<typeof PersonCountSchema>;
 
 export const PersonHolderSchema = z.object({
+  /**
+   * Wikidata identifier for the person.
+   */
   wikidataId: z.string().optional().nullable(),
+  /**
+   * Person name.
+   */
   name: z.string().optional().nullable(),
 });
 
 export type PersonHolder = z.infer<typeof PersonHolderSchema>;
 
 export const QuestionSchema = z.object({
+  /**
+   * Question generated from the story content.
+   */
   question: z.string().optional().nullable(),
+  /**
+   * Answer generated from the story content.
+   */
   answer: z.string().optional().nullable(),
+  /**
+   * Article IDs supporting the answer.
+   */
   references: z.array(z.string()).optional().nullable(),
 });
 
 export type Question = z.infer<typeof QuestionSchema>;
 
 export const RecordStatHolderSchema = z.object({
+  /**
+   * Name of the aggregated value.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Number of matching articles for the value.
+   */
   count: z.number().optional().nullable(),
 });
 
 export type RecordStatHolder = z.infer<typeof RecordStatHolderSchema>;
 
 export const SentimentHolderSchema = z.object({
+  /**
+   * Positive sentiment score from 0 to 1.
+   */
   positive: z.number().optional().nullable(),
+  /**
+   * Negative sentiment score from 0 to 1.
+   */
   negative: z.number().optional().nullable(),
+  /**
+   * Neutral sentiment score from 0 to 1.
+   */
   neutral: z.number().optional().nullable(),
 });
 
 export type SentimentHolder = z.infer<typeof SentimentHolderSchema>;
 
 export const CoordinateSchema = z.object({
+  /**
+   * Latitude in decimal degrees.
+   */
   lat: z.number().optional().nullable(),
+  /**
+   * Longitude in decimal degrees.
+   */
   lon: z.number().optional().nullable(),
 });
 
 export type Coordinate = z.infer<typeof CoordinateSchema>;
 
 export const SourceLocationSchema = z.object({
+  /**
+   * Country where the publisher is located.
+   */
   country: z.string().optional().nullable(),
+  /**
+   * State or region where the publisher is located.
+   */
   state: z.string().optional().nullable(),
+  /**
+   * County where the publisher is located.
+   */
   county: z.string().optional().nullable(),
+  /**
+   * City where the publisher is located.
+   */
   city: z.string().optional().nullable(),
   coordinates: CoordinateSchema.optional().nullable(),
 });
@@ -243,7 +476,13 @@ export const SourceLocationSchema = z.object({
 export type SourceLocation = z.infer<typeof SourceLocationSchema>;
 
 export const SourceHolderSchema = z.object({
+  /**
+   * Publisher domain.
+   */
   domain: z.string().optional().nullable(),
+  /**
+   * Whether the publisher uses a paywall, when known.
+   */
   paywall: z.boolean().optional().nullable(),
   location: SourceLocationSchema.optional().nullable(),
 });
@@ -251,69 +490,216 @@ export const SourceHolderSchema = z.object({
 export type SourceHolder = z.infer<typeof SourceHolderSchema>;
 
 export const TopicHolderSchema = z.object({
+  /**
+   * Topic assigned to the article.
+   */
   name: z.string().optional().nullable(),
 });
 
 export type TopicHolder = z.infer<typeof TopicHolderSchema>;
 
 export const NewsClusterSchema = z.object({
+  /**
+   * Date and time the story was created, in ISO 8601 format.
+   */
   createdAt: z.string().optional().nullable(),
+  /**
+   * Date and time the story was last updated, in ISO 8601 format.
+   */
   updatedAt: z.string().optional().nullable(),
+  /**
+   * Date and time the story became initialized and visible, in ISO 8601 format.
+   */
   initializedAt: z.string().optional().nullable(),
+  /**
+   * Unique identifier for the story cluster.
+   */
   id: z.string().optional().nullable(),
+  /**
+   * Identifier of the original story when this story is a duplicate.
+   */
   duplicateOf: z.string().optional().nullable(),
+  /**
+   * URL-safe identifier for the story.
+   */
   slug: z.string().optional().nullable(),
+  /**
+   * Generated story title.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Generated story summary.
+   */
   summary: z.string().optional().nullable(),
+  /**
+   * Short generated story summary, when available.
+   */
   shortSummary: z.string().optional().nullable(),
+  /**
+   * Article IDs supporting the story summary.
+   */
   summaryReferences: z.array(z.string()).optional().nullable(),
   imageSource: SourceHolderSchema.optional().nullable(),
+  /**
+   * Primary image URL selected for the story.
+   */
   imageUrl: z.string().optional().nullable(),
+  /**
+   * Key facts and developments identified in the story.
+   */
   keyPoints: z.array(KeyPointSchema).optional().nullable(),
+  /**
+   * Questions and answers generated from the story content.
+   */
   questions: z.array(QuestionSchema).optional().nullable(),
+  /**
+   * Distinct publisher domains represented in the story.
+   */
   uniqueSources: z.array(z.string()).optional().nullable(),
+  /**
+   * Representative articles selected for the story.
+   */
   selectedArticles: z
     .array(z.unknown() /* Circular reference to ArticleSchema */)
     .optional()
     .nullable(),
   sentiment: SentimentHolderSchema.optional().nullable(),
+  /**
+   * Number of unique articles in the story.
+   */
   uniqueCount: z.number().optional().nullable(),
+  /**
+   * Number of reprinted articles in the story.
+   */
   reprintCount: z.number().optional().nullable(),
+  /**
+   * Total article count including reprints.
+   */
   totalCount: z.number().optional().nullable(),
+  /**
+   * Countries associated with the story and their article counts.
+   */
   countries: z.array(RecordStatHolderSchema).optional().nullable(),
+  /**
+   * Countries most strongly associated with the story.
+   */
   topCountries: z.array(z.string()).optional().nullable(),
+  /**
+   * Topics associated with the story and their article counts.
+   */
   topics: z.array(RecordStatHolderSchema).optional().nullable(),
+  /**
+   * Topics most strongly associated with the story.
+   */
   topTopics: z.array(TopicHolderSchema).optional().nullable(),
+  /**
+   * Categories associated with the story and their article counts.
+   */
   categories: z.array(RecordStatHolderSchema).optional().nullable(),
+  /**
+   * Categories most strongly associated with the story.
+   */
   topCategories: z.array(CategoryHolderSchema).optional().nullable(),
+  /**
+   * Google Content Categories associated with the story and their article counts.
+   */
   taxonomies: z.array(RecordStatHolderSchema).optional().nullable(),
+  /**
+   * Google Content Categories most strongly associated with the story.
+   */
   topTaxonomies: z.array(CategoryHolderSchema).optional().nullable(),
+  /**
+   * People associated with the story and their article counts.
+   */
   people: z.array(PersonCountSchema).optional().nullable(),
+  /**
+   * People most strongly associated with the story.
+   */
   topPeople: z.array(PersonHolderSchema).optional().nullable(),
+  /**
+   * Companies associated with the story and their article counts.
+   */
   companies: z.array(CompanyCountSchema).optional().nullable(),
+  /**
+   * Companies most strongly associated with the story.
+   */
   topCompanies: z.array(CompanyHolderSchema).optional().nullable(),
+  /**
+   * Locations associated with the story and their article counts.
+   */
   locations: z.array(LocationCountSchema).optional().nullable(),
+  /**
+   * Locations most strongly associated with the story.
+   */
   topLocations: z.array(LocationHolderSchema).optional().nullable(),
+  /**
+   * Matched text fragments grouped by story field.
+   */
   highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
+  /**
+   * Ratio of unique publisher domains to total articles in the story.
+   */
   sourceDiversity: z.number().optional().nullable(),
 });
 
 export type NewsCluster = z.infer<typeof NewsClusterSchema>;
 
 export const PlaceSchema = z.object({
+  /**
+   * OpenStreetMap identifier for the place.
+   */
   osmId: z.string().optional().nullable(),
+  /**
+   * Road associated with the place.
+   */
   road: z.string().optional().nullable(),
+  /**
+   * Quarter associated with the place.
+   */
   quarter: z.string().optional().nullable(),
+  /**
+   * Suburb associated with the place.
+   */
   suburb: z.string().optional().nullable(),
+  /**
+   * City associated with the place.
+   */
   city: z.string().optional().nullable(),
+  /**
+   * Town associated with the place.
+   */
   town: z.string().optional().nullable(),
+  /**
+   * County associated with the place.
+   */
   county: z.string().optional().nullable(),
+  /**
+   * State district associated with the place.
+   */
   stateDistrict: z.string().optional().nullable(),
+  /**
+   * State or region associated with the place.
+   */
   state: z.string().optional().nullable(),
+  /**
+   * Postal code associated with the place.
+   */
   postcode: z.string().optional().nullable(),
+  /**
+   * Country associated with the place.
+   */
   country: z.string().optional().nullable(),
+  /**
+   * Two-character country code for the place.
+   */
   countryCode: z.string().optional().nullable(),
+  /**
+   * Named amenity associated with the place.
+   */
   amenity: z.string().optional().nullable(),
+  /**
+   * Neighborhood associated with the place.
+   */
   neighbourhood: z.string().optional().nullable(),
   coordinates: CoordinateSchema.optional().nullable(),
 });
@@ -321,49 +707,172 @@ export const PlaceSchema = z.object({
 export type Place = z.infer<typeof PlaceSchema>;
 
 export const ArticleSchema = z.object({
+  /**
+   * Canonical URL of the article.
+   */
   url: z.string().optional().nullable(),
+  /**
+   * Author byline as published by the source.
+   */
   authorsByline: z.string().optional().nullable(),
+  /**
+   * Unique Perigon identifier for the article.
+   */
   articleId: z.string().optional().nullable(),
+  /**
+   * Identifier of the story cluster containing the article, when assigned.
+   */
   clusterId: z.string().optional().nullable(),
   source: SourceHolderSchema.optional().nullable(),
+  /**
+   * Primary image URL associated with the article.
+   */
   imageUrl: z.string().optional().nullable(),
+  /**
+   * Two-character country code associated with the article.
+   */
   country: z.string().optional().nullable(),
+  /**
+   * ISO 639 two-letter language code for the article.
+   */
   language: z.string().optional().nullable(),
+  /**
+   * Date and time the article was published, in ISO 8601 format.
+   */
   pubDate: z.string().optional().nullable(),
+  /**
+   * Date and time the article was added to Perigon, in ISO 8601 format.
+   */
   addDate: z.string().optional().nullable(),
+  /**
+   * Date and time the article was last refreshed by Perigon, in ISO 8601 format.
+   */
   refreshDate: z.string().optional().nullable(),
+  /**
+   * Search relevance score for the article, when applicable.
+   */
   score: z.number().optional().nullable(),
+  /**
+   * Article headline.
+   */
   title: z.string().optional().nullable(),
+  /**
+   * Article description or publisher-provided excerpt.
+   */
   description: z.string().optional().nullable(),
+  /**
+   * Full article body available to Perigon.
+   */
   content: z.string().optional().nullable(),
+  /**
+   * Word count of the English article content, when available.
+   */
   enContentWordCount: z.number().optional().nullable(),
+  /**
+   * Primary medium type, such as Article or Video.
+   */
   medium: z.string().optional().nullable(),
+  /**
+   * URLs linked from the article content.
+   */
   links: z.array(z.string()).optional().nullable(),
+  /**
+   * Editorial labels assigned to the article.
+   */
   labels: z.array(LabelHolderSchema).optional().nullable(),
+  /**
+   * Event types detected in the article.
+   */
   eventTypes: z.array(EventTypeHolderSchema).optional().nullable(),
+  /**
+   * Known journalist records matched to the article byline.
+   */
   matchedAuthors: z.array(IdNameHolderSchema).optional().nullable(),
+  /**
+   * Claim identified in fact-check content, when applicable.
+   */
   claim: z.string().optional().nullable(),
+  /**
+   * Verdict identified in fact-check content, when applicable.
+   */
   verdict: z.string().optional().nullable(),
+  /**
+   * Keywords extracted from the article with their relevance weights.
+   */
   keywords: z.array(KeywordHolderSchema).optional().nullable(),
+  /**
+   * Topics assigned to the article.
+   */
   topics: z.array(TopicHolderSchema).optional().nullable(),
+  /**
+   * Broad content categories assigned to the article.
+   */
   categories: z.array(CategoryHolderSchema).optional().nullable(),
+  /**
+   * Google Content Categories assigned to the article with confidence scores.
+   */
   taxonomies: z.array(CategoryWithScoreHolderSchema).optional().nullable(),
+  /**
+   * Named entities extracted from the article.
+   */
   entities: z.array(EntityHolderSchema).optional().nullable(),
+  /**
+   * Companies identified in the article.
+   */
   companies: z.array(CompanyHolderSchema).optional().nullable(),
   sentiment: SentimentHolderSchema.optional().nullable(),
+  /**
+   * Generated summary of the article, when available.
+   */
   summary: z.string().optional().nullable(),
+  /**
+   * Short generated summary of the article, when available.
+   */
   shortSummary: z.string().optional().nullable(),
+  /**
+   * Translated article content, when available.
+   */
   translation: z.string().optional().nullable(),
+  /**
+   * English translation of the article title, when available.
+   */
   translatedTitle: z.string().optional().nullable(),
+  /**
+   * English translation of the article description, when available.
+   */
   translatedDescription: z.string().optional().nullable(),
+  /**
+   * English translation of the article summary, when available.
+   */
   translatedSummary: z.string().optional().nullable(),
+  /**
+   * Locations identified as central to the article.
+   */
   locations: z.array(LocationHolderSchema).optional().nullable(),
+  /**
+   * Whether the article is a reprint of previously published content.
+   */
   reprint: z.boolean().optional().nullable(),
+  /**
+   * Identifier grouping the original article with its known reprints.
+   */
   reprintGroupId: z.string().optional().nullable(),
+  /**
+   * Structured geographic places extracted from the article.
+   */
   places: z.array(PlaceSchema).optional().nullable(),
+  /**
+   * Known people identified in the article.
+   */
   people: z.array(PersonHolderSchema).optional().nullable(),
   cluster: NewsClusterSchema.optional().nullable(),
+  /**
+   * Expanded journalist details, when requested and available.
+   */
   journalists: z.array(JournalistSchema).optional().nullable(),
+  /**
+   * Matched text fragments grouped by article field.
+   */
   highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
 });
 
@@ -617,11 +1126,31 @@ export type ArticlesVectorSearchResult = z.infer<
   typeof ArticlesVectorSearchResultSchema
 >;
 
+export const ClustersListSortBySchema = z.enum([
+  "createdAt",
+  "updatedAt",
+  "relevance",
+  "count",
+  "totalCount",
+]);
+
+export type ClustersListSortBy = z.infer<typeof ClustersListSortBySchema>;
+
+export const ClustersListSortBy = {
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+  Relevance: "relevance",
+  Count: "count",
+  TotalCount: "totalCount",
+} as const;
+
 export const SymbolHolderSchema = z.object({
   symbol: z.string().optional().nullable(),
   exchange: z.string().optional().nullable(),
   exchangeShortName: z.string().optional().nullable(),
   ipoDate: z.string().optional().nullable(),
+  isin: z.string().optional().nullable(),
+  cusip: z.string().optional().nullable(),
 });
 
 export type SymbolHolder = z.infer<typeof SymbolHolderSchema>;
@@ -776,6 +1305,7 @@ export const WatchlistCompanySchema = z.object({
   id: z.string().optional().nullable(),
   domain: z.string().optional().nullable(),
   aliases: z.array(z.string()).optional().nullable(),
+  query: z.string().optional().nullable(),
 });
 
 export type WatchlistCompany = z.infer<typeof WatchlistCompanySchema>;
@@ -785,6 +1315,7 @@ export const WatchlistPersonSchema = z.object({
   description: z.string().optional().nullable(),
   aliases: z.array(z.string()).optional().nullable(),
   wikidataId: z.string().optional().nullable(),
+  query: z.string().optional().nullable(),
 });
 
 export type WatchlistPerson = z.infer<typeof WatchlistPersonSchema>;
@@ -835,6 +1366,20 @@ export const JournalistSearchResultSchema = z.object({
 export type JournalistSearchResult = z.infer<
   typeof JournalistSearchResultSchema
 >;
+
+export const JournalistsSortBySchema = z.enum([
+  "avgMonthlyPosts",
+  "linkedinConnections",
+  "linkedinFollowers",
+]);
+
+export type JournalistsSortBy = z.infer<typeof JournalistsSortBySchema>;
+
+export const JournalistsSortBy = {
+  AvgMonthlyPosts: "avgMonthlyPosts",
+  LinkedinConnections: "linkedinConnections",
+  LinkedinFollowers: "linkedinFollowers",
+} as const;
 
 export const PatchSourceGroupParamsSchema = z.object({
   /**
@@ -937,6 +1482,101 @@ export const SourceSchema = z.object({
 
 export type Source = z.infer<typeof SourceSchema>;
 
+export const SourceGroupDtoSchema = z.object({
+  /**
+   * Numeric identifier for the source group.
+   */
+  id: z.number().optional().nullable(),
+  /**
+   * Date and time the source group was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the source group was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Unique slug name for the source group.
+   */
+  name: z.string().optional().nullable(),
+  /**
+   * Human-readable display name.
+   */
+  displayName: z.string().optional().nullable(),
+  /**
+   * Optional description of the source group.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Publisher domains included in the group.
+   */
+  domains: z.array(z.string()).optional().nullable(),
+  /**
+   * Owning organization ID when the source group is private.
+   */
+  organizationId: z.number().optional().nullable(),
+  /**
+   * Whether the source group is publicly visible.
+   */
+  visible: z.boolean().optional().nullable(),
+});
+
+export type SourceGroupDto = z.infer<typeof SourceGroupDtoSchema>;
+
+export const SourceGroupListResultSchema = z.object({
+  /**
+   * Total number of matching source groups across all pages.
+   */
+  total: z.number(),
+  /**
+   * Source groups returned for the requested page.
+   */
+  data: z.array(SourceGroupDtoSchema),
+});
+
+export type SourceGroupListResult = z.infer<typeof SourceGroupListResultSchema>;
+
+export const SourceGroupResolveResultSchema = z.object({
+  /**
+   * Resolved source groups.
+   */
+  data: z.array(SourceGroupDtoSchema),
+});
+
+export type SourceGroupResolveResult = z.infer<
+  typeof SourceGroupResolveResultSchema
+>;
+
+export const SourceGroupResultSchema = z.object({
+  data: SourceGroupDtoSchema,
+});
+
+export type SourceGroupResult = z.infer<typeof SourceGroupResultSchema>;
+
+export const SourceGroupSortBySchema = z.enum([
+  "id",
+  "createdAt",
+  "updatedAt",
+  "name",
+]);
+
+export type SourceGroupSortBy = z.infer<typeof SourceGroupSortBySchema>;
+
+export const SourceGroupSortBy = {
+  Id: "id",
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+  Name: "name",
+} as const;
+
 export const SourceSearchResultSchema = z.object({
   status: z.number(),
   numResults: z.number(),
@@ -945,30 +1585,92 @@ export const SourceSearchResultSchema = z.object({
 
 export type SourceSearchResult = z.infer<typeof SourceSearchResultSchema>;
 
+export const SourcesSortBySchema = z.enum([
+  "globalRank",
+  "relevance",
+  "monthlyVisits",
+  "avgMonthlyPosts",
+]);
+
+export type SourcesSortBy = z.infer<typeof SourcesSortBySchema>;
+
+export const SourcesSortBy = {
+  GlobalRank: "globalRank",
+  Relevance: "relevance",
+  MonthlyVisits: "monthlyVisits",
+  AvgMonthlyPosts: "avgMonthlyPosts",
+} as const;
+
 export const StatResultSchema = z.object({
+  /**
+   * HTTP status code for the response.
+   */
   status: z.number().optional().nullable(),
+  /**
+   * Statistics returned by the request.
+   */
   results: z.array(z.unknown()).optional().nullable(),
+  /**
+   * Total number of matching records, when calculated by the endpoint.
+   */
+  numResults: z.number().optional().nullable(),
 });
 
 export type StatResult = z.infer<typeof StatResultSchema>;
 
 export const StoryHistoryRecordSchema = z.object({
+  /**
+   * Unique identifier of the story associated with this history record.
+   */
   clusterId: z.string().optional().nullable(),
+  /**
+   * Date and time the history record was created, in ISO 8601 format.
+   */
   createdAt: z.string().optional().nullable(),
+  /**
+   * Story name captured in this history record, when available.
+   */
   name: z.string().optional().nullable(),
+  /**
+   * Date and time the story refresh that produced this record was triggered, in ISO 8601 format.
+   */
   triggeredAt: z.string().optional().nullable(),
+  /**
+   * Story summary captured in this history record.
+   */
   summary: z.string().optional().nullable(),
+  /**
+   * Short story summary captured in this history record, when available.
+   */
   shortSummary: z.string().optional().nullable(),
+  /**
+   * Description of changes from the previous story version, when available.
+   */
   changelog: z.string().optional().nullable(),
+  /**
+   * Key points captured for this version of the story.
+   */
   keyPoints: z.array(KeyPointSchema).optional().nullable(),
+  /**
+   * Questions and answers generated for this version of the story.
+   */
   questions: z.array(QuestionSchema).optional().nullable(),
 });
 
 export type StoryHistoryRecord = z.infer<typeof StoryHistoryRecordSchema>;
 
 export const StoryHistoryResultSchema = z.object({
+  /**
+   * HTTP status code for the response.
+   */
   status: z.number(),
+  /**
+   * Total number of matching history records.
+   */
   numResults: z.number(),
+  /**
+   * History records returned for the requested page.
+   */
   results: z.array(StoryHistoryRecordSchema),
 });
 
@@ -984,15 +1686,15 @@ export type StorySearchResult = z.infer<typeof StorySearchResultSchema>;
 
 export const SummaryBodySchema = z.object({
   /**
-   * Instructions guiding how the summary should be written. Maximum length: 2 048 characters.
+   * Instructions guiding how the summary should be written. Maximum length: 2,048 characters.
    */
   prompt: z.string().optional().nullable(),
   /**
-   * The maximum number of articles to factor into the summary.
+   * Maximum number of articles used to generate the summary. Must be between 1 and 100.
    */
   maxArticleCount: z.number().optional().nullable(),
   /**
-   * The maximum number of articles that should be returned in the response. This can be used to return fewer than maxArticleCount results.
+   * Maximum number of articles returned in the response. Must be between 1 and 100 and cannot return more articles than maxArticleCount selected.
    */
   returnedArticleCount: z.number().optional().nullable(),
   /**
@@ -1003,7 +1705,7 @@ export const SummaryBodySchema = z.object({
     .optional()
     .nullable(),
   /**
-   * Method for selecting articles: ARTICLES (include all matches) or CLUSTERS (one per cluster).
+   * Article selection method. ARTICLES selects up to maxArticleCount matching articles; CLUSTERS selects the first article from each of up to maxArticleCount stories.
    */
   method: z.enum(["ARTICLES", "CLUSTERS"]).optional().nullable(),
   /**
@@ -1019,13 +1721,12 @@ export const SummaryBodySchema = z.object({
       "gpt-4o-mini",
       "gpt-4.1",
       "gpt-4.1-mini",
-      "llama-3.3-70b-versatile",
       "openai/gpt-oss-120b",
     ])
     .optional()
     .nullable(),
   /**
-   * Sampling temperature for the LLM (0.0 = deterministic to 2.0 = very creative).
+   * Sampling temperature from 0.0 to 2.0. Ignored by gpt-5.4-mini, gpt-5.4-nano, gpt-5-mini, and gpt-5-nano.
    */
   temperature: z.number().optional().nullable(),
   /**
@@ -1033,7 +1734,7 @@ export const SummaryBodySchema = z.object({
    */
   topP: z.number().optional().nullable(),
   /**
-   * Maximum number of tokens to generate in the summary.
+   * Maximum number of tokens to generate. Must be 0 or greater.
    */
   maxTokens: z.number().optional().nullable(),
 });
@@ -1041,9 +1742,21 @@ export const SummaryBodySchema = z.object({
 export type SummaryBody = z.infer<typeof SummaryBodySchema>;
 
 export const SummarySearchResultSchema = z.object({
+  /**
+   * HTTP status code for the response.
+   */
   status: z.number(),
+  /**
+   * Number of articles returned in results after applying returnedArticleCount.
+   */
   numResults: z.number(),
+  /**
+   * Generated summary of the selected articles, or 'No articles found' when no content matches.
+   */
   summary: z.string(),
+  /**
+   * Articles returned after summary generation, limited by returnedArticleCount.
+   */
   results: z.array(ArticleSchema),
 });
 
@@ -1109,6 +1822,126 @@ export const UpdateWatchlistParamsSchema = z.object({
 });
 
 export type UpdateWatchlistParams = z.infer<typeof UpdateWatchlistParamsSchema>;
+
+export const WatchlistCompanyDtoSchema = z.object({
+  name: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  id: z.string().optional().nullable(),
+  domain: z.string().optional().nullable(),
+  aliases: z.array(z.string()).optional().nullable(),
+  query: z.string().optional().nullable(),
+});
+
+export type WatchlistCompanyDto = z.infer<typeof WatchlistCompanyDtoSchema>;
+
+export const WatchlistPersonDtoSchema = z.object({
+  name: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  wikidataId: z.string().optional().nullable(),
+  aliases: z.array(z.string()).optional().nullable(),
+  query: z.string().optional().nullable(),
+});
+
+export type WatchlistPersonDto = z.infer<typeof WatchlistPersonDtoSchema>;
+
+export const WatchlistDtoSchema = z.object({
+  /**
+   * Numeric identifier for the watchlist.
+   */
+  id: z.number().optional().nullable(),
+  /**
+   * Date and time the watchlist was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the watchlist was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.string().date(), z.string().datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Unique slug name for the watchlist.
+   */
+  name: z.string().optional().nullable(),
+  /**
+   * Human-readable display name.
+   */
+  displayName: z.string().optional().nullable(),
+  /**
+   * Optional description of the watchlist.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * People included in the watchlist.
+   */
+  people: z.array(WatchlistPersonDtoSchema).optional().nullable(),
+  /**
+   * Companies included in the watchlist.
+   */
+  companies: z.array(WatchlistCompanyDtoSchema).optional().nullable(),
+  /**
+   * Owning organization ID when the watchlist is private.
+   */
+  organizationId: z.number().optional().nullable(),
+  /**
+   * Whether the watchlist is publicly visible.
+   */
+  visible: z.boolean().optional().nullable(),
+});
+
+export type WatchlistDto = z.infer<typeof WatchlistDtoSchema>;
+
+export const WatchlistListResultSchema = z.object({
+  /**
+   * Total number of matching watchlists across all pages.
+   */
+  total: z.number(),
+  /**
+   * Watchlists returned for the requested page.
+   */
+  data: z.array(WatchlistDtoSchema),
+});
+
+export type WatchlistListResult = z.infer<typeof WatchlistListResultSchema>;
+
+export const WatchlistResolveResultSchema = z.object({
+  /**
+   * Resolved watchlists.
+   */
+  data: z.array(WatchlistDtoSchema),
+});
+
+export type WatchlistResolveResult = z.infer<
+  typeof WatchlistResolveResultSchema
+>;
+
+export const WatchlistResultSchema = z.object({
+  data: WatchlistDtoSchema,
+});
+
+export type WatchlistResult = z.infer<typeof WatchlistResultSchema>;
+
+export const WatchlistSortBySchema = z.enum([
+  "id",
+  "createdAt",
+  "updatedAt",
+  "name",
+]);
+
+export type WatchlistSortBy = z.infer<typeof WatchlistSortBySchema>;
+
+export const WatchlistSortBy = {
+  Id: "id",
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+  Name: "name",
+} as const;
 
 export const WikiPageSectionHolderSchema = z.object({
   id: z.string().optional().nullable(),

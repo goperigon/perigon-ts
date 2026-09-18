@@ -1,17 +1,11 @@
 /**
- * {{#description}}{{description}}{{/description}}{{^description}}Parameter {{paramName}}{{/description}}
- {{#isEnum}}
- * @type {{{datatypeWithEnum}}}
- {{#allowableValues}}
- * @values {{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}
- {{/allowableValues}}
- {{/isEnum}}
+ * {{#unescapedDescription}}{{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}{{/unescapedDescription}}{{^unescapedDescription}}Parameter {{paramName}}{{/unescapedDescription}}
  {{#required}}
  * @required
  {{/required}}
  */
 {{paramName}}: {{#isEnum}}
-z.enum([{{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])
+{{operationIdCamelCase}}{{enumName}}Schema
 {{/isEnum}}{{^isEnum}}{{#isArray}}
 z.array({{#items}}{{#isEnum}}
 z.enum([{{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}])

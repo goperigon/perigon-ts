@@ -19,6 +19,43 @@ import {
 } from '../models/index{{importFileExtension}}';
 {{/imports.0}}
 
+{{#hasEnums}}
+{{#operations}}
+{{#operation}}
+{{#allParams}}
+{{#isEnum}}
+export const {{operationIdCamelCase}}{{enumName}}Schema = z.enum([
+{{#allowableValues}}
+{{#enumVars}}
+    {{{value}}}{{^-last}},{{/-last}}
+{{/enumVars}}
+{{/allowableValues}}
+]);
+export type {{operationIdCamelCase}}{{enumName}} = z.infer<typeof {{operationIdCamelCase}}{{enumName}}Schema>;
+{{#stringEnums}}
+export enum {{operationIdCamelCase}}{{enumName}} {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{name}} = {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+}
+{{/stringEnums}}
+{{^stringEnums}}
+export const {{operationIdCamelCase}}{{enumName}} = {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{name}}: {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+} as const;
+{{/stringEnums}}
+
+{{/isEnum}}
+{{/allParams}}
+{{/operation}}
+{{/operations}}
+{{/hasEnums}}
 {{#operations}}
 {{#operation}}
 {{#allParams.0}}
@@ -171,40 +208,3 @@ export class {{classname}} extends runtime.BaseAPI {
     {{/operation}}
 }
 {{/operations}}
-{{#hasEnums}}
-
-{{#operations}}
-{{#operation}}
-{{#allParams}}
-{{#isEnum}}
-{{#stringEnums}}
-/**
-  * @export
-  * @enum {string}
-  */
-export enum {{operationIdCamelCase}}{{enumName}} {
-{{#allowableValues}}
-    {{#enumVars}}
-    {{name}} = {{{value}}}{{^-last}},{{/-last}}
-    {{/enumVars}}
-{{/allowableValues}}
-}
-{{/stringEnums}}
-{{^stringEnums}}
-/**
- * @export
- */
-export const {{operationIdCamelCase}}{{enumName}} = {
-{{#allowableValues}}
-    {{#enumVars}}
-    {{name}}: {{{value}}}{{^-last}},{{/-last}}
-    {{/enumVars}}
-{{/allowableValues}}
-} as const;
-export type {{operationIdCamelCase}}{{enumName}} = typeof {{operationIdCamelCase}}{{enumName}}[keyof typeof {{operationIdCamelCase}}{{enumName}}];
-{{/stringEnums}}
-{{/isEnum}}
-{{/allParams}}
-{{/operation}}
-{{/operations}}
-{{/hasEnums}}

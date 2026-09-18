@@ -76,19 +76,20 @@
     "zod": "^3.25.29"
   },
   "devDependencies": {
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "dotenv": "^16.6.1",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.4.12",
+    "@openapitools/openapi-generator-cli": "^2.41.0",
     "@types/jest": "^29.5.9",
     "@types/node": "^20.19.43",
-    "@openapitools/openapi-generator-cli": "^2.41.0",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
+    "doctoc": "^2.5.0",
+    "dotenv": "^16.6.1",
     "eslint": "^9.39.5",
     "eslint-plugin-unused-imports": "^4.4.1",
+    "jest": "^29.7.0",
+    "minimatch": "^10.2.6",
     "prettier": "^3.9.8",
-    "doctoc": "^2.5.0"
+    "ts-jest": "^29.4.12",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }
