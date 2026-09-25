@@ -134,7 +134,12 @@ async function main() {
         `     Country: ${article.source?.location?.country ?? "N/A"}`,
       );
       console.log(
-        `     Categories: ${article.categories?.join(", ") || "N/A"}\n`,
+        `     Categories: ${
+          article.categories
+            ?.map((it) => it.name)
+            ?.filter(Boolean)
+            ?.join(", ") || "N/A"
+        }\n`,
       );
     });
 
@@ -159,9 +164,22 @@ async function main() {
       console.log(
         `     Articles: ${story.totalCount ?? 0} from ${story.uniqueSources?.length ?? 0} sources`,
       );
-      console.log(`     Topics: ${story.topics?.join(", ") || "N/A"}`);
       console.log(
-        `     Key Points: ${story.keyPoints?.slice(0, 2).join("; ") || "N/A"}\n`,
+        `     Topics: ${
+          story.topics
+            ?.map((it) => it.name)
+            ?.filter(Boolean)
+            ?.join(", ") || "N/A"
+        }`,
+      );
+      console.log(
+        `     Key Points: ${
+          story.keyPoints
+            ?.slice(0, 2)
+            ?.map((keyPoint) => keyPoint.point)
+            ?.filter(Boolean)
+            ?.join("; ") || "N/A"
+        }\n`,
       );
     });
 
@@ -192,9 +210,21 @@ async function main() {
       console.log(`  ${index + 1}. ${article.title}`);
       console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
       console.log(
-        `     Categories: ${article.categories?.join(", ") || "N/A"}`,
+        `     Categories: ${
+          article.categories
+            ?.map((it) => it.name)
+            ?.filter(Boolean)
+            ?.join(", ") || "N/A"
+        }`,
       );
-      console.log(`     Labels: ${article.labels?.join(", ") || "None"}`);
+      console.log(
+        `     Labels: ${
+          article.labels
+            ?.map((it) => it.name)
+            ?.filter(Boolean)
+            ?.join(", ") || "None"
+        }`,
+      );
       console.log(
         `     Published: ${
           article.pubDate
