@@ -59,24 +59,19 @@ const SpecFiltersConfigSchema = z.object({
 
 type SpecFiltersConfig = z.infer<typeof SpecFiltersConfigSchema>;
 
-const OpenApiSchemaSchema = z
-  .object({
-    properties: z.record(z.string(), z.object({}).passthrough()).optional(),
-    required: z.array(z.string()).optional(),
-  })
-  .passthrough();
+const OpenApiSchemaSchema = z.looseObject({
+  properties: z.record(z.string(), z.looseObject({})).optional(),
+  required: z.array(z.string()).optional(),
+});
 
-const OpenApiSpecSchema = z
-  .object({
-    paths: z.record(z.string(), z.unknown()).optional(),
-    components: z
-      .object({
-        schemas: z.record(z.string(), OpenApiSchemaSchema).optional(),
-      })
-      .passthrough()
-      .optional(),
-  })
-  .passthrough();
+const OpenApiSpecSchema = z.looseObject({
+  paths: z.record(z.string(), z.unknown()).optional(),
+  components: z
+    .looseObject({
+      schemas: z.record(z.string(), OpenApiSchemaSchema).optional(),
+    })
+    .optional(),
+});
 
 type OpenApiSpec = z.infer<typeof OpenApiSpecSchema>;
 

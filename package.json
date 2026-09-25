@@ -73,7 +73,7 @@
     "undici": ">=5"
   },
   "dependencies": {
-    "zod": "^3.25.29"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.41.0",

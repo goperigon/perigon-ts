@@ -5,7 +5,7 @@
     "": {
       "name": "@goperigon/perigon-ts",
       "dependencies": {
-        "zod": "^3.25.29",
+        "zod": "^4.6.5",
       },
       "devDependencies": {
         "@openapitools/openapi-generator-cli": "^2.41.0",
@@ -1308,7 +1308,7 @@
 
     "yuku-parser": ["yuku-parser@0.10.2", "", { "dependencies": { "@yuku-toolchain/types": "^0.10.2", "yuku-ast": "^0.10.2" }, "optionalDependencies": { "@yuku-parser/binding-android-arm64": "0.10.2", "@yuku-parser/binding-darwin-arm64": "0.10.2", "@yuku-parser/binding-darwin-x64": "0.10.2", "@yuku-parser/binding-freebsd-x64": "0.10.2", "@yuku-parser/binding-linux-arm-gnu": "0.10.2", "@yuku-parser/binding-linux-arm-musl": "0.10.2", "@yuku-parser/binding-linux-arm64-gnu": "0.10.2", "@yuku-parser/binding-linux-arm64-musl": "0.10.2", "@yuku-parser/binding-linux-x64-gnu": "0.10.2", "@yuku-parser/binding-linux-x64-musl": "0.10.2", "@yuku-parser/binding-win32-arm64": "0.10.2", "@yuku-parser/binding-win32-x64": "0.10.2" } }, "sha512-CgaU0/PPjCAIEZ3WQroosOxTY3eeKldAN3h+vk8pMNz4+jl1CZzBR4pW+K/rRPF112VooCL5FdjJoiMNjDrL2A=="],
 
-    "zod": ["zod@3.25.76", "", {}, "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="],
+    "zod": ["zod@4.6.5", "", {}, "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="],
 
     "zwitch": ["zwitch@1.0.5", "", {}, "sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw=="],
 

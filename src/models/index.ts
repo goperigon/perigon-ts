@@ -1082,7 +1082,7 @@ export const ArticleSearchParamsSchema = z.object({
    * 'pubDateFrom' filter, will search articles published after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00 - Default: Only articles with a pubDate within the last 30 days of the request
    */
   pubDateFrom: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -1090,7 +1090,7 @@ export const ArticleSearchParamsSchema = z.object({
    * 'pubDateTo' filter, will search articles published before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00
    */
   pubDateTo: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -1491,7 +1491,7 @@ export const SourceGroupDtoSchema = z.object({
    * Date and time the source group was created, in ISO 8601 format.
    */
   createdAt: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -1499,7 +1499,7 @@ export const SourceGroupDtoSchema = z.object({
    * Date and time the source group was last updated, in ISO 8601 format.
    */
   updatedAt: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -1772,12 +1772,12 @@ export type TopicLabels = z.infer<typeof TopicLabelsSchema>;
 export const TopicDtoSchema = z.object({
   id: z.number().optional().nullable(),
   createdAt: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
   updatedAt: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -1853,7 +1853,7 @@ export const WatchlistDtoSchema = z.object({
    * Date and time the watchlist was created, in ISO 8601 format.
    */
   createdAt: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -1861,7 +1861,7 @@ export const WatchlistDtoSchema = z.object({
    * Date and time the watchlist was last updated, in ISO 8601 format.
    */
   updatedAt: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -2056,7 +2056,7 @@ export const WikipediaSearchParamsSchema = z.object({
    * 'wikiRevisionFrom' filter, will search pages modified after the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
   wikiRevisionFrom: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
@@ -2064,7 +2064,7 @@ export const WikipediaSearchParamsSchema = z.object({
    * 'wikiRevisionFrom' filter, will search pages modified before the specified date, the date could be passed as ISO or 'yyyy-mm-dd'. Date time in ISO format, ie. 2024-01-01T00:00:00.
    */
   wikiRevisionTo: z
-    .union([z.string().date(), z.string().datetime()])
+    .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val))
     .optional()
     .nullable(),
