@@ -63,8 +63,8 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "bun run tsup",
-    "dev": "bun run tsup --watch",
+    "build": "bun run tsdown",
+    "dev": "bun run tsdown --watch",
     "test": "bun test --coverage",
     "typecheck": "tsc --noEmit",
     "generate": "bash ./scripts/generate.sh"
@@ -89,7 +89,7 @@
     "minimatch": "^10.2.6",
     "prettier": "^3.9.9",
     "ts-jest": "^29.4.14",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "tsdown": "^0.23.0",
+    "typescript": "^6.0.3"
   }
 }
