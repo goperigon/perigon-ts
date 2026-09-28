@@ -23,6 +23,12 @@ import type {
   ContactPointResult,
   Journalist,
   JournalistSearchResult,
+  LimitsResult,
+  MonitorEventListResult,
+  MonitorListResult,
+  MonitorNewsletterListResult,
+  MonitorResult,
+  MonitorSummaryListResult,
   PeopleSearchResult,
   QuerySearchResult,
   SourceGroupListResult,
@@ -47,6 +53,12 @@ import {
   ContactPointResultSchema,
   JournalistSchema,
   JournalistSearchResultSchema,
+  LimitsResultSchema,
+  MonitorEventListResultSchema,
+  MonitorListResultSchema,
+  MonitorNewsletterListResultSchema,
+  MonitorResultSchema,
+  MonitorSummaryListResultSchema,
   PeopleSearchResultSchema,
   QuerySearchResultSchema,
   SourceGroupListResultSchema,
@@ -141,6 +153,117 @@ export const ListContactPointsNullsEnum = {
   Last: "last",
 } as const;
 
+export const ListMonitorEventsApiSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListMonitorEventsApiSortOrderEnum = z.infer<
+  typeof ListMonitorEventsApiSortOrderEnumSchema
+>;
+export const ListMonitorEventsApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorEventsApiNullsEnumSchema = z.enum(["first", "last"]);
+export type ListMonitorEventsApiNullsEnum = z.infer<
+  typeof ListMonitorEventsApiNullsEnumSchema
+>;
+export const ListMonitorEventsApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorNewslettersApiSortOrderEnumSchema = z.enum([
+  "asc",
+  "desc",
+]);
+export type ListMonitorNewslettersApiSortOrderEnum = z.infer<
+  typeof ListMonitorNewslettersApiSortOrderEnumSchema
+>;
+export const ListMonitorNewslettersApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorNewslettersApiNullsEnumSchema = z.enum([
+  "first",
+  "last",
+]);
+export type ListMonitorNewslettersApiNullsEnum = z.infer<
+  typeof ListMonitorNewslettersApiNullsEnumSchema
+>;
+export const ListMonitorNewslettersApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorSummariesApiSortOrderEnumSchema = z.enum([
+  "asc",
+  "desc",
+]);
+export type ListMonitorSummariesApiSortOrderEnum = z.infer<
+  typeof ListMonitorSummariesApiSortOrderEnumSchema
+>;
+export const ListMonitorSummariesApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorSummariesApiNullsEnumSchema = z.enum(["first", "last"]);
+export type ListMonitorSummariesApiNullsEnum = z.infer<
+  typeof ListMonitorSummariesApiNullsEnumSchema
+>;
+export const ListMonitorSummariesApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorsApiSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListMonitorsApiSortOrderEnum = z.infer<
+  typeof ListMonitorsApiSortOrderEnumSchema
+>;
+export const ListMonitorsApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorsApiStatusEnumSchema = z.enum([
+  "DRAFT",
+  "ACTIVE",
+  "STOPPED",
+  "ARCHIVED",
+]);
+export type ListMonitorsApiStatusEnum = z.infer<
+  typeof ListMonitorsApiStatusEnumSchema
+>;
+export const ListMonitorsApiStatusEnum = {
+  Draft: "DRAFT",
+  Active: "ACTIVE",
+  Stopped: "STOPPED",
+  Archived: "ARCHIVED",
+} as const;
+
+export const ListMonitorsApiClassificationTypeEnumSchema = z.enum([
+  "EVENT",
+  "MENTIONS",
+  "TOPIC",
+]);
+export type ListMonitorsApiClassificationTypeEnum = z.infer<
+  typeof ListMonitorsApiClassificationTypeEnumSchema
+>;
+export const ListMonitorsApiClassificationTypeEnum = {
+  Event: "EVENT",
+  Mentions: "MENTIONS",
+  Topic: "TOPIC",
+} as const;
+
+export const ListMonitorsApiNullsEnumSchema = z.enum(["first", "last"]);
+export type ListMonitorsApiNullsEnum = z.infer<
+  typeof ListMonitorsApiNullsEnumSchema
+>;
+export const ListMonitorsApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
 export const ListSourceGroupsSortOrderEnumSchema = z.enum(["asc", "desc"]);
 export type ListSourceGroupsSortOrderEnum = z.infer<
   typeof ListSourceGroupsSortOrderEnumSchema
@@ -199,6 +322,38 @@ export const SearchWikipediaSortByEnum = {
   ScrapedAtAsc: "scrapedAtAsc",
 } as const;
 
+export const ActivateMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to activate.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ActivateMonitorApiRequestSchema = z.object({
+  ...ActivateMonitorApiPathSchema.shape,
+});
+
+export type ActivateMonitorApiRequest = z.input<
+  typeof ActivateMonitorApiRequestSchema
+>;
+
+export const ArchiveMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to archive.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ArchiveMonitorApiRequestSchema = z.object({
+  ...ArchiveMonitorApiPathSchema.shape,
+});
+
+export type ArchiveMonitorApiRequest = z.input<
+  typeof ArchiveMonitorApiRequestSchema
+>;
+
 export const CreateContactPointBodySchema = z.object({
   /**
    * Parameter contactPointRequestBody
@@ -213,6 +368,22 @@ export const CreateContactPointRequestSchema = z.object({
 
 export type CreateContactPointRequest = z.input<
   typeof CreateContactPointRequestSchema
+>;
+
+export const CreateMonitorApiBodySchema = z.object({
+  /**
+   * Parameter signalApiCreateBody
+   * @required
+   */
+  signalApiCreateBody: Models.SignalApiCreateBodySchema,
+});
+
+export const CreateMonitorApiRequestSchema = z.object({
+  ...CreateMonitorApiBodySchema.shape,
+});
+
+export type CreateMonitorApiRequest = z.input<
+  typeof CreateMonitorApiRequestSchema
 >;
 
 export const CreateSourceGroupBodySchema = z.object({
@@ -326,6 +497,33 @@ export const GetJournalistByIdRequestSchema = z.object({
 export type GetJournalistByIdRequest = z.input<
   typeof GetJournalistByIdRequestSchema
 >;
+
+export const GetLimitsQuerySchema = z.object({
+  /**
+   * Optional list of API keys whose validity and status should be checked. Each key is reported as valid only if it exists and belongs to your account.
+   */
+  apiKeys: z.array(z.string()).optional(),
+});
+
+export const GetLimitsRequestSchema = z.object({
+  ...GetLimitsQuerySchema.shape,
+});
+
+export type GetLimitsRequest = z.input<typeof GetLimitsRequestSchema>;
+
+export const GetMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const GetMonitorApiRequestSchema = z.object({
+  ...GetMonitorApiPathSchema.shape,
+});
+
+export type GetMonitorApiRequest = z.input<typeof GetMonitorApiRequestSchema>;
 
 export const GetSourceGroupPathSchema = z.object({
   /**
@@ -607,6 +805,224 @@ export type ListContactPointsRequest = z.input<
   typeof ListContactPointsRequestSchema
 >;
 
+export const ListMonitorEventsApiQuerySchema = z.object({
+  /**
+   * Filter for events with this exact event type.
+   */
+  eventType: z.string().optional(),
+  /**
+   * Filter for events created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Filter for events created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Required field used to sort events. Accepts createdAt, updatedAt, or eventDate.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorEventsApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorEventsApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorEventsApiPathSchema = z.object({
+  /**
+   * UUID of the monitor whose events to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ListMonitorEventsApiRequestSchema = z.object({
+  ...ListMonitorEventsApiQuerySchema.shape,
+
+  ...ListMonitorEventsApiPathSchema.shape,
+});
+
+export type ListMonitorEventsApiRequest = z.input<
+  typeof ListMonitorEventsApiRequestSchema
+>;
+
+export const ListMonitorNewslettersApiQuerySchema = z.object({
+  /**
+   * Filter by newsletter title using a case-insensitive partial match.
+   */
+  title: z.string().optional(),
+  /**
+   * Filter for newsletters created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Filter for newsletters created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Required field used to sort newsletters. Accepts createdAt or updatedAt.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorNewslettersApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorNewslettersApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorNewslettersApiPathSchema = z.object({
+  /**
+   * UUID of the monitor whose newsletters to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ListMonitorNewslettersApiRequestSchema = z.object({
+  ...ListMonitorNewslettersApiQuerySchema.shape,
+
+  ...ListMonitorNewslettersApiPathSchema.shape,
+});
+
+export type ListMonitorNewslettersApiRequest = z.input<
+  typeof ListMonitorNewslettersApiRequestSchema
+>;
+
+export const ListMonitorSummariesApiQuerySchema = z.object({
+  /**
+   * Filter for summaries created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Filter for summaries created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Required field used to sort summaries. Accepts createdAt or updatedAt.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorSummariesApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorSummariesApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorSummariesApiPathSchema = z.object({
+  /**
+   * UUID of the monitor whose summaries to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ListMonitorSummariesApiRequestSchema = z.object({
+  ...ListMonitorSummariesApiQuerySchema.shape,
+
+  ...ListMonitorSummariesApiPathSchema.shape,
+});
+
+export type ListMonitorSummariesApiRequest = z.input<
+  typeof ListMonitorSummariesApiRequestSchema
+>;
+
+export const ListMonitorsApiQuerySchema = z.object({
+  /**
+   * Filter by one or more monitor UUIDs. Multiple values are combined with OR.
+   */
+  uuid: z.array(z.string()).optional(),
+  /**
+   * Filter by monitor name using a case-insensitive partial match.
+   */
+  name: z.string().optional(),
+  /**
+   * Filter by status: DRAFT, ACTIVE, STOPPED, or ARCHIVED. When omitted, archived monitors are excluded.
+   */
+  status: ListMonitorsApiStatusEnumSchema.optional(),
+  /**
+   * Filter by classification type: EVENT, MENTIONS, or TOPIC. Multiple values are combined with OR.
+   */
+  classificationType: ListMonitorsApiClassificationTypeEnumSchema.optional(),
+  /**
+   * Required field used to sort monitors. Accepts createdAt or updatedAt.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorsApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorsApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorsApiRequestSchema = z.object({
+  ...ListMonitorsApiQuerySchema.shape,
+});
+
+export type ListMonitorsApiRequest = z.input<
+  typeof ListMonitorsApiRequestSchema
+>;
+
 export const ListSourceGroupsQuerySchema = z.object({
   /**
    * Parameter name
@@ -686,6 +1102,22 @@ export const ListWatchlistsRequestSchema = z.object({
 });
 
 export type ListWatchlistsRequest = z.input<typeof ListWatchlistsRequestSchema>;
+
+export const PauseMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to pause.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const PauseMonitorApiRequestSchema = z.object({
+  ...PauseMonitorApiPathSchema.shape,
+});
+
+export type PauseMonitorApiRequest = z.input<
+  typeof PauseMonitorApiRequestSchema
+>;
 
 export const ResolveSourceGroupsQuerySchema = z.object({
   /**
@@ -2208,6 +2640,31 @@ export type UpdateContactPointRequest = z.input<
   typeof UpdateContactPointRequestSchema
 >;
 
+export const UpdateMonitorApiBodySchema = z.object({
+  /**
+   * Parameter signalApiUpdateBody
+   * @required
+   */
+  signalApiUpdateBody: Models.SignalApiUpdateBodySchema,
+});
+
+export const UpdateMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to update.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const UpdateMonitorApiRequestSchema = z.object({
+  ...UpdateMonitorApiBodySchema.shape,
+  ...UpdateMonitorApiPathSchema.shape,
+});
+
+export type UpdateMonitorApiRequest = z.input<
+  typeof UpdateMonitorApiRequestSchema
+>;
+
 export const UpdateSourceGroupBodySchema = z.object({
   /**
    * Parameter patchSourceGroupParams
@@ -2295,6 +2752,76 @@ export type VectorSearchWikipediaRequest = z.input<
  */
 export class V1Api extends runtime.BaseAPI {
   /**
+   * Activate a monitor, starting its processing pipeline.
+   * Activate monitor
+   */
+  async activateMonitorApi(
+    requestParameters: ActivateMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = ActivateMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/activate`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "POST",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
+   * Archive a monitor. Archived monitors are excluded from list results by default.
+   * Archive monitor
+   */
+  async archiveMonitorApi(
+    requestParameters: ArchiveMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = ArchiveMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "DELETE",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
    * Create a new contact point under the organization associated with the API key. Only WEBHOOK contact points can be created via the API.
    * Create contact point
    */
@@ -2328,6 +2855,41 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return ContactPointResultSchema.parse(raw);
+  }
+  /**
+   * Create a new AI monitor. Only AI_SIGNAL type is supported; status is required and accepts ACTIVE or DRAFT.
+   * Create monitor
+   */
+  async createMonitorApi(
+    requestParameters: CreateMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = CreateMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.signalApiCreateBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
   }
   /**
    * Create a new source group under the organization associated with the API key.
@@ -2575,6 +3137,75 @@ export class V1Api extends runtime.BaseAPI {
     return JournalistSchema.parse(raw);
   }
   /**
+   * Returns the authenticated account\'s current API usage and the limits that apply to it: the number of requests made in the current tracking period, the request limit, the per-second rate limit, and when the counter resets.  Optionally, pass one or more API keys via the `apiKeys` parameter to check their status. For each supplied key the response reports whether it is `valid` (exists and belongs to your account), `enabled` (a disabled key is \'off\'), and whether its `subscription` is active.  This endpoint is authenticated with your API key but is quota-exempt: calling it does **not** count against your monthly request quota and is not subject to rate limiting. It is intended for liveness/health probes and external dashboards that need to check whether an API key and subscription are active without consuming usage.
+   * Limits
+   */
+  async getLimits(
+    requestParameters: GetLimitsRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<LimitsResult> {
+    const params = GetLimitsRequestSchema.parse(requestParameters);
+    const queryParameters = GetLimitsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/limits`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return LimitsResultSchema.parse(raw);
+  }
+  /**
+   * Retrieve a monitor by UUID for the organization associated with the API key.
+   * Get monitor
+   */
+  async getMonitorApi(
+    requestParameters: GetMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = GetMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
    * Retrieve a source group by ID. Only returns source groups owned by the organization associated with the API key.
    * Get source group
    */
@@ -2747,6 +3378,153 @@ export class V1Api extends runtime.BaseAPI {
     return ContactPointListResultSchema.parse(raw);
   }
   /**
+   * List structured events emitted by a monitor. Events represent individual matches detected by the monitor (e.g. a news article matching the monitor\'s criteria) and are produced asynchronously as new content is ingested.
+   * List monitor events
+   */
+  async listMonitorEventsApi(
+    requestParameters: ListMonitorEventsApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorEventListResult> {
+    const params = ListMonitorEventsApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorEventsApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/events`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorEventListResultSchema.parse(raw);
+  }
+  /**
+   * List newsletters generated for a monitor. Newsletters bundle a monitor\'s recent events into a human-readable digest and are produced on the monitor\'s configured schedule.
+   * List monitor newsletters
+   */
+  async listMonitorNewslettersApi(
+    requestParameters: ListMonitorNewslettersApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorNewsletterListResult> {
+    const params =
+      ListMonitorNewslettersApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorNewslettersApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/newsletters`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorNewsletterListResultSchema.parse(raw);
+  }
+  /**
+   * List AI-generated summaries produced for a monitor as matching content is processed.
+   * List monitor summaries
+   */
+  async listMonitorSummariesApi(
+    requestParameters: ListMonitorSummariesApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorSummaryListResult> {
+    const params =
+      ListMonitorSummariesApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorSummariesApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/summary`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorSummaryListResultSchema.parse(raw);
+  }
+  /**
+   * List AI monitors for the organization associated with the API key. Excludes archived monitors by default. Use the status parameter to filter.
+   * List monitors
+   */
+  async listMonitorsApi(
+    requestParameters: ListMonitorsApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorListResult> {
+    const params = ListMonitorsApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorsApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorListResultSchema.parse(raw);
+  }
+  /**
    * List source groups owned by the organization associated with the API key, as well as publicly visible source groups. Supports filtering by name and domain.
    * List source groups
    */
@@ -2813,6 +3591,41 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return WatchlistListResultSchema.parse(raw);
+  }
+  /**
+   * Pause a monitor, stopping its processing pipeline.
+   * Pause monitor
+   */
+  async pauseMonitorApi(
+    requestParameters: PauseMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = PauseMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/pause`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "POST",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
   }
   /**
    * Resolve source groups by name. For each name, returns the organization\'s private source group if one exists, otherwise falls back to the matching public source group.
@@ -3227,6 +4040,44 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return ContactPointResultSchema.parse(raw);
+  }
+  /**
+   * Partially update a monitor. Only provided fields are modified. Use /activate, /pause, or DELETE to change monitor status.
+   * Update monitor
+   */
+  async updateMonitorApi(
+    requestParameters: UpdateMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = UpdateMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "PATCH",
+        headers: headerParameters,
+
+        body: params.signalApiUpdateBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
   }
   /**
    * Partially update a source group owned by the organization associated with the API key. Only provided fields will be updated.

@@ -1,3 +1,4 @@
+src/apis/UtilitiesApi.ts
 src/apis/V1Api.ts
 src/apis/index.ts
 src/index.ts

@@ -5,12 +5,5 @@
     "ScoredDataArticle": ["vectors"],
     "ScoredDataWikiData": ["vectors"]
   },
-  "excludedPaths": [
-    "/v1/api/monitors",
-    "/v1/api/monitors/**",
-    "/v1/articles/refresh",
-    "/v1/articles/refresh/**",
-    "/v1/limits",
-    "/v1/limits/**"
-  ]
+  "excludedPaths": ["/v1/articles/refresh", "/v1/articles/refresh/**"]
 }

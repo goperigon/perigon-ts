@@ -34,6 +34,96 @@ export const AllEndpointSortBy = {
   RefreshDate: "refreshDate",
 } as const;
 
+export const ApiKeyStatusSchema = z.object({
+  /**
+   * Masked preview of the supplied API key.
+   */
+  keyPreview: z.string().optional().nullable(),
+  /**
+   * Whether the supplied API key is valid and belongs to the authenticated account.
+   */
+  valid: z.boolean().optional().nullable(),
+  /**
+   * Whether the API key is enabled. A disabled ('off') key is valid but cannot be used to make requests. False when the key is not valid.
+   */
+  enabled: z.boolean().optional().nullable(),
+  /**
+   * Whether the account owning the key has an active subscription or trial.
+   */
+  subscriptionActive: z.boolean().optional().nullable(),
+  /**
+   * Approx number of requests made with this API key in this billing cycle.
+   */
+  requestCount: z.number().optional().nullable(),
+});
+
+export type ApiKeyStatus = z.infer<typeof ApiKeyStatusSchema>;
+
+export const ApiLimitsDtoSchema = z.object({
+  /**
+   * Name of the account (organization) the API key belongs to.
+   */
+  organizationName: z.string().optional().nullable(),
+  /**
+   * Number of billable requests used in the current tracking period.
+   */
+  requestsUsed: z.number().optional().nullable(),
+  /**
+   * Maximum number of requests allowed in the current tracking period. Null means the account has no request limit.
+   */
+  requestLimit: z.number().optional().nullable(),
+  /**
+   * Maximum number of results allowed per page (page size).
+   */
+  maxPageSize: z.number().optional().nullable(),
+  /**
+   * Maximum number of results that can be paginated through.
+   */
+  paginationLimit: z.number().optional().nullable(),
+  /**
+   * Number of characters article content is truncated to. Null means content is not truncated.
+   */
+  articleContentTruncation: z.number().optional().nullable(),
+  /**
+   * Start of the current tracking period.
+   */
+  since: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Timestamp of the last billable request.
+   */
+  lastMadeAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * When the request counter resets to zero.
+   */
+  resetAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date the API subscription is scheduled to be cancelled. Absent when the subscription is not set to cancel.
+   */
+  subscriptionCancelAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Status of each API key supplied via the 'apiKeys' parameter, in the same order as the request. Absent when no keys were supplied.
+   */
+  keyStatuses: z.array(ApiKeyStatusSchema).optional().nullable(),
+});
+
+export type ApiLimitsDto = z.infer<typeof ApiLimitsDtoSchema>;
+
 export const CategoryHolderSchema = z.object({
   /**
    * Content category assigned to the article.
@@ -1223,6 +1313,369 @@ export const CompanySearchResultSchema = z.object({
 
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
+export const ComplexAllEndpointQuerySchema = z.object({
+  /**
+   * Search article title, description, and content using keywords or Boolean syntax.
+   */
+  q: z.string().optional().nullable(),
+  /**
+   * Filter for an exact article URL.
+   */
+  url: z.string().optional().nullable(),
+  /**
+   * Filter for articles with this image URL.
+   */
+  imageUrl: z.string().optional().nullable(),
+  /**
+   * Filter for articles containing this text in the title.
+   */
+  title: z.string().optional().nullable(),
+  /**
+   * Filter for articles containing this text in the body content.
+   */
+  content: z.string().optional().nullable(),
+  /**
+   * Filter for articles containing this text in the description.
+   */
+  desc: z.string().optional().nullable(),
+  /**
+   * Filter by Perigon article IDs. Multiple values are combined with OR.
+   */
+  articleId: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by Perigon story cluster IDs. Multiple values are combined with OR.
+   */
+  clusterId: z.array(z.string()).optional().nullable(),
+  /**
+   * Return the original article and known reprints in a reprint group. Must be a 32-character group ID.
+   */
+  reprintGroupId: z.string().optional().nullable(),
+  /**
+   * Filter by journalist IDs. Each ID must be exactly 32 characters.
+   */
+  journalistId: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by medium type, such as Article or Video. Multiple values are combined with OR.
+   */
+  medium: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by Perigon source groups. Multiple values are combined with OR.
+   */
+  sourceGroup: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles from Perigon source groups. Multiple values exclude matches from any listed group.
+   */
+  excludeSourceGroup: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by publisher domains or subdomains. Supports * and ? wildcards.
+   */
+  source: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude publisher domains or subdomains. Supports * and ? wildcards.
+   */
+  excludeSource: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by article country codes. Use two-character codes such as us or gb; multiple values are combined with OR.
+   */
+  country: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles with the specified country codes. Use two-character codes such as us or gb.
+   */
+  excludeCountry: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by ISO 639 two-letter language codes, such as en or es.
+   */
+  language: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles in the specified ISO 639 two-letter languages.
+   */
+  excludeLanguage: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by editorial labels, such as Opinion, Paid-news, or Press Release.
+   */
+  label: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles with any of the specified editorial labels.
+   */
+  excludeLabel: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by exact author bylines. Multiple values are combined with OR.
+   */
+  byline: z.array(z.string()).optional().nullable(),
+  /**
+   * Search within article author bylines.
+   */
+  bylineQ: z.string().optional().nullable(),
+  /**
+   * Filter for articles containing this text in the summary.
+   */
+  summary: z.string().optional().nullable(),
+  /**
+   * Filter for articles mentioning entities from the specified watchlists.
+   */
+  watchlist: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles mentioning entities from the specified watchlists.
+   */
+  excludeWatchlist: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles written by journalists with these IDs.
+   */
+  excludeJournalistId: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles published by sources in the specified cities.
+   */
+  excludeSourceCity: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles published by sources in the specified states.
+   */
+  excludeSourceState: z.array(z.string()).optional().nullable(),
+  /**
+   * Latitude of the location used to filter places. Must be between -90 and 90.
+   */
+  lat: z.number().optional().nullable(),
+  /**
+   * Longitude of the location used to filter places. Must be between -180 and 180.
+   */
+  lon: z.number().optional().nullable(),
+  /**
+   * Maximum distance in kilometers from lat and lon. Must be between 1 and 300.
+   */
+  maxDistance: z.number().optional().nullable(),
+  /**
+   * Latitude used to find nearby publishers. Must be between -90 and 90.
+   */
+  sourceLat: z.number().optional().nullable(),
+  /**
+   * Longitude used to find nearby publishers. Must be between -180 and 180.
+   */
+  sourceLon: z.number().optional().nullable(),
+  /**
+   * Maximum distance in kilometers from sourceLat and sourceLon. Must be between 1 and 300.
+   */
+  sourceMaxDistance: z.number().optional().nullable(),
+  /**
+   * Filter for articles with at least this many words.
+   */
+  minWordCount: z.number().optional().nullable(),
+  /**
+   * Filter for articles with no more than this many words.
+   */
+  maxWordCount: z.number().optional().nullable(),
+  /**
+   * Filter by detected event types. Multiple values are combined with OR.
+   */
+  eventType: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by extractor names that processed the article.
+   */
+  extractorName: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles processed by the specified extractor names.
+   */
+  excludeExtractorName: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles published by sources in the specified countries. Use two-character country codes such as us or gb.
+   */
+  excludeSourceCountry: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles published by sources in the specified counties.
+   */
+  excludeSourceCounty: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by exact author names. Multiple values are combined with OR.
+   */
+  author: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles written by any of the specified authors.
+   */
+  excludeAuthor: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by article topics. Multiple values are combined with OR.
+   */
+  topic: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles assigned any of the specified topics.
+   */
+  excludeTopic: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by article categories. Multiple values are combined with OR; use none for uncategorized articles.
+   */
+  category: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by full Google Content Category paths. Multiple values are combined with OR.
+   */
+  taxonomy: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by a Google Content Category path prefix, such as /Finance.
+   */
+  prefixTaxonomy: z.string().optional().nullable(),
+  /**
+   * Filter by Perigon company IDs. Multiple values are combined with OR.
+   */
+  companyId: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by an exact company name mention.
+   */
+  companyName: z.string().optional().nullable(),
+  /**
+   * Filter by company domains, such as apple.com.
+   */
+  companyDomain: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by company stock symbols.
+   */
+  companySymbol: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles mentioning companies with these Perigon IDs.
+   */
+  excludeCompanyId: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles related to companies with these domains.
+   */
+  excludeCompanyDomain: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles related to companies with these stock symbols.
+   */
+  excludeCompanySymbol: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by Wikidata IDs of people mentioned in articles.
+   */
+  personWikidataId: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by exact person name mentions. Multiple values are combined with OR.
+   */
+  personName: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles mentioning people with these Wikidata IDs.
+   */
+  excludePersonWikidataId: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles mentioning any of the specified people by name.
+   */
+  excludePersonName: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles containing links that match this URL pattern.
+   */
+  linkTo: z.string().optional().nullable(),
+  /**
+   * Filter for articles primarily associated with the specified countries.
+   */
+  locationsCountry: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles primarily associated with the specified states.
+   */
+  state: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles primarily associated with the specified cities.
+   */
+  city: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles primarily associated with the specified areas, such as neighborhoods or districts.
+   */
+  area: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles primarily associated with the specified counties.
+   */
+  county: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles published by sources in these countries. Use two-character country codes such as us or gb.
+   */
+  sourceCountry: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles published by sources in the specified states.
+   */
+  sourceState: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles published by sources in the specified counties.
+   */
+  sourceCounty: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter for articles published by sources in the specified cities.
+   */
+  sourceCity: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles primarily associated with any of the specified countries.
+   */
+  excludeLocationsCountry: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles primarily associated with any of the specified states.
+   */
+  excludeState: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles primarily associated with any of the specified counties.
+   */
+  excludeCounty: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles primarily associated with any of the specified cities.
+   */
+  excludeCity: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles primarily associated with any of the specified areas.
+   */
+  excludeArea: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by structured location attributes using key:value pairs separated by ::, such as city:New York::state:NY.
+   */
+  location: z.array(z.string()).optional().nullable(),
+  /**
+   * Filter by structured publisher location attributes.
+   */
+  sourceLocation: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles assigned any of the specified categories.
+   */
+  excludeCategory: z.array(z.string()).optional().nullable(),
+  /**
+   * Exclude articles assigned any of the specified Google Content Categories.
+   */
+  excludeTaxonomy: z.array(z.string()).optional().nullable(),
+  /**
+   * Minimum positive sentiment score, inclusive. Accepts values from 0 to 1.
+   */
+  positiveSentimentFrom: z.number().optional().nullable(),
+  /**
+   * Maximum positive sentiment score, inclusive. Accepts values from 0 to 1.
+   */
+  positiveSentimentTo: z.number().optional().nullable(),
+  /**
+   * Minimum negative sentiment score, inclusive. Accepts values from 0 to 1.
+   */
+  negativeSentimentFrom: z.number().optional().nullable(),
+  /**
+   * Maximum negative sentiment score, inclusive. Accepts values from 0 to 1.
+   */
+  negativeSentimentTo: z.number().optional().nullable(),
+  /**
+   * Minimum neutral sentiment score, inclusive. Accepts values from 0 to 1.
+   */
+  neutralSentimentFrom: z.number().optional().nullable(),
+  /**
+   * Maximum neutral sentiment score, inclusive. Accepts values from 0 to 1.
+   */
+  neutralSentimentTo: z.number().optional().nullable(),
+  /**
+   * Search translated title, description, and content for non-English articles. Defaults to false.
+   */
+  searchTranslation: z.boolean().optional().nullable(),
+  /**
+   * Filter by whether the publisher has a paywall.
+   */
+  paywall: z.boolean().optional().nullable(),
+  /**
+   * Filter by geographic content scope. Accepts all, local, or world.
+   */
+  type: z.enum(["ALL", "LOCAL", "WORLD"]).optional().nullable(),
+  qfield: z
+    .enum(["TITLE", "DESCRIPTION", "CONTENT", "SUMMARY"])
+    .optional()
+    .nullable(),
+});
+
+export type ComplexAllEndpointQuery = z.infer<
+  typeof ComplexAllEndpointQuerySchema
+>;
+
 export const ContactPointApiDtoSchema = z.object({
   /**
    * Unique identifier for the contact point.
@@ -1464,6 +1917,19 @@ export const CreateWatchlistParamsSchema = z.object({
 
 export type CreateWatchlistParams = z.infer<typeof CreateWatchlistParamsSchema>;
 
+export const EntityGroupSchema = z.object({
+  /**
+   * Reference name used to identify the entity group in monitor output.
+   */
+  groupReference: z.string(),
+  /**
+   * Optional plain-language description of the entities represented by the group.
+   */
+  description: z.string().optional().nullable(),
+});
+
+export type EntityGroup = z.infer<typeof EntityGroupSchema>;
+
 export const ErrorResponseSchema = z.object({
   status: z.number().optional().nullable(),
   message: z.string().optional().nullable(),
@@ -1471,6 +1937,89 @@ export const ErrorResponseSchema = z.object({
 });
 
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
+
+export const SourceTopStatHolderSchema = z.object({
+  name: z.string().optional().nullable(),
+  count: z.number().optional().nullable(),
+});
+
+export type SourceTopStatHolder = z.infer<typeof SourceTopStatHolderSchema>;
+
+export const SourceSchema = z.object({
+  id: z.string().optional().nullable(),
+  domain: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  primaryRecordId: z.string().optional().nullable(),
+  updatedAt: z.string().optional().nullable(),
+  altNames: z.array(z.string()).optional().nullable(),
+  description: z.string().optional().nullable(),
+  avgMonthlyPosts: z.number().optional().nullable(),
+  paywall: z.boolean().optional().nullable(),
+  location: SourceLocationSchema.optional().nullable(),
+  topCategories: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  topTopics: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  topCountries: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  topLabels: z.array(SourceTopStatHolderSchema).optional().nullable(),
+  avgBiasRating: z.string().optional().nullable(),
+  adFontesBiasRating: z.string().optional().nullable(),
+  allSidesBiasRating: z.string().optional().nullable(),
+  mbfcBiasRating: z.string().optional().nullable(),
+  monthlyVisits: z.number().optional().nullable(),
+  globalRank: z.number().optional().nullable(),
+  logoLarge: ImageHolderSchema.optional().nullable(),
+  logoFavIcon: ImageHolderSchema.optional().nullable(),
+  logoSquare: ImageHolderSchema.optional().nullable(),
+});
+
+export type Source = z.infer<typeof SourceSchema>;
+
+export const FilledFieldSourceSchema = z.object({
+  /**
+   * Perigon article ID of the supporting source, when available.
+   */
+  articleId: z.string().optional().nullable(),
+  /**
+   * URL of the supporting source, when available.
+   */
+  url: z.string().optional().nullable(),
+  /**
+   * Title of the supporting source, when available.
+   */
+  title: z.string().optional().nullable(),
+  xPostId: z.string().optional().nullable(),
+});
+
+export type FilledFieldSource = z.infer<typeof FilledFieldSourceSchema>;
+
+export const FilledFieldSchema = z.object({
+  /**
+   * Name of the event data field populated by enrichment.
+   */
+  field: z.string(),
+  /**
+   * Search method used to populate the field. Accepts WEB_SEARCH or ARTICLE_SEARCH.
+   */
+  method: z.enum(["WEB_SEARCH", "ARTICLE_SEARCH", "X_POST"]),
+  /**
+   * How enrichment was initiated. Accepts MANUAL or BACKGROUND.
+   */
+  source: z.enum(["MANUAL", "BACKGROUND"]),
+  /**
+   * Sources used to populate the field.
+   */
+  sources: z.array(FilledFieldSourceSchema).optional().nullable(),
+});
+
+export type FilledField = z.infer<typeof FilledFieldSchema>;
+
+export const FillbotMetadataSchema = z.object({
+  /**
+   * Event fields populated by enrichment and the sources used for each field.
+   */
+  filledFields: z.array(FilledFieldSchema).optional().nullable(),
+});
+
+export type FillbotMetadata = z.infer<typeof FillbotMetadataSchema>;
 
 export const JournalistSearchResultSchema = z.object({
   status: z.number(),
@@ -1495,6 +2044,544 @@ export const JournalistsSortBy = {
   LinkedinConnections: "linkedinConnections",
   LinkedinFollowers: "linkedinFollowers",
 } as const;
+
+export const LimitsResultSchema = z.object({
+  data: ApiLimitsDtoSchema,
+});
+
+export type LimitsResult = z.infer<typeof LimitsResultSchema>;
+
+export const MatchedEntityDataSchema = z.object({
+  /**
+   * Name of the entity matched in the source content.
+   */
+  name: z.string(),
+  /**
+   * Entity type assigned by the monitor.
+   */
+  type: z.string(),
+  /**
+   * Domain associated with the matched entity, when available.
+   */
+  domain: z.string().optional().nullable(),
+});
+
+export type MatchedEntityData = z.infer<typeof MatchedEntityDataSchema>;
+
+export const SignalArticlePartialDtoSchema = z.object({
+  /**
+   * Article headline.
+   */
+  title: z.string().optional().nullable(),
+  /**
+   * Canonical URL of the article.
+   */
+  url: z.string().optional().nullable(),
+  /**
+   * Publisher domain for the article.
+   */
+  domain: z.string().optional().nullable(),
+  /**
+   * Article publication date supplied with the monitor result.
+   */
+  pubDate: z.string().optional().nullable(),
+  /**
+   * URL of the publisher's favicon.
+   */
+  sourceFavicon: z.string().optional().nullable(),
+  /**
+   * Matched text snippets grouped by article field.
+   */
+  highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
+});
+
+export type SignalArticlePartialDto = z.infer<
+  typeof SignalArticlePartialDtoSchema
+>;
+
+export const XPostMediaItemSchema = z.object({
+  mediaUrlHttps: z.string(),
+});
+
+export type XPostMediaItem = z.infer<typeof XPostMediaItemSchema>;
+
+export const XPostMediaSchema = z.object({
+  photo: z.array(XPostMediaItemSchema).optional().nullable(),
+  video: z.array(XPostMediaItemSchema).optional().nullable(),
+});
+
+export type XPostMedia = z.infer<typeof XPostMediaSchema>;
+
+export const XPostSchema = z.object({
+  screenName: z.string(),
+  text: z.string(),
+  lang: z.string(),
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val)),
+  avatarUrl: z.string().optional().nullable(),
+  favorites: z.number().optional().nullable(),
+  replies: z.number().optional().nullable(),
+  quotes: z.number().optional().nullable(),
+  bookmarks: z.number().optional().nullable(),
+  media: XPostMediaSchema,
+  xReposts: z.number().optional().nullable(),
+  xPostId: z.string().optional().nullable(),
+});
+
+export type XPost = z.infer<typeof XPostSchema>;
+
+export const SignalEventDtoSchema = z.object({
+  /**
+   * Unique identifier for the monitor event.
+   */
+  uuid: z.string().optional().nullable(),
+  /**
+   * Date and time the event was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the event was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the detected event occurred, in ISO 8601 format when available.
+   */
+  eventDate: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Detected event category produced by the monitor.
+   */
+  eventType: z.string().optional().nullable(),
+  /**
+   * Structured event fields defined by the monitor's data schema.
+   */
+  data: z.record(z.string(), z.unknown()).optional().nullable(),
+  /**
+   * Perigon article IDs related to the event.
+   */
+  relatedArticleIds: z.array(z.string()).optional().nullable(),
+  /**
+   * Article details keyed by article ID for articles related to the event.
+   */
+  articles: z
+    .record(z.string(), SignalArticlePartialDtoSchema)
+    .optional()
+    .nullable(),
+  /**
+   * Entities matched in the content that produced the event.
+   */
+  entities: z.array(MatchedEntityDataSchema).optional().nullable(),
+  /**
+   * AI-generated summary of the event, when available.
+   */
+  summary: z.string().optional().nullable(),
+  fillbotMetadata: FillbotMetadataSchema.optional().nullable(),
+  /**
+   * Date and time enrichment is scheduled to run, in ISO 8601 format.
+   */
+  fillbotScheduleAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time enrichment last ran, in ISO 8601 format.
+   */
+  fillbotLastRunAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Current event enrichment status. Accepts PENDING, IN_PROGRESS, COMPLETE, or EXHAUSTED.
+   */
+  fillbotStatus: z
+    .enum(["PENDING", "IN_PROGRESS", "COMPLETE", "EXHAUSTED"])
+    .optional()
+    .nullable(),
+  duplicate: z.boolean().optional().nullable(),
+  xPosts: z.array(XPostSchema).optional().nullable(),
+});
+
+export type SignalEventDto = z.infer<typeof SignalEventDtoSchema>;
+
+export const MonitorEventListResultSchema = z.object({
+  /**
+   * Total number of matching events across all pages.
+   */
+  total: z.number(),
+  /**
+   * Events returned for the requested page.
+   */
+  data: z.array(SignalEventDtoSchema),
+});
+
+export type MonitorEventListResult = z.infer<
+  typeof MonitorEventListResultSchema
+>;
+
+export const SignalMonitoringPlanDataSchemaPropertySchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export const SignalMonitoringPlanDataSchemaSchema = z.object({
+  /**
+   * Data schema version. Currently only V1 is supported.
+   */
+  version: z.enum(["V1"]),
+  /**
+   * Whether extracted event data may contain fields not defined in schema. Defaults to false.
+   */
+  allowExtra: z.boolean().optional().nullable(),
+  /**
+   * Structured event field definitions keyed by output field name.
+   */
+  schema: z.record(z.string(), SignalMonitoringPlanDataSchemaPropertySchema),
+});
+
+export type SignalMonitoringPlanDataSchema = z.infer<
+  typeof SignalMonitoringPlanDataSchemaSchema
+>;
+
+export const SignalMonitoringPlanNewsletterConfigSchema = z.object({
+  /**
+   * Whether generated newsletters include citations. Defaults to true.
+   */
+  citations: z.boolean().optional().nullable(),
+  /**
+   * How story citations are resolved. Accepts STORY or TOP_ARTICLE.
+   */
+  storyCitationResolvingType: z.enum(["STORY", "TOP_ARTICLE"]),
+});
+
+export type SignalMonitoringPlanNewsletterConfig = z.infer<
+  typeof SignalMonitoringPlanNewsletterConfigSchema
+>;
+
+export const ScheduleIntervalSchema = z.object({
+  /**
+   * Hour when the monitor runs, from 0 through 23.
+   */
+  hour: z.number().optional().nullable(),
+  /**
+   * Minute when the monitor runs, from 0 through 59.
+   */
+  minute: z.number().optional().nullable(),
+  /**
+   * Days when a WEEKLY schedule runs. Requires 1 through 7 values from MONDAY through SUNDAY.
+   */
+  days: z
+    .enum([
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY",
+      "SUNDAY",
+    ])
+    .optional()
+    .nullable(),
+  /**
+   * Days of the month when a MONTHLY schedule runs. Required for MONTHLY schedules; each value must be from 1 through 31.
+   */
+  daysOfMonth: z.array(z.number()).optional().nullable(),
+  /**
+   * Schedule recurrence type. Accepts WEEKLY or MONTHLY and defaults to WEEKLY.
+   */
+  scheduleType: z.enum(["WEEKLY", "MONTHLY"]),
+});
+
+export type ScheduleInterval = z.infer<typeof ScheduleIntervalSchema>;
+
+export const SignalSchedulePolicySchema = z.object({
+  /**
+   * Times when the monitor runs. Must contain between 1 and 24 intervals.
+   */
+  intervals: z.array(ScheduleIntervalSchema),
+  /**
+   * IANA time zone used to interpret schedule intervals, such as America/Chicago. Defaults to UTC.
+   */
+  timezoneId: z.string().optional().nullable(),
+});
+
+export type SignalSchedulePolicy = z.infer<typeof SignalSchedulePolicySchema>;
+
+export const SignalXQuerySchema = z.object({
+  version: z.enum(["V1"]),
+  query: z.string(),
+  searchType: z.enum(["TOP", "LATEST", "MEDIA"]),
+});
+
+export type SignalXQuery = z.infer<typeof SignalXQuerySchema>;
+
+export const SignalApiDtoSchema = z.object({
+  /**
+   * Unique identifier for the monitor.
+   */
+  uuid: z.string().optional().nullable(),
+  /**
+   * Display name of the monitor.
+   */
+  name: z.string().optional().nullable(),
+  /**
+   * Date and time the monitor was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the monitor was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Current lifecycle status: DRAFT, ACTIVE, STOPPED, or ARCHIVED.
+   */
+  status: z
+    .enum(["DRAFT", "ACTIVE", "STOPPED", "ARCHIVED"])
+    .optional()
+    .nullable(),
+  /**
+   * How matching content is classified: EVENT, MENTIONS, or TOPIC.
+   */
+  classificationType: z
+    .enum(["EVENT", "MENTIONS", "TOPIC"])
+    .optional()
+    .nullable(),
+  /**
+   * Plain-language objective that defines what the monitor tracks.
+   */
+  monitoringObjective: z.string().optional().nullable(),
+  /**
+   * Optional instructions used to guide monitor processing.
+   */
+  prompt: z.string().optional().nullable(),
+  dataSchema: SignalMonitoringPlanDataSchemaSchema.optional().nullable(),
+  newsletterConfig:
+    SignalMonitoringPlanNewsletterConfigSchema.optional().nullable(),
+  /**
+   * Entity groups the monitor identifies in matching content.
+   */
+  entityGroups: z.array(EntityGroupSchema).optional().nullable(),
+  query: ComplexAllEndpointQuerySchema.optional().nullable(),
+  schedulePolicy: SignalSchedulePolicySchema.optional().nullable(),
+  /**
+   * Numeric ID of the watchlist associated with the monitor, if any.
+   */
+  watchlistId: z.number().optional().nullable(),
+  /**
+   * UUIDs of contact points configured to receive monitor notifications.
+   */
+  contactPointIds: z.array(z.string()).optional().nullable(),
+  xQuery: SignalXQuerySchema.optional().nullable(),
+});
+
+export type SignalApiDto = z.infer<typeof SignalApiDtoSchema>;
+
+export const MonitorListResultSchema = z.object({
+  /**
+   * Total number of matching monitors across all pages.
+   */
+  total: z.number(),
+  /**
+   * Monitors returned for the requested page.
+   */
+  data: z.array(SignalApiDtoSchema),
+});
+
+export type MonitorListResult = z.infer<typeof MonitorListResultSchema>;
+
+export const SignalNewsletterStoryPartialDtoSchema = z.object({
+  /**
+   * URL-safe identifier for the story.
+   */
+  slug: z.string().optional().nullable(),
+  /**
+   * URL of the story.
+   */
+  url: z.string().optional().nullable(),
+  /**
+   * Story headline.
+   */
+  title: z.string().optional().nullable(),
+  /**
+   * URL of the source favicon used for the story.
+   */
+  sourceFavicon: z.string().optional().nullable(),
+  /**
+   * Date and time the story was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the story was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+});
+
+export type SignalNewsletterStoryPartialDto = z.infer<
+  typeof SignalNewsletterStoryPartialDtoSchema
+>;
+
+export const SignalNewsletterDtoSchema = z.object({
+  /**
+   * Unique identifier for the newsletter.
+   */
+  uuid: z.string().optional().nullable(),
+  /**
+   * Date and time the newsletter was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the newsletter was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Generated title of the newsletter.
+   */
+  title: z.string().optional().nullable(),
+  /**
+   * Generated newsletter content.
+   */
+  content: z.string().optional().nullable(),
+  /**
+   * Article details keyed by article ID for content cited in the newsletter.
+   */
+  articles: z
+    .record(z.string(), SignalArticlePartialDtoSchema)
+    .optional()
+    .nullable(),
+  /**
+   * Story details keyed by story identifier for stories cited in the newsletter.
+   */
+  stories: z
+    .record(z.string(), SignalNewsletterStoryPartialDtoSchema)
+    .optional()
+    .nullable(),
+  xPosts: z.record(z.string(), XPostSchema).optional().nullable(),
+});
+
+export type SignalNewsletterDto = z.infer<typeof SignalNewsletterDtoSchema>;
+
+export const MonitorNewsletterListResultSchema = z.object({
+  /**
+   * Total number of matching newsletters across all pages.
+   */
+  total: z.number(),
+  /**
+   * Newsletters returned for the requested page.
+   */
+  data: z.array(SignalNewsletterDtoSchema),
+});
+
+export type MonitorNewsletterListResult = z.infer<
+  typeof MonitorNewsletterListResultSchema
+>;
+
+export const MonitorResultSchema = z.object({
+  data: SignalApiDtoSchema,
+});
+
+export type MonitorResult = z.infer<typeof MonitorResultSchema>;
+
+export const SignalSummaryDtoSchema = z.object({
+  /**
+   * AI-generated summary of the monitor's matching content.
+   */
+  text: z.string().optional().nullable(),
+  /**
+   * Date and time the summary was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the summary was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+});
+
+export type SignalSummaryDto = z.infer<typeof SignalSummaryDtoSchema>;
+
+export const MonitorSummaryListResultSchema = z.object({
+  /**
+   * Total number of matching summaries across all pages.
+   */
+  total: z.number(),
+  /**
+   * Summaries returned for the requested page.
+   */
+  data: z.array(SignalSummaryDtoSchema),
+});
+
+export type MonitorSummaryListResult = z.infer<
+  typeof MonitorSummaryListResultSchema
+>;
 
 export const PatchSourceGroupParamsSchema = z.object({
   /**
@@ -1562,40 +2649,87 @@ export const ScoredDataWikiDataSchema = z.object({
 
 export type ScoredDataWikiData = z.infer<typeof ScoredDataWikiDataSchema>;
 
-export const SourceTopStatHolderSchema = z.object({
-  name: z.string().optional().nullable(),
-  count: z.number().optional().nullable(),
+export const SignalApiCreateBodySchema = z.object({
+  /**
+   * Display name for the monitor. Must be non-blank and at most 256 characters.
+   */
+  name: z.string(),
+  /**
+   * Required initial monitor status. Accepts ACTIVE or DRAFT.
+   */
+  status: z.enum(["ACTIVE", "DRAFT"]).optional().nullable(),
+  /**
+   * How matching content is classified. Accepts EVENT, MENTIONS, or TOPIC.
+   */
+  classificationType: z.enum(["EVENT", "MENTIONS", "TOPIC"]),
+  /**
+   * Plain-language objective that defines what the monitor tracks. Must be non-blank and at most 4,096 characters.
+   */
+  monitoringObjective: z.string(),
+  /**
+   * Optional instructions used to guide monitor processing. Limited to 8,192 characters.
+   */
+  prompt: z.string().optional().nullable(),
+  dataSchema: SignalMonitoringPlanDataSchemaSchema,
+  newsletterConfig:
+    SignalMonitoringPlanNewsletterConfigSchema.optional().nullable(),
+  /**
+   * Entity groups the monitor should identify in matching content. Null is treated as an empty list.
+   */
+  entityGroups: z.array(EntityGroupSchema).optional().nullable(),
+  query: ComplexAllEndpointQuerySchema,
+  schedulePolicy: SignalSchedulePolicySchema.optional().nullable(),
+  /**
+   * Numeric ID of a visible watchlist in the monitor's organization to associate with the monitor.
+   */
+  watchlistId: z.number().optional().nullable(),
+  /**
+   * UUIDs of verified, non-archived contact points that receive monitor notifications.
+   */
+  contactPointIds: z.array(z.string()).optional().nullable(),
+  xQuery: SignalXQuerySchema.optional().nullable(),
 });
 
-export type SourceTopStatHolder = z.infer<typeof SourceTopStatHolderSchema>;
+export type SignalApiCreateBody = z.infer<typeof SignalApiCreateBodySchema>;
 
-export const SourceSchema = z.object({
-  id: z.string().optional().nullable(),
-  domain: z.string().optional().nullable(),
-  name: z.string().optional().nullable(),
-  primaryRecordId: z.string().optional().nullable(),
-  updatedAt: z.string().optional().nullable(),
-  altNames: z.array(z.string()).optional().nullable(),
-  description: z.string().optional().nullable(),
-  avgMonthlyPosts: z.number().optional().nullable(),
-  paywall: z.boolean().optional().nullable(),
-  location: SourceLocationSchema.optional().nullable(),
-  topCategories: z.array(SourceTopStatHolderSchema).optional().nullable(),
-  topTopics: z.array(SourceTopStatHolderSchema).optional().nullable(),
-  topCountries: z.array(SourceTopStatHolderSchema).optional().nullable(),
-  topLabels: z.array(SourceTopStatHolderSchema).optional().nullable(),
-  avgBiasRating: z.string().optional().nullable(),
-  adFontesBiasRating: z.string().optional().nullable(),
-  allSidesBiasRating: z.string().optional().nullable(),
-  mbfcBiasRating: z.string().optional().nullable(),
-  monthlyVisits: z.number().optional().nullable(),
-  globalRank: z.number().optional().nullable(),
-  logoLarge: ImageHolderSchema.optional().nullable(),
-  logoFavIcon: ImageHolderSchema.optional().nullable(),
-  logoSquare: ImageHolderSchema.optional().nullable(),
+export const SignalApiUpdateBodySchema = z.object({
+  /**
+   * New display name for the monitor. Must be non-blank and at most 256 characters.
+   */
+  name: z.string(),
+  /**
+   * New classification behavior. Accepts EVENT, MENTIONS, or TOPIC.
+   */
+  classificationType: z.enum(["EVENT", "MENTIONS", "TOPIC"]),
+  /**
+   * New plain-language monitoring objective. Must be non-blank and at most 4,096 characters.
+   */
+  monitoringObjective: z.string(),
+  /**
+   * New instructions used to guide monitor processing. Limited to 8,192 characters and may be cleared with null.
+   */
+  prompt: z.string().optional().nullable(),
+  dataSchema: SignalMonitoringPlanDataSchemaSchema,
+  newsletterConfig:
+    SignalMonitoringPlanNewsletterConfigSchema.optional().nullable(),
+  /**
+   * Replacement entity groups for the monitor. Send an empty list to remove all groups.
+   */
+  entityGroups: z.array(EntityGroupSchema),
+  query: ComplexAllEndpointQuerySchema,
+  schedulePolicy: SignalSchedulePolicySchema.optional().nullable(),
+  /**
+   * Numeric ID of a visible watchlist in the monitor's organization to associate with the monitor.
+   */
+  watchlistId: z.number().optional().nullable(),
+  /**
+   * Replacement UUIDs of verified, non-archived contact points. Send an empty list to remove all contact points.
+   */
+  contactPointIds: z.array(z.string()),
+  xQuery: SignalXQuerySchema.optional().nullable(),
 });
 
-export type Source = z.infer<typeof SourceSchema>;
+export type SignalApiUpdateBody = z.infer<typeof SignalApiUpdateBodySchema>;
 
 export const SourceGroupDtoSchema = z.object({
   /**
