@@ -6,7 +6,7 @@
  * Downloads the remote Perigon OpenAPI spec and produces a local snapshot
  * at `.openapi-generator/spec.local.json` that the generator consumes.
  *
- * Two transformations are applied, both driven by `scripts/hidden-fields.json`:
+ * Three transformations are applied, all driven by `scripts/spec-filters.json`:
  *
  *   1. Hidden properties: for each `<Schema>: [<field>, ...]` entry the
  *      matching property is removed from `components.schemas.<Schema>` AND
@@ -15,11 +15,17 @@
  *      reads this extension and skips the field regardless of whether the
  *      preprocessor succeeded.
  *
- *   2. Orphan schemas: after the above, we run a fixed-point pass that
+ *   2. Excluded paths: every `paths` key that matches a listed minimatch
+ *      glob is deleted so those operations never reach the generator.
+ *      A pattern with no wildcards is an exact match; use `*` / `**`
+ *      (and other minimatch syntax) to cover nested paths.
+ *
+ *   3. Orphan schemas: after the above, we run a fixed-point pass that
  *      deletes any `components.schemas` entry with zero remaining `$ref`
  *      pointers from anywhere in the spec (excluding self-references).
  *      This handles the cascade where hiding a property (e.g. `vectors`)
- *      leaves its referenced schema (e.g. `VectorData`) unused.
+ *      or dropping a path (e.g. `/v1/api/monitors`) leaves its referenced
+ *      schema unused.
  *
  * Why both layers:
  *   - The template rule makes it visible in version control *why* a field
@@ -30,37 +36,44 @@
 
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { dirname, join } from "path";
+import { Minimatch } from "minimatch";
+import { z } from "zod";
 
 const SPEC_URL = "https://api.perigon.io/v1/openapi/public-sdk";
-const CONFIG_PATH = join(process.cwd(), "scripts/hidden-fields.json");
+const CONFIG_PATH = join(process.cwd(), "scripts/spec-filters.json");
 const OUTPUT_PATH = join(process.cwd(), ".openapi-generator/spec.local.json");
 
-interface HiddenFieldsConfig {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  $description?: string;
-  [schemaName: string]: string[] | string | undefined;
-}
+// OpenAPI path params use `{uuid}`-style braces, so disable brace expansion.
+// Pin POSIX matching so generate does not depend on the host OS.
+const MINIMATCH_OPTIONS = {
+  nobrace: true,
+  nocomment: true,
+  platform: "linux",
+} as const;
 
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [k: string]: JsonValue };
+const SpecFiltersConfigSchema = z.object({
+  $description: z.string(),
+  hiddenFields: z.record(z.string(), z.array(z.string())).default({}),
+  excludedPaths: z.array(z.string()).default([]),
+});
 
-interface OpenApiSchema {
-  properties?: Record<string, Record<string, JsonValue>>;
-  required?: string[];
-  [key: string]: JsonValue | undefined;
-}
+type SpecFiltersConfig = z.infer<typeof SpecFiltersConfigSchema>;
 
-interface OpenApiSpec {
-  components?: {
-    schemas?: Record<string, OpenApiSchema>;
-  };
-  [key: string]: unknown;
-}
+const OpenApiSchemaSchema = z.looseObject({
+  properties: z.record(z.string(), z.looseObject({})).optional(),
+  required: z.array(z.string()).optional(),
+});
+
+const OpenApiSpecSchema = z.looseObject({
+  paths: z.record(z.string(), z.unknown()).optional(),
+  components: z
+    .looseObject({
+      schemas: z.record(z.string(), OpenApiSchemaSchema).optional(),
+    })
+    .optional(),
+});
+
+type OpenApiSpec = z.infer<typeof OpenApiSpecSchema>;
 
 async function fetchSpec(url: string): Promise<OpenApiSpec> {
   console.log(`🌐 Fetching OpenAPI spec from ${url}`);
@@ -70,17 +83,11 @@ async function fetchSpec(url: string): Promise<OpenApiSpec> {
       `Failed to fetch spec: HTTP ${res.status} ${res.statusText}`,
     );
   }
-  return (await res.json()) as OpenApiSpec;
+  return OpenApiSpecSchema.parse(await res.json());
 }
 
-function loadHiddenFields(path: string): Record<string, string[]> {
-  const raw = JSON.parse(readFileSync(path, "utf-8")) as HiddenFieldsConfig;
-  const out: Record<string, string[]> = {};
-  for (const [key, value] of Object.entries(raw)) {
-    if (key.startsWith("$")) continue; // metadata keys
-    if (Array.isArray(value)) out[key] = value;
-  }
-  return out;
+function loadSpecFilters(path: string): SpecFiltersConfig {
+  return SpecFiltersConfigSchema.parse(JSON.parse(readFileSync(path, "utf-8")));
 }
 
 function hideProperties(
@@ -120,12 +127,42 @@ function hideProperties(
   return { applied, missing };
 }
 
+function excludePaths(
+  spec: OpenApiSpec,
+  patterns: string[],
+): { excluded: string[]; unused: string[] } {
+  const paths = spec.paths;
+  if (!paths) return { excluded: [], unused: [...patterns] };
+
+  const matchers = patterns.map((pattern) => ({
+    pattern,
+    matcher: new Minimatch(pattern, MINIMATCH_OPTIONS),
+  }));
+  const unused = new Set(patterns);
+  const excluded: string[] = [];
+
+  for (const path of Object.keys(paths)) {
+    let matched = false;
+    for (const { pattern, matcher } of matchers) {
+      if (!matcher.match(path)) continue;
+      unused.delete(pattern);
+      matched = true;
+    }
+    if (!matched) continue;
+    delete paths[path];
+    excluded.push(path);
+    console.log(`  🚫 Excluded path ${path}`);
+  }
+
+  return { excluded, unused: [...unused] };
+}
+
 /**
  * Walk the entire spec and collect every `$ref` target that is NOT contained
  * within the given schema's own subtree (so that a schema that references
  * itself doesn't look alive on that basis alone).
  */
-function collectRefs(node: JsonValue, acc: Set<string>): void {
+function collectRefs(node: unknown, acc: Set<string>): void {
   if (node === null || typeof node !== "object") return;
   if (Array.isArray(node)) {
     for (const v of node) collectRefs(v, acc);
@@ -135,7 +172,7 @@ function collectRefs(node: JsonValue, acc: Set<string>): void {
     if (k === "$ref" && typeof v === "string") {
       acc.add(v);
     } else {
-      collectRefs(v as JsonValue, acc);
+      collectRefs(v, acc);
     }
   }
 }
@@ -152,7 +189,7 @@ function pruneOrphanSchemas(spec: OpenApiSpec): string[] {
     // Build a set of all in-use refs, excluding refs coming from inside each
     // candidate schema itself (so pure self-references don't keep a schema alive).
     const allRefs = new Set<string>();
-    collectRefs(spec as unknown as JsonValue, allRefs);
+    collectRefs(spec, allRefs);
 
     let removedThisPass = 0;
     for (const name of Object.keys(schemas)) {
@@ -163,7 +200,7 @@ function pruneOrphanSchemas(spec: OpenApiSpec): string[] {
         const saved = schemas[name];
         delete schemas[name];
         const refsWithoutSelf = new Set<string>();
-        collectRefs(spec as unknown as JsonValue, refsWithoutSelf);
+        collectRefs(spec, refsWithoutSelf);
         if (!refsWithoutSelf.has(target)) {
           pruned.push(name);
           console.log(`  🧹 Pruned orphan schema ${name}`);
@@ -187,17 +224,22 @@ function pruneOrphanSchemas(spec: OpenApiSpec): string[] {
 }
 
 async function main(): Promise<void> {
-  const hidden = loadHiddenFields(CONFIG_PATH);
-  const configuredCount = Object.values(hidden).reduce(
-    (acc, fields) => acc + fields.length,
-    0,
+  const { hiddenFields, excludedPaths } = loadSpecFilters(CONFIG_PATH);
+  const hiddenEntries = Object.entries(hiddenFields).flatMap(
+    ([schemaName, fields]) => fields.map((field) => `${schemaName}.${field}`),
+  );
+  console.log(`📋 Loaded spec filters from scripts/spec-filters.json`);
+  console.log(
+    `  🔒 ${hiddenEntries.length} hidden field(s)` +
+      (hiddenEntries.length > 0 ? `: ${hiddenEntries.join(", ")}` : ""),
   );
   console.log(
-    `📋 Loaded ${configuredCount} hidden field(s) from scripts/hidden-fields.json`,
+    `  🚫 ${excludedPaths.length} excluded path pattern(s)` +
+      (excludedPaths.length > 0 ? `: ${excludedPaths.join(", ")}` : ""),
   );
 
   const spec = await fetchSpec(SPEC_URL);
-  const { applied, missing } = hideProperties(spec, hidden);
+  const { applied, missing } = hideProperties(spec, hiddenFields);
 
   if (missing.length > 0) {
     console.warn(
@@ -206,13 +248,23 @@ async function main(): Promise<void> {
     for (const m of missing) console.warn(`     - ${m}`);
   }
 
+  const { excluded, unused } = excludePaths(spec, excludedPaths);
+
+  if (unused.length > 0) {
+    console.warn(
+      `⚠️  Skipped ${unused.length} excluded-path pattern(s) (no matching paths):`,
+    );
+    for (const pattern of unused) console.warn(`     - ${pattern}`);
+  }
+
   const pruned = pruneOrphanSchemas(spec);
 
   mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
   writeFileSync(OUTPUT_PATH, JSON.stringify(spec, null, 2), "utf-8");
   console.log(
     `✅ Wrote preprocessed spec to ${OUTPUT_PATH} ` +
-      `(${applied} field(s) hidden, ${pruned.length} orphan schema(s) pruned)`,
+      `(${applied} field(s) hidden, ${excluded.length} path(s) excluded, ` +
+      `${pruned.length} orphan schema(s) pruned)`,
   );
 }
 

@@ -108,7 +108,7 @@ const perigon = new V1Api(
 const { articles, numResults } = await perigon.searchArticles({
   q: 'technology AND startups',
   source: ['techcrunch.com'],
-  from: '2024-01-01',
+  from: new Date('2024-01-01'),
   size: 10,
 });
 ```
@@ -134,7 +134,13 @@ const { results } = await perigon.searchStories({ q: 'climate change', size: 5 }
 
 ### AI Features
 ```ts
-const { summary } = await perigon.searchSummarizer({ q: 'renewable energy', size: 10 });
+const { summary } = await perigon.searchSummarizer({
+  q: 'renewable energy',
+  summaryBody: {
+    prompt: 'Summarize the main developments in renewable energy.',
+    maxArticleCount: 10,
+  },
+});
 ```
 - [`searchSummarizer`](https://dev.perigon.io/reference?endpoint=8) – Generate AI-powered summaries from multiple articles on any topic
 

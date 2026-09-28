@@ -105,7 +105,7 @@ const perigon = new V1Api(
 const { articles, numResults } = await perigon.searchArticles({
   q: "technology AND startups",
   source: ["techcrunch.com"],
-  from: "2024-01-01",
+  from: new Date("2024-01-01"),
   size: 10,
 });
 ```
@@ -142,7 +142,10 @@ const { results } = await perigon.searchStories({
 ```ts
 const { summary } = await perigon.searchSummarizer({
   q: "renewable energy",
-  size: 10,
+  summaryBody: {
+    prompt: "Summarize the main developments in renewable energy.",
+    maxArticleCount: 10,
+  },
 });
 ```
 

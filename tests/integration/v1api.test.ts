@@ -1,6 +1,5 @@
-import { V1Api, Configuration } from "../../src";
-import { ArticleSearchParams, SummaryBody } from "../../src/models";
 import * as dotenv from "dotenv";
+import { Configuration, SummaryBody, V1Api } from "../../src";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -151,12 +150,12 @@ describeWithApiKey("Perigon API Integration Tests", () => {
 
   describe("Vector Search", () => {
     it("should perform semantic search for articles", async () => {
-      const articleSearchParams: ArticleSearchParams = {
-        prompt: "Latest advancements in artificial intelligence",
-        size: 5,
-      };
-
-      const result = await api.vectorSearchArticles({ articleSearchParams });
+      const result = await api.vectorSearchArticles({
+        articleSearchParams: {
+          prompt: "Latest advancements in artificial intelligence",
+          size: 5,
+        },
+      });
 
       // Verify response structure
       expect(result).toHaveProperty("results");
@@ -171,7 +170,6 @@ describeWithApiKey("Perigon API Integration Tests", () => {
       const result = await api.searchSummarizer({
         summaryBody,
         q: "renewable energy",
-        size: 10,
       });
 
       // Verify summary

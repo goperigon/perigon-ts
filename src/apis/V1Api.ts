@@ -19,35 +19,372 @@ import * as Models from "../models/index";
 import type {
   ArticlesVectorSearchResult,
   CompanySearchResult,
+  ContactPointListResult,
+  ContactPointResult,
   Journalist,
   JournalistSearchResult,
+  LimitsResult,
+  MonitorEventListResult,
+  MonitorListResult,
+  MonitorNewsletterListResult,
+  MonitorResult,
+  MonitorSummaryListResult,
   PeopleSearchResult,
   QuerySearchResult,
+  SourceGroupListResult,
+  SourceGroupResolveResult,
+  SourceGroupResult,
   SourceSearchResult,
   StatResult,
   StoryHistoryResult,
   StorySearchResult,
   SummarySearchResult,
   TopicSearchResult,
+  WatchlistListResult,
+  WatchlistResolveResult,
+  WatchlistResult,
   WikipediaSearchResult,
   WikipediaVectorSearchResult,
 } from "../models/index";
 import {
   ArticlesVectorSearchResultSchema,
   CompanySearchResultSchema,
+  ContactPointListResultSchema,
+  ContactPointResultSchema,
   JournalistSchema,
   JournalistSearchResultSchema,
+  LimitsResultSchema,
+  MonitorEventListResultSchema,
+  MonitorListResultSchema,
+  MonitorNewsletterListResultSchema,
+  MonitorResultSchema,
+  MonitorSummaryListResultSchema,
   PeopleSearchResultSchema,
   QuerySearchResultSchema,
+  SourceGroupListResultSchema,
+  SourceGroupResolveResultSchema,
+  SourceGroupResultSchema,
   SourceSearchResultSchema,
   StatResultSchema,
   StoryHistoryResultSchema,
   StorySearchResultSchema,
   SummarySearchResultSchema,
   TopicSearchResultSchema,
+  WatchlistListResultSchema,
+  WatchlistResolveResultSchema,
+  WatchlistResultSchema,
   WikipediaSearchResultSchema,
   WikipediaVectorSearchResultSchema,
 } from "../models/index";
+
+export const GetStoryCountsSplitByEnumSchema = z.enum([
+  "hour",
+  "day",
+  "week",
+  "month",
+]);
+export type GetStoryCountsSplitByEnum = z.infer<
+  typeof GetStoryCountsSplitByEnumSchema
+>;
+export const GetStoryCountsSplitByEnum = {
+  Hour: "hour",
+  Day: "day",
+  Week: "week",
+  Month: "month",
+} as const;
+
+export const GetStoryHistorySortByEnumSchema = z.enum([
+  "createdAt",
+  "triggeredAt",
+]);
+export type GetStoryHistorySortByEnum = z.infer<
+  typeof GetStoryHistorySortByEnumSchema
+>;
+export const GetStoryHistorySortByEnum = {
+  CreatedAt: "createdAt",
+  TriggeredAt: "triggeredAt",
+} as const;
+
+export const ListContactPointsSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListContactPointsSortOrderEnum = z.infer<
+  typeof ListContactPointsSortOrderEnumSchema
+>;
+export const ListContactPointsSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListContactPointsStatusEnumSchema = z.enum([
+  "ACTIVE",
+  "STOPPED",
+  "FAILING",
+  "ARCHIVED",
+]);
+export type ListContactPointsStatusEnum = z.infer<
+  typeof ListContactPointsStatusEnumSchema
+>;
+export const ListContactPointsStatusEnum = {
+  Active: "ACTIVE",
+  Stopped: "STOPPED",
+  Failing: "FAILING",
+  Archived: "ARCHIVED",
+} as const;
+
+export const ListContactPointsTypeEnumSchema = z.enum([
+  "EMAIL",
+  "FASTN",
+  "WEBHOOK",
+]);
+export type ListContactPointsTypeEnum = z.infer<
+  typeof ListContactPointsTypeEnumSchema
+>;
+export const ListContactPointsTypeEnum = {
+  Email: "EMAIL",
+  Fastn: "FASTN",
+  Webhook: "WEBHOOK",
+} as const;
+
+export const ListContactPointsNullsEnumSchema = z.enum(["first", "last"]);
+export type ListContactPointsNullsEnum = z.infer<
+  typeof ListContactPointsNullsEnumSchema
+>;
+export const ListContactPointsNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorEventsApiSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListMonitorEventsApiSortOrderEnum = z.infer<
+  typeof ListMonitorEventsApiSortOrderEnumSchema
+>;
+export const ListMonitorEventsApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorEventsApiNullsEnumSchema = z.enum(["first", "last"]);
+export type ListMonitorEventsApiNullsEnum = z.infer<
+  typeof ListMonitorEventsApiNullsEnumSchema
+>;
+export const ListMonitorEventsApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorNewslettersApiSortOrderEnumSchema = z.enum([
+  "asc",
+  "desc",
+]);
+export type ListMonitorNewslettersApiSortOrderEnum = z.infer<
+  typeof ListMonitorNewslettersApiSortOrderEnumSchema
+>;
+export const ListMonitorNewslettersApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorNewslettersApiNullsEnumSchema = z.enum([
+  "first",
+  "last",
+]);
+export type ListMonitorNewslettersApiNullsEnum = z.infer<
+  typeof ListMonitorNewslettersApiNullsEnumSchema
+>;
+export const ListMonitorNewslettersApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorSummariesApiSortOrderEnumSchema = z.enum([
+  "asc",
+  "desc",
+]);
+export type ListMonitorSummariesApiSortOrderEnum = z.infer<
+  typeof ListMonitorSummariesApiSortOrderEnumSchema
+>;
+export const ListMonitorSummariesApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorSummariesApiNullsEnumSchema = z.enum(["first", "last"]);
+export type ListMonitorSummariesApiNullsEnum = z.infer<
+  typeof ListMonitorSummariesApiNullsEnumSchema
+>;
+export const ListMonitorSummariesApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListMonitorsApiSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListMonitorsApiSortOrderEnum = z.infer<
+  typeof ListMonitorsApiSortOrderEnumSchema
+>;
+export const ListMonitorsApiSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListMonitorsApiStatusEnumSchema = z.enum([
+  "DRAFT",
+  "ACTIVE",
+  "STOPPED",
+  "ARCHIVED",
+]);
+export type ListMonitorsApiStatusEnum = z.infer<
+  typeof ListMonitorsApiStatusEnumSchema
+>;
+export const ListMonitorsApiStatusEnum = {
+  Draft: "DRAFT",
+  Active: "ACTIVE",
+  Stopped: "STOPPED",
+  Archived: "ARCHIVED",
+} as const;
+
+export const ListMonitorsApiClassificationTypeEnumSchema = z.enum([
+  "EVENT",
+  "MENTIONS",
+  "TOPIC",
+]);
+export type ListMonitorsApiClassificationTypeEnum = z.infer<
+  typeof ListMonitorsApiClassificationTypeEnumSchema
+>;
+export const ListMonitorsApiClassificationTypeEnum = {
+  Event: "EVENT",
+  Mentions: "MENTIONS",
+  Topic: "TOPIC",
+} as const;
+
+export const ListMonitorsApiNullsEnumSchema = z.enum(["first", "last"]);
+export type ListMonitorsApiNullsEnum = z.infer<
+  typeof ListMonitorsApiNullsEnumSchema
+>;
+export const ListMonitorsApiNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListSourceGroupsSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListSourceGroupsSortOrderEnum = z.infer<
+  typeof ListSourceGroupsSortOrderEnumSchema
+>;
+export const ListSourceGroupsSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListSourceGroupsNullsEnumSchema = z.enum(["first", "last"]);
+export type ListSourceGroupsNullsEnum = z.infer<
+  typeof ListSourceGroupsNullsEnumSchema
+>;
+export const ListSourceGroupsNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const ListWatchlistsSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListWatchlistsSortOrderEnum = z.infer<
+  typeof ListWatchlistsSortOrderEnumSchema
+>;
+export const ListWatchlistsSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListWatchlistsNullsEnumSchema = z.enum(["first", "last"]);
+export type ListWatchlistsNullsEnum = z.infer<
+  typeof ListWatchlistsNullsEnumSchema
+>;
+export const ListWatchlistsNullsEnum = {
+  First: "first",
+  Last: "last",
+} as const;
+
+export const SearchWikipediaSortByEnumSchema = z.enum([
+  "relevance",
+  "revisionTsDesc",
+  "revisionTsAsc",
+  "pageViewsDesc",
+  "pageViewsAsc",
+  "scrapedAtDesc",
+  "scrapedAtAsc",
+]);
+export type SearchWikipediaSortByEnum = z.infer<
+  typeof SearchWikipediaSortByEnumSchema
+>;
+export const SearchWikipediaSortByEnum = {
+  Relevance: "relevance",
+  RevisionTsDesc: "revisionTsDesc",
+  RevisionTsAsc: "revisionTsAsc",
+  PageViewsDesc: "pageViewsDesc",
+  PageViewsAsc: "pageViewsAsc",
+  ScrapedAtDesc: "scrapedAtDesc",
+  ScrapedAtAsc: "scrapedAtAsc",
+} as const;
+
+export const ActivateMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to activate.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ActivateMonitorApiRequestSchema = z.object({
+  ...ActivateMonitorApiPathSchema.shape,
+});
+
+export type ActivateMonitorApiRequest = z.input<
+  typeof ActivateMonitorApiRequestSchema
+>;
+
+export const ArchiveMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to archive.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ArchiveMonitorApiRequestSchema = z.object({
+  ...ArchiveMonitorApiPathSchema.shape,
+});
+
+export type ArchiveMonitorApiRequest = z.input<
+  typeof ArchiveMonitorApiRequestSchema
+>;
+
+export const CreateContactPointBodySchema = z.object({
+  /**
+   * Parameter contactPointRequestBody
+   * @required
+   */
+  contactPointRequestBody: Models.ContactPointRequestBodySchema,
+});
+
+export const CreateContactPointRequestSchema = z.object({
+  ...CreateContactPointBodySchema.shape,
+});
+
+export type CreateContactPointRequest = z.input<
+  typeof CreateContactPointRequestSchema
+>;
+
+export const CreateMonitorApiBodySchema = z.object({
+  /**
+   * Parameter signalApiCreateBody
+   * @required
+   */
+  signalApiCreateBody: Models.SignalApiCreateBodySchema,
+});
+
+export const CreateMonitorApiRequestSchema = z.object({
+  ...CreateMonitorApiBodySchema.shape,
+});
+
+export type CreateMonitorApiRequest = z.input<
+  typeof CreateMonitorApiRequestSchema
+>;
 
 export const CreateSourceGroupBodySchema = z.object({
   /**
@@ -79,6 +416,22 @@ export const CreateWatchlistRequestSchema = z.object({
 
 export type CreateWatchlistRequest = z.input<
   typeof CreateWatchlistRequestSchema
+>;
+
+export const DeleteContactPointPathSchema = z.object({
+  /**
+   * Parameter uuid
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const DeleteContactPointRequestSchema = z.object({
+  ...DeleteContactPointPathSchema.shape,
+});
+
+export type DeleteContactPointRequest = z.input<
+  typeof DeleteContactPointRequestSchema
 >;
 
 export const DeleteSourceGroupPathSchema = z.object({
@@ -113,6 +466,22 @@ export type DeleteWatchlistRequest = z.input<
   typeof DeleteWatchlistRequestSchema
 >;
 
+export const GetContactPointPathSchema = z.object({
+  /**
+   * Parameter uuid
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const GetContactPointRequestSchema = z.object({
+  ...GetContactPointPathSchema.shape,
+});
+
+export type GetContactPointRequest = z.input<
+  typeof GetContactPointRequestSchema
+>;
+
 export const GetJournalistByIdPathSchema = z.object({
   /**
    * Parameter id
@@ -128,6 +497,33 @@ export const GetJournalistByIdRequestSchema = z.object({
 export type GetJournalistByIdRequest = z.input<
   typeof GetJournalistByIdRequestSchema
 >;
+
+export const GetLimitsQuerySchema = z.object({
+  /**
+   * Optional list of API keys whose validity and status should be checked. Each key is reported as valid only if it exists and belongs to your account.
+   */
+  apiKeys: z.array(z.string()).optional(),
+});
+
+export const GetLimitsRequestSchema = z.object({
+  ...GetLimitsQuerySchema.shape,
+});
+
+export type GetLimitsRequest = z.input<typeof GetLimitsRequestSchema>;
+
+export const GetMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const GetMonitorApiRequestSchema = z.object({
+  ...GetMonitorApiPathSchema.shape,
+});
+
+export type GetMonitorApiRequest = z.input<typeof GetMonitorApiRequestSchema>;
 
 export const GetSourceGroupPathSchema = z.object({
   /**
@@ -161,31 +557,19 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   excludeClusterId: z.array(z.string()).optional(),
   /**
-   * String. Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
-   */
-  sortBy: Models.SortBySchema.optional(),
-  /**
-   * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
-   */
-  page: z.number().optional(),
-  /**
-   * Integer. The number of articles to return per page in the paginated response.
-   */
-  size: z.number().optional(),
-  /**
-   * Date. \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   * Filter for stories created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
    */
   from: z.date().optional(),
   /**
-   * Date. \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
+   * Filter for stories created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
    */
   to: z.date().optional(),
   /**
-   * Date. Filter for stories created after this date. Alternative parameter for filtering by story creation date.
+   * Filter for stories initialized on or after this date. A story is initialized when it becomes visible with generated story data.
    */
   initializedFrom: z.date().optional(),
   /**
-   * Date. Filter for stories created before this date. Alternative parameter for filtering by story creation date.
+   * Filter for stories initialized on or before this date. A story is initialized when it becomes visible with generated story data.
    */
   initializedTo: z.date().optional(),
   /**
@@ -201,11 +585,11 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   topic: z.array(z.string()).optional(),
   /**
-   * String Array. Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
+   * String Array. Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use 'none' to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
    */
   category: z.array(z.string()).optional(),
   /**
-   * String Array. Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
+   * String Array. Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy=/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
    */
   taxonomy: z.array(z.string()).optional(),
   /**
@@ -213,7 +597,7 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   source: z.array(z.string()).optional(),
   /**
-   * String Array. Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
+   * String Array. Filter stories that contain articles from publishers in Perigon's curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
    */
   sourceGroup: z.array(z.string()).optional(),
   /**
@@ -249,6 +633,14 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   companySymbol: z.array(z.string()).optional(),
   /**
+   * String Array. Filter stories by ISIN codes of top mentioned companies (International Securities Identification Numbers). Returns stories where companies with these ISINs appear prominently. For available company entities and their ISINs, consult the /companies endpoint.
+   */
+  companyIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter stories by ISIN codes on ticker listings of top mentioned companies (symbols.isin). Distinct from companyIsin, which matches the company-level ISIN. Returns stories where those companies appear prominently. For available company entities and their listing ISINs, consult the /companies endpoint.
+   */
+  companySymbolIsin: z.array(z.string()).optional(),
+  /**
    * String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
    */
   country: z.array(z.string()).optional(),
@@ -277,76 +669,38 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   nameExists: z.boolean().optional(),
   /**
-   * Float. Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Filter stories with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Filter stories with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Filter stories with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Filter stories with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo: z.number().optional(),
   /**
-   * Float. Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Filter stories with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * Boolean.
-   */
-  showStoryPageInfo: z.boolean().optional(),
-  /**
-   * Boolean. Show total number of results. By default set to false, will cap result count at 10000.
-   */
-  showNumResults: z.boolean().optional(),
-  /**
-   * Boolean. Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
+   * Boolean. Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates=true, all stories are shown.
    */
   showDuplicates: z.boolean().optional(),
   /**
-   * Boolean. When set to true, enables text highlighting in search results.
-   */
-  showHighlighting: z.boolean().optional(),
-  /**
-   * Integer. Specifies the size in characters of each highlighted text fragment. Defaults to 100 if not specified.
-   */
-  highlightFragmentSize: z.number().optional(),
-  /**
-   * Integer. Controls the maximum number of highlighted fragments to return per field.
-   */
-  highlightNumFragments: z.number().optional(),
-  /**
-   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
-   */
-  highlightPreTag: z.string().optional(),
-  /**
-   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
-   */
-  highlightPostTag: z.string().optional(),
-  /**
-   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
-   */
-  highlightQ: z.string().optional(),
-  /**
-   * Boolean. Preview 5 articles from the cluster.
-   */
-  expandArticles: z.boolean().optional(),
-  /**
-   * String. The value for \&#39;splitBy\&#39; must be one of the following: HOUR, DAY, WEEK, MONTH, or NONE.
-   * @type SplitByEnum
-   * @values 'HOUR', 'DAY', 'WEEK', 'MONTH', 'NONE'
+   * Time interval used to group story counts. Accepts hour, day, week, or month and defaults to month.
    * @required
    */
-  splitBy: z.enum(["HOUR", "DAY", "WEEK", "MONTH", "NONE"]),
+  splitBy: GetStoryCountsSplitByEnumSchema,
 });
 
 export const GetStoryCountsRequestSchema = z.object({
@@ -357,23 +711,21 @@ export type GetStoryCountsRequest = z.input<typeof GetStoryCountsRequestSchema>;
 
 export const GetStoryHistoryQuerySchema = z.object({
   /**
-   * String Array. Filter to specific story. Passing a cluster ID will filter results to only the content found within the cluster.
+   * Filter history records by story cluster ID. Multiple values are combined with OR.
    */
   clusterId: z.array(z.string()).optional(),
   /**
-   * Date. \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   * Filter for history records created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
    */
   from: z.date().optional(),
   /**
-   * Date. \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59.
+   * Filter for history records created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
    */
   to: z.date().optional(),
   /**
-   * String. Sort stories by count, creation date (createdAt), story refresh trigger date (triggeredAt).
-   * @type SortByEnum
-   * @values 'createdAt', 'triggeredAt'
+   * Field used to sort history records in descending order. Accepts createdAt or triggeredAt and defaults to createdAt.
    */
-  sortBy: z.enum(["createdAt", "triggeredAt"]).optional(),
+  sortBy: GetStoryHistorySortByEnumSchema.optional(),
   /**
    * Integer. Zero-based page number. From 0 to 10000. See the Pagination section for limitations.
    */
@@ -383,7 +735,7 @@ export const GetStoryHistoryQuerySchema = z.object({
    */
   size: z.number().optional(),
   /**
-   * Boolean. Filter to only include clusters that have a changelog or not.
+   * Filter by whether a history record contains a changelog. Use true to require one or false to require its absence.
    */
   changelogExists: z.boolean().optional(),
 });
@@ -410,6 +762,267 @@ export const GetWatchlistRequestSchema = z.object({
 
 export type GetWatchlistRequest = z.input<typeof GetWatchlistRequestSchema>;
 
+export const ListContactPointsQuerySchema = z.object({
+  /**
+   * Parameter status
+   */
+  status: ListContactPointsStatusEnumSchema.optional(),
+  /**
+   * Parameter type
+   */
+  type: ListContactPointsTypeEnumSchema.optional(),
+  /**
+   * Parameter sortBy
+   * @required
+   */
+  sortBy: Models.ContactPointSortBySchema,
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListContactPointsSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListContactPointsNullsEnumSchema.optional(),
+});
+
+export const ListContactPointsRequestSchema = z.object({
+  ...ListContactPointsQuerySchema.shape,
+});
+
+export type ListContactPointsRequest = z.input<
+  typeof ListContactPointsRequestSchema
+>;
+
+export const ListMonitorEventsApiQuerySchema = z.object({
+  /**
+   * Filter for events with this exact event type.
+   */
+  eventType: z.string().optional(),
+  /**
+   * Filter for events created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Filter for events created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Required field used to sort events. Accepts createdAt, updatedAt, or eventDate.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorEventsApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorEventsApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorEventsApiPathSchema = z.object({
+  /**
+   * UUID of the monitor whose events to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ListMonitorEventsApiRequestSchema = z.object({
+  ...ListMonitorEventsApiQuerySchema.shape,
+
+  ...ListMonitorEventsApiPathSchema.shape,
+});
+
+export type ListMonitorEventsApiRequest = z.input<
+  typeof ListMonitorEventsApiRequestSchema
+>;
+
+export const ListMonitorNewslettersApiQuerySchema = z.object({
+  /**
+   * Filter by newsletter title using a case-insensitive partial match.
+   */
+  title: z.string().optional(),
+  /**
+   * Filter for newsletters created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Filter for newsletters created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Required field used to sort newsletters. Accepts createdAt or updatedAt.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorNewslettersApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorNewslettersApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorNewslettersApiPathSchema = z.object({
+  /**
+   * UUID of the monitor whose newsletters to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ListMonitorNewslettersApiRequestSchema = z.object({
+  ...ListMonitorNewslettersApiQuerySchema.shape,
+
+  ...ListMonitorNewslettersApiPathSchema.shape,
+});
+
+export type ListMonitorNewslettersApiRequest = z.input<
+  typeof ListMonitorNewslettersApiRequestSchema
+>;
+
+export const ListMonitorSummariesApiQuerySchema = z.object({
+  /**
+   * Filter for summaries created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  from: z.date().optional(),
+  /**
+   * Filter for summaries created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
+   */
+  to: z.date().optional(),
+  /**
+   * Required field used to sort summaries. Accepts createdAt or updatedAt.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorSummariesApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorSummariesApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorSummariesApiPathSchema = z.object({
+  /**
+   * UUID of the monitor whose summaries to retrieve.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const ListMonitorSummariesApiRequestSchema = z.object({
+  ...ListMonitorSummariesApiQuerySchema.shape,
+
+  ...ListMonitorSummariesApiPathSchema.shape,
+});
+
+export type ListMonitorSummariesApiRequest = z.input<
+  typeof ListMonitorSummariesApiRequestSchema
+>;
+
+export const ListMonitorsApiQuerySchema = z.object({
+  /**
+   * Filter by one or more monitor UUIDs. Multiple values are combined with OR.
+   */
+  uuid: z.array(z.string()).optional(),
+  /**
+   * Filter by monitor name using a case-insensitive partial match.
+   */
+  name: z.string().optional(),
+  /**
+   * Filter by status: DRAFT, ACTIVE, STOPPED, or ARCHIVED. When omitted, archived monitors are excluded.
+   */
+  status: ListMonitorsApiStatusEnumSchema.optional(),
+  /**
+   * Filter by classification type: EVENT, MENTIONS, or TOPIC. Multiple values are combined with OR.
+   */
+  classificationType: ListMonitorsApiClassificationTypeEnumSchema.optional(),
+  /**
+   * Required field used to sort monitors. Accepts createdAt or updatedAt.
+   * @required
+   */
+  sortBy: z.string(),
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListMonitorsApiSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListMonitorsApiNullsEnumSchema.optional(),
+});
+
+export const ListMonitorsApiRequestSchema = z.object({
+  ...ListMonitorsApiQuerySchema.shape,
+});
+
+export type ListMonitorsApiRequest = z.input<
+  typeof ListMonitorsApiRequestSchema
+>;
+
 export const ListSourceGroupsQuerySchema = z.object({
   /**
    * Parameter name
@@ -420,24 +1033,29 @@ export const ListSourceGroupsQuerySchema = z.object({
    */
   domain: z.string().optional(),
   /**
-   * The page number to retrieve.   _Starting from 0_.   _Default value 0_.
-   */
-  page: z.string().optional(),
-  /**
-   * The number of items per page.   _Must be at least 1_.   _Default value 10_.
-   */
-  size: z.string().optional(),
-  /**
-   * Field to sort by.
+   * Parameter sortBy
    * @required
    */
-  sortBy: z.string(),
+  sortBy: Models.SourceGroupSortBySchema,
 
   /**
-   * The sort order for the results.   _Available values: \&#39;asc\&#39; or \&#39;desc\&#39;_.
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
    * @required
    */
-  sortOrder: z.string(),
+  sortOrder: ListSourceGroupsSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListSourceGroupsNullsEnumSchema.optional(),
 });
 
 export const ListSourceGroupsRequestSchema = z.object({
@@ -454,24 +1072,29 @@ export const ListWatchlistsQuerySchema = z.object({
    */
   name: z.string().optional(),
   /**
-   * The page number to retrieve.   _Starting from 0_.   _Default value 0_.
-   */
-  page: z.string().optional(),
-  /**
-   * The number of items per page.   _Must be at least 1_.   _Default value 10_.
-   */
-  size: z.string().optional(),
-  /**
-   * Field to sort by.
+   * Parameter sortBy
    * @required
    */
-  sortBy: z.string(),
+  sortBy: Models.WatchlistSortBySchema,
 
   /**
-   * The sort order for the results.   _Available values: \&#39;asc\&#39; or \&#39;desc\&#39;_.
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
    * @required
    */
-  sortOrder: z.string(),
+  sortOrder: ListWatchlistsSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListWatchlistsNullsEnumSchema.optional(),
 });
 
 export const ListWatchlistsRequestSchema = z.object({
@@ -479,6 +1102,22 @@ export const ListWatchlistsRequestSchema = z.object({
 });
 
 export type ListWatchlistsRequest = z.input<typeof ListWatchlistsRequestSchema>;
+
+export const PauseMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to pause.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const PauseMonitorApiRequestSchema = z.object({
+  ...PauseMonitorApiPathSchema.shape,
+});
+
+export type PauseMonitorApiRequest = z.input<
+  typeof PauseMonitorApiRequestSchema
+>;
 
 export const ResolveSourceGroupsQuerySchema = z.object({
   /**
@@ -532,7 +1171,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   summary: z.string().optional(),
   /**
-   * String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   * String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source=cnn.com&url=travel.
    */
   url: z.string().optional(),
   /**
@@ -564,19 +1203,19 @@ export const SearchArticlesQuerySchema = z.object({
    */
   to: z.date().optional(),
   /**
-   * Date. Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles added to Perigon's system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom: z.date().optional(),
   /**
-   * Date. Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles added to Perigon's system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo: z.date().optional(),
   /**
-   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles refreshed/updated in Perigon's system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom: z.date().optional(),
   /**
-   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles refreshed/updated in Perigon's system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo: z.date().optional(),
   /**
@@ -588,7 +1227,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   source: z.array(z.string()).optional(),
   /**
-   * String Array. Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
+   * String Array. Filter articles using Perigon's curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
    */
   sourceGroup: z.array(z.string()).optional(),
   /**
@@ -652,7 +1291,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   excludeLabel: z.array(z.string()).optional(),
   /**
-   * String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   * String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use 'none' to search uncategorized articles.
    */
   category: z.array(z.string()).optional(),
   /**
@@ -668,7 +1307,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   excludeTopic: z.array(z.string()).optional(),
   /**
-   * String. Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
+   * String. Returns only articles that contain links to the specified URL pattern. Matches against the 'links' field in article responses.
    */
   linkTo: z.string().optional(),
   /**
@@ -704,7 +1343,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   county: z.array(z.string()).optional(),
   /**
-   * String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   * String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., 'Los Angeles County', 'Cook County'). This parameter allows for more granular geographic filter
    */
   excludeCounty: z.array(z.string()).optional(),
   /**
@@ -720,7 +1359,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   excludeLocationsCountry: z.array(z.string()).optional(),
   /**
-   * String Array. Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   * String Array. Return all articles that have the specified location. Location attributes are delimited by ':' between key and value, and '::' between attributes. Example: 'city:New York::state:NY'.
    */
   location: z.array(z.string()).optional(),
   /**
@@ -772,7 +1411,7 @@ export const SearchArticlesQuerySchema = z.object({
    */
   sourceLat: z.number().optional(),
   /**
-   * Float. Latitude of the center point to search articles created by local publications.
+   * Float. Longitude of the center point to search articles created by local publications.
    */
   sourceLon: z.number().optional(),
   /**
@@ -820,6 +1459,22 @@ export const SearchArticlesQuerySchema = z.object({
    */
   companySymbol: z.array(z.string()).optional(),
   /**
+   * String Array. Filter articles by company ISIN codes (International Securities Identification Numbers). For available company entities and their ISINs, consult the /companies endpoint.
+   */
+  companyIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by ISIN codes on company ticker listings (symbols.isin). Distinct from companyIsin, which matches the company-level ISIN. For available company entities and their listing ISINs, consult the /companies endpoint.
+   */
+  companySymbolIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles related to companies with specific ISIN codes. Creates an AND-exclude filter to remove content about these companies. For available company entities and their ISINs, consult the /companies endpoint.
+   */
+  excludeCompanyIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles related to companies whose ticker listings have these ISIN codes (symbols.isin). Distinct from excludeCompanyIsin, which matches the company-level ISIN. For available company entities and their listing ISINs, consult the /companies endpoint.
+   */
+  excludeCompanySymbolIsin: z.array(z.string()).optional(),
+  /**
    * String Array. A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
    */
   excludeCompanySymbol: z.array(z.string()).optional(),
@@ -852,11 +1507,11 @@ export const SearchArticlesQuerySchema = z.object({
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)
+   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy=/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)
    */
   taxonomy: z.array(z.string()).optional(),
   /**
-   * String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   * String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy=/Finance
    */
   prefixTaxonomy: z.string().optional(),
   /**
@@ -872,15 +1527,15 @@ export const SearchArticlesQuerySchema = z.object({
    */
   highlightNumFragments: z.number().optional(),
   /**
-   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to '<em>' if not specified.
    */
   highlightPreTag: z.string().optional(),
   /**
-   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to '</em>' if not specified.
    */
   highlightPostTag: z.string().optional(),
   /**
-   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query 'q=climate change' with 'highlightQ=renewable OR solar' will highlight terms 'renewable' and 'solar' in results about climate change.
    */
   highlightQ: z.string().optional(),
 });
@@ -900,6 +1555,10 @@ export const SearchCompaniesQuerySchema = z.object({
    * String Array. Filter by company stock ticker symbols (e.g., AAPL, MSFT, GOOGL). Multiple values create an OR filter.
    */
   symbol: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter by ISIN codes on company ticker listings. Matches symbols.isin rather than the company-level ISIN. Multiple values create an OR filter.
+   */
+  symbolIsin: z.array(z.string()).optional(),
   /**
    * String Array. Filter by company domains or websites (e.g., apple.com, microsoft.com). Multiple values create an OR filter.
    */
@@ -980,6 +1639,10 @@ export const SearchJournalistsQuerySchema = z.object({
    */
   twitter: z.string().optional(),
   /**
+   * String. Sort journalists from highest to lowest by avgMonthlyPosts, linkedinConnections, or linkedinFollowers. When omitted, results are sorted by relevance.
+   */
+  sortBy: Models.JournalistsSortBySchema.optional(),
+  /**
    * Integer. The number of journalists to return per page in the paginated response.
    */
   size: z.number().optional(),
@@ -992,7 +1655,7 @@ export const SearchJournalistsQuerySchema = z.object({
    */
   source: z.array(z.string()).optional(),
   /**
-   * String Array. Filter journalists by the top topics they cover. Topics are more specific themes that the article is about. Examples of topics: \&#39;Economy\&#39;, \&#39;Real Estate\&#39;, \&#39;Cryptocurrency\&#39;. If multiple parameters are passed, they will be applied as OR operations. (Searches inside the topCategories data field.)
+   * String Array. Filter journalists by the top topics they cover. Topics are more specific themes that the article is about. Examples of topics: 'Economy', 'Real Estate', 'Cryptocurrency'. If multiple parameters are passed, they will be applied as OR operations. (Searches inside the topCategories data field.)
    */
   topic: z.array(z.string()).optional(),
   /**
@@ -1000,7 +1663,7 @@ export const SearchJournalistsQuerySchema = z.object({
    */
   category: z.array(z.string()).optional(),
   /**
-   * String Array. Filter journalists by the most common label tagged to the articles they publish. This accepts labels like \&#39;Opinion\&#39; or \&#39;Pop Culture\&#39;. (Searches the topLabels data field.)
+   * String Array. Filter journalists by the most common label tagged to the articles they publish. This accepts labels like 'Opinion' or 'Pop Culture'. (Searches the topLabels data field.)
    */
   label: z.array(z.string()).optional(),
   /**
@@ -1015,6 +1678,26 @@ export const SearchJournalistsQuerySchema = z.object({
    * String Array. Filter journalists by countries they commonly cover in their reporting. Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). Multiple values create an OR filter.
    */
   country: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter journalists by their profile location country (`locations.country`). Uses ISO 3166-1 alpha-2 two-letter country codes in lowercase (e.g., us, gb, jp). `uk` is accepted as an alias for `gb`. Distinct from `country`, which filters reporting focus (`topCountries`). Multiple values create an OR filter.
+   */
+  locationCountry: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter journalists by their profile location state or region (`locations.state`). For US locations this is the two-letter state code (e.g., NY, CA). Multiple values create an OR filter.
+   */
+  locationState: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter journalists by their profile location county (`locations.county`). County names should match stored metadata (e.g., 'Los Angeles County', 'Cook County'). Multiple values create an OR filter.
+   */
+  locationCounty: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter journalists by their profile location city (`locations.city`). Multiple values create an OR filter.
+   */
+  locationCity: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter journalists by their profile location area — neighborhood, borough, or district (`locations.area`). Multiple values create an OR filter.
+   */
+  locationArea: z.array(z.string()).optional(),
   /**
    * Date. Filter for journalist profiles updated on or after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
@@ -1039,7 +1722,7 @@ export type SearchJournalistsRequest = z.input<
 
 export const SearchPeopleQuerySchema = z.object({
   /**
-   * String. Search by person\&#39;s name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
+   * String. Search by person's name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
    */
   name: z.string().optional(),
   /**
@@ -1086,7 +1769,7 @@ export const SearchSourcesQuerySchema = z.object({
   /**
    * String. Determines the source sorting order. Options include relevance (default, best match to query), globalRank (by overall traffic and popularity), monthlyVisits (by total monthly visitor count), and avgMonthlyPosts (by number of articles published monthly).
    */
-  sortBy: Models.SortBySchema.optional(),
+  sortBy: Models.SourcesSortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -1195,7 +1878,7 @@ export const SearchStoriesQuerySchema = z.object({
   /**
    * String. Determines the story sorting order. Options include createdAt (default, when stories first emerged), updatedAt (when stories received new articles, best for tracking developing events), relevance (best match to query), count (by unique article count), and totalCount (by total article count including reprints).
    */
-  sortBy: Models.SortBySchema.optional(),
+  sortBy: Models.ClustersListSortBySchema.optional(),
   /**
    * Integer. The specific page of results to retrieve in the paginated response. Starts at 0.
    */
@@ -1205,19 +1888,19 @@ export const SearchStoriesQuerySchema = z.object({
    */
   size: z.number().optional(),
   /**
-   * Date. \&#39;from\&#39; filter, will search stories created after the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T00:00:00
+   * Filter for stories created on or after this date. Accepts ISO 8601 or yyyy-mm-dd format.
    */
   from: z.date().optional(),
   /**
-   * Date. \&#39;to\&#39; filter, will search stories created before the specified date, the date could be passed as ISO or \&#39;yyyy-mm-dd\&#39;. Add time in ISO format, ie. 2023-03-01T23:59:59
+   * Filter for stories created on or before this date. Accepts ISO 8601 or yyyy-mm-dd format.
    */
   to: z.date().optional(),
   /**
-   * Date. Filter for stories created after this date. Alternative parameter for filtering by story creation date.
+   * Filter for stories initialized on or after this date. A story is initialized when it becomes visible with generated story data.
    */
   initializedFrom: z.date().optional(),
   /**
-   * Date. Filter for stories created before this date. Alternative parameter for filtering by story creation date.
+   * Filter for stories initialized on or before this date. A story is initialized when it becomes visible with generated story data.
    */
   initializedTo: z.date().optional(),
   /**
@@ -1233,11 +1916,11 @@ export const SearchStoriesQuerySchema = z.object({
    */
   topic: z.array(z.string()).optional(),
   /**
-   * String Array. Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use \&#39;none\&#39; to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
+   * String Array. Filter stories by broad content categories such as Politics, Tech, Sports, Business, or Finance. Use 'none' to find uncategorized stories. Categories are derived from the articles within each story. Multiple values create an OR filter.
    */
   category: z.array(z.string()).optional(),
   /**
-   * String Array. Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy&#x3D;/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
+   * String Array. Filter stories by Google Content Categories. Must pass the full hierarchical path of the category. Example: taxonomy=/Finance/Banking/Other,/Finance/Investing/Funds. Stories are categorized based on their constituent articles. Multiple values create an OR filter.
    */
   taxonomy: z.array(z.string()).optional(),
   /**
@@ -1245,7 +1928,7 @@ export const SearchStoriesQuerySchema = z.object({
    */
   source: z.array(z.string()).optional(),
   /**
-   * String Array. Filter stories that contain articles from publishers in Perigon\&#39;s curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
+   * String Array. Filter stories that contain articles from publishers in Perigon's curated bundles (e.g., top100, top25crypto). A story will match if it contains at least one article from any publisher in the specified bundles. Multiple values create an OR filter.
    */
   sourceGroup: z.array(z.string()).optional(),
   /**
@@ -1281,6 +1964,14 @@ export const SearchStoriesQuerySchema = z.object({
    */
   companySymbol: z.array(z.string()).optional(),
   /**
+   * String Array. Filter stories by ISIN codes of top mentioned companies (International Securities Identification Numbers). Returns stories where companies with these ISINs appear prominently. For available company entities and their ISINs, consult the /companies endpoint.
+   */
+  companyIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter stories by ISIN codes on ticker listings of top mentioned companies (symbols.isin). Distinct from companyIsin, which matches the company-level ISIN. Returns stories where those companies appear prominently. For available company entities and their listing ISINs, consult the /companies endpoint.
+   */
+  companySymbolIsin: z.array(z.string()).optional(),
+  /**
    * String Array. Country code to filter by country. If multiple parameters are passed, they will be applied as OR operations.
    */
   country: z.array(z.string()).optional(),
@@ -1309,27 +2000,27 @@ export const SearchStoriesQuerySchema = z.object({
    */
   nameExists: z.boolean().optional(),
   /**
-   * Float. Filter articles with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Filter stories with an aggregate positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentFrom: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
+   * Filter stories with an aggregate positive sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
   positiveSentimentTo: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Filter stories with an aggregate neutral sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentFrom: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
+   * Filter stories with an aggregate neutral sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger neutral tone.
    */
   neutralSentimentTo: z.number().optional(),
   /**
-   * Float. Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Filter stories with an aggregate negative sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentFrom: z.number().optional(),
   /**
-   * Float. Filter articles with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
+   * Filter stories with an aggregate negative sentiment score less than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger negative tone.
    */
   negativeSentimentTo: z.number().optional(),
   /**
@@ -1341,7 +2032,7 @@ export const SearchStoriesQuerySchema = z.object({
    */
   showNumResults: z.boolean().optional(),
   /**
-   * Boolean. Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates&#x3D;true, all stories are shown.
+   * Boolean. Stories are deduplicated by default. If a story is deduplicated, all future articles are merged into the original story. duplicateOf field contains the original cluster Id. When showDuplicates=true, all stories are shown.
    */
   showDuplicates: z.boolean().optional(),
   /**
@@ -1357,15 +2048,15 @@ export const SearchStoriesQuerySchema = z.object({
    */
   highlightNumFragments: z.number().optional(),
   /**
-   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to '<em>' if not specified.
    */
   highlightPreTag: z.string().optional(),
   /**
-   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to '</em>' if not specified.
    */
   highlightPostTag: z.string().optional(),
   /**
-   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query 'q=climate change' with 'highlightQ=renewable OR solar' will highlight terms 'renewable' and 'solar' in results about climate change.
    */
   highlightQ: z.string().optional(),
   /**
@@ -1402,7 +2093,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   summary: z.string().optional(),
   /**
-   * String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source&#x3D;cnn.com&amp;url&#x3D;travel.
+   * String. Search query on the url field. Semantic similar to q parameter. E.g. could be used for querying certain website sections, e.g. source=cnn.com&url=travel.
    */
   url: z.string().optional(),
   /**
@@ -1422,10 +2113,6 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   page: z.number().optional(),
   /**
-   * Integer. The number of articles to return per page in the paginated response.
-   */
-  size: z.number().optional(),
-  /**
    * Date. Filter for articles published after this date. Accepts ISO 8601 format (e.g., 2023-03-01T00:00:00) or yyyy-mm-dd format.
    */
   from: z.date().optional(),
@@ -1434,19 +2121,19 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   to: z.date().optional(),
   /**
-   * Date. Filter for articles added to Perigon\&#39;s system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles added to Perigon's system after this date. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   addDateFrom: z.date().optional(),
   /**
-   * Date. Filter for articles added to Perigon\&#39;s system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles added to Perigon's system before this date. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   addDateTo: z.date().optional(),
   /**
-   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
+   * Date. Filter for articles refreshed/updated in Perigon's system after this date. In most cases yields similar results to addDateFrom but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T00:00:00) or yyyy-mm-dd format.
    */
   refreshDateFrom: z.date().optional(),
   /**
-   * Date. Filter for articles refreshed/updated in Perigon\&#39;s system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
+   * Date. Filter for articles refreshed/updated in Perigon's system before this date. In most cases yields similar results to addDateTo but can differ for updated content. Accepts ISO 8601 format (e.g., 2022-02-01T23:59:59) or yyyy-mm-dd format.
    */
   refreshDateTo: z.date().optional(),
   /**
@@ -1458,7 +2145,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   source: z.array(z.string()).optional(),
   /**
-   * String Array. Filter articles using Perigon\&#39;s curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
+   * String Array. Filter articles using Perigon's curated publisher bundles (e.g., top100, top25crypto). Multiple values create an OR filter to include articles from any of the specified bundles.
    */
   sourceGroup: z.array(z.string()).optional(),
   /**
@@ -1522,7 +2209,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   excludeLabel: z.array(z.string()).optional(),
   /**
-   * String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use \&#39;none\&#39; to search uncategorized articles.
+   * String Array. Filter by categories. Categories are general themes that the article is about. Examples of categories: Tech, Politics, etc. If multiple parameters are passed, they will be applied as OR operations. Use 'none' to search uncategorized articles.
    */
   category: z.array(z.string()).optional(),
   /**
@@ -1538,7 +2225,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   excludeTopic: z.array(z.string()).optional(),
   /**
-   * String. Returns only articles that contain links to the specified URL pattern. Matches against the \&#39;links\&#39; field in article responses.
+   * String. Returns only articles that contain links to the specified URL pattern. Matches against the 'links' field in article responses.
    */
   linkTo: z.string().optional(),
   /**
@@ -1574,7 +2261,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   county: z.array(z.string()).optional(),
   /**
-   * String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., \&#39;Los Angeles County\&#39;, \&#39;Cook County\&#39;). This parameter allows for more granular geographic filter
+   * String Array. Excludes articles from specific counties or administrative divisions in the search results. Accepts either a single county name or a list of county names. County names should match the format used in article metadata (e.g., 'Los Angeles County', 'Cook County'). This parameter allows for more granular geographic filter
    */
   excludeCounty: z.array(z.string()).optional(),
   /**
@@ -1590,7 +2277,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   excludeLocationsCountry: z.array(z.string()).optional(),
   /**
-   * String Array. Return all articles that have the specified location. Location attributes are delimited by \&#39;:\&#39; between key and value, and \&#39;::\&#39; between attributes. Example: \&#39;city:New York::state:NY\&#39;.
+   * String Array. Return all articles that have the specified location. Location attributes are delimited by ':' between key and value, and '::' between attributes. Example: 'city:New York::state:NY'.
    */
   location: z.array(z.string()).optional(),
   /**
@@ -1642,7 +2329,7 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   sourceLat: z.number().optional(),
   /**
-   * Float. Latitude of the center point to search articles created by local publications.
+   * Float. Longitude of the center point to search articles created by local publications.
    */
   sourceLon: z.number().optional(),
   /**
@@ -1690,13 +2377,25 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   companySymbol: z.array(z.string()).optional(),
   /**
+   * String Array. Filter articles by company ISIN codes (International Securities Identification Numbers). For available company entities and their ISINs, consult the /companies endpoint.
+   */
+  companyIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Filter articles by ISIN codes on company ticker listings (symbols.isin). Distinct from companyIsin, which matches the company-level ISIN. For available company entities and their listing ISINs, consult the /companies endpoint.
+   */
+  companySymbolIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles related to companies with specific ISIN codes. Creates an AND-exclude filter to remove content about these companies. For available company entities and their ISINs, consult the /companies endpoint.
+   */
+  excludeCompanyIsin: z.array(z.string()).optional(),
+  /**
+   * String Array. Exclude articles related to companies whose ticker listings have these ISIN codes (symbols.isin). Distinct from excludeCompanyIsin, which matches the company-level ISIN. For available company entities and their listing ISINs, consult the /companies endpoint.
+   */
+  excludeCompanySymbolIsin: z.array(z.string()).optional(),
+  /**
    * String Array. A list of stock symbols (ticker symbols) that identify companies to be excluded. Articles related to companies using any of these symbols will be omitted, which is useful for targeting or avoiding specific public companies.
    */
   excludeCompanySymbol: z.array(z.string()).optional(),
-  /**
-   * Boolean. Whether to show the total number of all matched articles. Default value is false which makes queries a bit more efficient but also counts up to 10000 articles.
-   */
-  showNumResults: z.boolean().optional(),
   /**
    * Float. Filter articles with a positive sentiment score greater than or equal to the specified value. Scores range from 0 to 1, with higher values indicating stronger positive tone.
    */
@@ -1722,11 +2421,11 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   negativeSentimentTo: z.number().optional(),
   /**
-   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy&#x3D;/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)
+   * String Array. Filters by Google Content Categories. This field will accept 1 or more categories, must pass the full name of the category. Example: taxonomy=/Finance/Banking/Other, /Finance/Investing/Funds. [Full list](https://docs.cloud.google.com/natural-language/docs/categories#version_2)
    */
   taxonomy: z.array(z.string()).optional(),
   /**
-   * String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy&#x3D;/Finance
+   * String. Filters by Google Content Categories. This field will filter by the category prefix only. Example: prefixTaxonomy=/Finance
    */
   prefixTaxonomy: z.string().optional(),
   /**
@@ -1742,15 +2441,15 @@ export const SearchSummarizerQuerySchema = z.object({
    */
   highlightNumFragments: z.number().optional(),
   /**
-   * String. Defines the HTML tag that appears before highlighted text. Defaults to \&#39;&lt;em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears before highlighted text. Defaults to '<em>' if not specified.
    */
   highlightPreTag: z.string().optional(),
   /**
-   * String. Defines the HTML tag that appears after highlighted text. Defaults to \&#39;&lt;/em&gt;\&#39; if not specified.
+   * String. Defines the HTML tag that appears after highlighted text. Defaults to '</em>' if not specified.
    */
   highlightPostTag: z.string().optional(),
   /**
-   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query \&#39;q&#x3D;climate change\&#39; with \&#39;highlightQ&#x3D;renewable OR solar\&#39; will highlight terms \&#39;renewable\&#39; and \&#39;solar\&#39; in results about climate change.
+   * String. Specifies a separate query for highlighting, allowing highlights based on terms different from the main search query. Example: main query 'q=climate change' with 'highlightQ=renewable OR solar' will highlight terms 'renewable' and 'solar' in results about climate change.
    */
   highlightQ: z.string().optional(),
 });
@@ -1815,11 +2514,11 @@ export const SearchWikipediaQuerySchema = z.object({
    */
   summary: z.string().optional(),
   /**
-   * String. Search specifically within the page\&#39;s content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically within the page's content (across all sections). Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   text: z.string().optional(),
   /**
-   * String. Search specifically across page\&#39;s references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
+   * String. Search specifically across page's references. Supports Boolean operators, exact phrases with quotes, and wildcards for matching title variations.
    */
   reference: z.string().optional(),
   /**
@@ -1827,15 +2526,15 @@ export const SearchWikipediaQuerySchema = z.object({
    */
   id: z.array(z.string()).optional(),
   /**
-   * Integer Array. Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages.
+   * Integer Array. Retrieve specific pages by their Wikipedia identifiers. These are unique only in a combination with `wikiCode` parameter. Multiple IDs can be provided to return a collection of specific pages.
    */
   wikiPageId: z.array(z.number()).optional(),
   /**
-   * Integer Array. Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with &#x60;wikiCode&#x60; parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
+   * Integer Array. Retrieve specific pages by their Wikipedia revision identifiers. These are unique only in a combination with `wikiCode` parameter. Multiple IDs can be provided to return a collection of specific pages. This ID changes each time a page is edited.
    */
   wikiRevisionId: z.array(z.number()).optional(),
   /**
-   * String Array. Retrieve pages only from specified wiki projects. Currently, the only accepted value is &#x60;enwiki&#x60;.
+   * String Array. Retrieve pages only from specified wiki projects. Currently, the only accepted value is `enwiki`.
    */
   wikiCode: z.array(z.string()).optional(),
   /**
@@ -1887,7 +2586,7 @@ export const SearchWikipediaQuerySchema = z.object({
    */
   pageviewsTo: z.number().optional(),
   /**
-   * Boolean. Retrieve pages that have any viewership statistics available for them. If &#x60;false&#x60; (the default) - return all pages.
+   * Boolean. Retrieve pages that have any viewership statistics available for them. If `false` (the default) - return all pages.
    */
   withPageviews: z.boolean().optional(),
   /**
@@ -1904,20 +2603,8 @@ export const SearchWikipediaQuerySchema = z.object({
   size: z.number().optional(),
   /**
    * String. Determines the Wikipedia page sorting order. Options include relevance (default), revisionTsDesc (recently edited first), revisionTsAsc (recently edited last), pageViewsDesc (highest viewership first), pageViewsAsc (highest viewership last), scrapedAtDesc (recently scraped first), scrapedAtAsc (recently scraped last).
-   * @type SortByEnum
-   * @values 'relevance', 'revisionTsDesc', 'revisionTsAsc', 'pageViewsDesc', 'pageViewsAsc', 'scrapedAtDesc', 'scrapedAtAsc'
    */
-  sortBy: z
-    .enum([
-      "relevance",
-      "revisionTsDesc",
-      "revisionTsAsc",
-      "pageViewsDesc",
-      "pageViewsAsc",
-      "scrapedAtDesc",
-      "scrapedAtAsc",
-    ])
-    .optional(),
+  sortBy: SearchWikipediaSortByEnumSchema.optional(),
 });
 
 export const SearchWikipediaRequestSchema = z.object({
@@ -1926,6 +2613,56 @@ export const SearchWikipediaRequestSchema = z.object({
 
 export type SearchWikipediaRequest = z.input<
   typeof SearchWikipediaRequestSchema
+>;
+
+export const UpdateContactPointBodySchema = z.object({
+  /**
+   * Parameter contactPointUpdateBody
+   * @required
+   */
+  contactPointUpdateBody: Models.ContactPointUpdateBodySchema,
+});
+
+export const UpdateContactPointPathSchema = z.object({
+  /**
+   * Parameter uuid
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const UpdateContactPointRequestSchema = z.object({
+  ...UpdateContactPointBodySchema.shape,
+  ...UpdateContactPointPathSchema.shape,
+});
+
+export type UpdateContactPointRequest = z.input<
+  typeof UpdateContactPointRequestSchema
+>;
+
+export const UpdateMonitorApiBodySchema = z.object({
+  /**
+   * Parameter signalApiUpdateBody
+   * @required
+   */
+  signalApiUpdateBody: Models.SignalApiUpdateBodySchema,
+});
+
+export const UpdateMonitorApiPathSchema = z.object({
+  /**
+   * UUID of the monitor to update.
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const UpdateMonitorApiRequestSchema = z.object({
+  ...UpdateMonitorApiBodySchema.shape,
+  ...UpdateMonitorApiPathSchema.shape,
+});
+
+export type UpdateMonitorApiRequest = z.input<
+  typeof UpdateMonitorApiRequestSchema
 >;
 
 export const UpdateSourceGroupBodySchema = z.object({
@@ -2015,13 +2752,153 @@ export type VectorSearchWikipediaRequest = z.input<
  */
 export class V1Api extends runtime.BaseAPI {
   /**
+   * Activate a monitor, starting its processing pipeline.
+   * Activate monitor
+   */
+  async activateMonitorApi(
+    requestParameters: ActivateMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = ActivateMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/activate`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "POST",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
+   * Archive a monitor. Archived monitors are excluded from list results by default.
+   * Archive monitor
+   */
+  async archiveMonitorApi(
+    requestParameters: ArchiveMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = ArchiveMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "DELETE",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
+   * Create a new contact point under the organization associated with the API key. Only WEBHOOK contact points can be created via the API.
+   * Create contact point
+   */
+  async createContactPoint(
+    requestParameters: CreateContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = CreateContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.contactPointRequestBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
+  }
+  /**
+   * Create a new AI monitor. Only AI_SIGNAL type is supported; status is required and accepts ACTIVE or DRAFT.
+   * Create monitor
+   */
+  async createMonitorApi(
+    requestParameters: CreateMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = CreateMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.signalApiCreateBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
    * Create a new source group under the organization associated with the API key.
    * Create source group
    */
   async createSourceGroup(
     requestParameters: CreateSourceGroupRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<SourceGroupResult> {
     const params = CreateSourceGroupRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2046,14 +2923,8 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return SourceGroupResultSchema.parse(raw);
   }
   /**
    * Create a new watchlist under the organization associated with the API key. A watchlist can contain up to 100 combined people and companies.
@@ -2062,7 +2933,7 @@ export class V1Api extends runtime.BaseAPI {
   async createWatchlist(
     requestParameters: CreateWatchlistRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<WatchlistResult> {
     const params = CreateWatchlistRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2087,14 +2958,43 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
+    const raw = await response.json();
+    return WatchlistResultSchema.parse(raw);
+  }
+  /**
+   * Delete a contact point owned by the organization associated with the API key. Contact points with historical notifications are archived rather than hard-deleted.
+   * Delete contact point
+   */
+  async deleteContactPoint(
+    requestParameters: DeleteContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = DeleteContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
     }
-    return undefined as unknown;
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "DELETE",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
   }
   /**
    * Delete a source group owned by the organization associated with the API key.
@@ -2103,7 +3003,7 @@ export class V1Api extends runtime.BaseAPI {
   async deleteSourceGroup(
     requestParameters: DeleteSourceGroupRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<SourceGroupResult> {
     const params = DeleteSourceGroupRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2128,23 +3028,17 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return SourceGroupResultSchema.parse(raw);
   }
   /**
-   * Delete a watchlist owned by the organization associated with the API key. A watchlist cannot be deleted if it is attached to active signals.
+   * Delete a watchlist owned by the organization associated with the API key. A watchlist cannot be deleted if it is attached to active monitors.
    * Delete watchlist
    */
   async deleteWatchlist(
     requestParameters: DeleteWatchlistRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<WatchlistResult> {
     const params = DeleteWatchlistRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2169,14 +3063,43 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
+    const raw = await response.json();
+    return WatchlistResultSchema.parse(raw);
+  }
+  /**
+   * Retrieve a contact point by UUID. Only returns contact points owned by the organization associated with the API key. FASTN contact points are not accessible via this endpoint.
+   * Get contact point
+   */
+  async getContactPoint(
+    requestParameters: GetContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = GetContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
     }
-    return undefined as unknown;
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
   }
   /**
    * Find additional details on a journalist by using the journalist ID found in an article response object.
@@ -2214,13 +3137,82 @@ export class V1Api extends runtime.BaseAPI {
     return JournalistSchema.parse(raw);
   }
   /**
+   * Returns the authenticated account\'s current API usage and the limits that apply to it: the number of requests made in the current tracking period, the request limit, the per-second rate limit, and when the counter resets.  Optionally, pass one or more API keys via the `apiKeys` parameter to check their status. For each supplied key the response reports whether it is `valid` (exists and belongs to your account), `enabled` (a disabled key is \'off\'), and whether its `subscription` is active.  This endpoint is authenticated with your API key but is quota-exempt: calling it does **not** count against your monthly request quota and is not subject to rate limiting. It is intended for liveness/health probes and external dashboards that need to check whether an API key and subscription are active without consuming usage.
+   * Limits
+   */
+  async getLimits(
+    requestParameters: GetLimitsRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<LimitsResult> {
+    const params = GetLimitsRequestSchema.parse(requestParameters);
+    const queryParameters = GetLimitsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/limits`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return LimitsResultSchema.parse(raw);
+  }
+  /**
+   * Retrieve a monitor by UUID for the organization associated with the API key.
+   * Get monitor
+   */
+  async getMonitorApi(
+    requestParameters: GetMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = GetMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
    * Retrieve a source group by ID. Only returns source groups owned by the organization associated with the API key.
    * Get source group
    */
   async getSourceGroup(
     requestParameters: GetSourceGroupRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<SourceGroupResult> {
     const params = GetSourceGroupRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2245,17 +3237,11 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return SourceGroupResultSchema.parse(raw);
   }
   /**
-   * Get statistics on story counts over time intervals. Supports filtering by various story attributes and grouping by different time intervals (hour, day, week, month).
+   * Count matching stories by their creation time. Results can be grouped by hour, day, week, or month and filtered by supported story attributes.
    * Story Count Statistics
    */
   async getStoryCounts(
@@ -2289,6 +3275,7 @@ export class V1Api extends runtime.BaseAPI {
     return StatResultSchema.parse(raw);
   }
   /**
+   * Retrieve previous generated versions of stories and their evolving summaries, key points, questions, and changelogs.
    * Story History
    */
   async getStoryHistory(
@@ -2328,7 +3315,7 @@ export class V1Api extends runtime.BaseAPI {
   async getWatchlist(
     requestParameters: GetWatchlistRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<WatchlistResult> {
     const params = GetWatchlistRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2353,14 +3340,189 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
+    const raw = await response.json();
+    return WatchlistResultSchema.parse(raw);
+  }
+  /**
+   * List contact points owned by the organization associated with the API key. Supports filtering by status and type. FASTN contact points are excluded from results.
+   * List contact points
+   */
+  async listContactPoints(
+    requestParameters: ListContactPointsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointListResult> {
+    const params = ListContactPointsRequestSchema.parse(requestParameters);
+    const queryParameters = ListContactPointsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
     }
-    return undefined as unknown;
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointListResultSchema.parse(raw);
+  }
+  /**
+   * List structured events emitted by a monitor. Events represent individual matches detected by the monitor (e.g. a news article matching the monitor\'s criteria) and are produced asynchronously as new content is ingested.
+   * List monitor events
+   */
+  async listMonitorEventsApi(
+    requestParameters: ListMonitorEventsApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorEventListResult> {
+    const params = ListMonitorEventsApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorEventsApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/events`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorEventListResultSchema.parse(raw);
+  }
+  /**
+   * List newsletters generated for a monitor. Newsletters bundle a monitor\'s recent events into a human-readable digest and are produced on the monitor\'s configured schedule.
+   * List monitor newsletters
+   */
+  async listMonitorNewslettersApi(
+    requestParameters: ListMonitorNewslettersApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorNewsletterListResult> {
+    const params =
+      ListMonitorNewslettersApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorNewslettersApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/newsletters`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorNewsletterListResultSchema.parse(raw);
+  }
+  /**
+   * List AI-generated summaries produced for a monitor as matching content is processed.
+   * List monitor summaries
+   */
+  async listMonitorSummariesApi(
+    requestParameters: ListMonitorSummariesApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorSummaryListResult> {
+    const params =
+      ListMonitorSummariesApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorSummariesApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/summary`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorSummaryListResultSchema.parse(raw);
+  }
+  /**
+   * List AI monitors for the organization associated with the API key. Excludes archived monitors by default. Use the status parameter to filter.
+   * List monitors
+   */
+  async listMonitorsApi(
+    requestParameters: ListMonitorsApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorListResult> {
+    const params = ListMonitorsApiRequestSchema.parse(requestParameters);
+    const queryParameters = ListMonitorsApiQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorListResultSchema.parse(raw);
   }
   /**
    * List source groups owned by the organization associated with the API key, as well as publicly visible source groups. Supports filtering by name and domain.
@@ -2369,7 +3531,7 @@ export class V1Api extends runtime.BaseAPI {
   async listSourceGroups(
     requestParameters: ListSourceGroupsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<SourceGroupListResult> {
     const params = ListSourceGroupsRequestSchema.parse(requestParameters);
     const queryParameters = ListSourceGroupsQuerySchema.parse(params);
 
@@ -2393,14 +3555,8 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return SourceGroupListResultSchema.parse(raw);
   }
   /**
    * List watchlists owned by the organization associated with the API key, as well as publicly visible watchlists. Supports filtering by name.
@@ -2409,7 +3565,7 @@ export class V1Api extends runtime.BaseAPI {
   async listWatchlists(
     requestParameters: ListWatchlistsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<WatchlistListResult> {
     const params = ListWatchlistsRequestSchema.parse(requestParameters);
     const queryParameters = ListWatchlistsQuerySchema.parse(params);
 
@@ -2433,14 +3589,43 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
+    const raw = await response.json();
+    return WatchlistListResultSchema.parse(raw);
+  }
+  /**
+   * Pause a monitor, stopping its processing pipeline.
+   * Pause monitor
+   */
+  async pauseMonitorApi(
+    requestParameters: PauseMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = PauseMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
     }
-    return undefined as unknown;
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}/pause`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "POST",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
   }
   /**
    * Resolve source groups by name. For each name, returns the organization\'s private source group if one exists, otherwise falls back to the matching public source group.
@@ -2449,7 +3634,7 @@ export class V1Api extends runtime.BaseAPI {
   async resolveSourceGroups(
     requestParameters: ResolveSourceGroupsRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<SourceGroupResolveResult> {
     const params = ResolveSourceGroupsRequestSchema.parse(requestParameters);
     const queryParameters = ResolveSourceGroupsQuerySchema.parse(params);
 
@@ -2473,14 +3658,8 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return SourceGroupResolveResultSchema.parse(raw);
   }
   /**
    * Resolve watchlists by name. For each name, returns the organization\'s private watchlist if one exists, otherwise falls back to the matching public watchlist.
@@ -2489,7 +3668,7 @@ export class V1Api extends runtime.BaseAPI {
   async resolveWatchlists(
     requestParameters: ResolveWatchlistsRequest = {},
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<WatchlistResolveResult> {
     const params = ResolveWatchlistsRequestSchema.parse(requestParameters);
     const queryParameters = ResolveWatchlistsQuerySchema.parse(params);
 
@@ -2513,14 +3692,8 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return WatchlistResolveResultSchema.parse(raw);
   }
   /**
    * Search and filter all news articles available via the Perigon API. The result includes a list of individual articles that were matched to your specific criteria.
@@ -2727,7 +3900,7 @@ export class V1Api extends runtime.BaseAPI {
     return StorySearchResultSchema.parse(raw);
   }
   /**
-   * Produce a single, concise summary over the full corpus of articles matching your filters, using your prompt to guide which insights to highlight.
+   * Produce one concise summary from up to 100 articles matching the supplied filters. Use the prompt and summarization fields to control which insights are highlighted. When method is CLUSTERS, article-only parameters such as articleId, page, sortBy, watchlist, reprintGroupId, exclusion filters, prefixTaxonomy, and highlighting options are ignored.
    * Search Summarizer
    */
   async searchSummarizer(
@@ -2831,13 +4004,89 @@ export class V1Api extends runtime.BaseAPI {
     return WikipediaSearchResultSchema.parse(raw);
   }
   /**
+   * Partially update a contact point owned by the organization associated with the API key. Only provided fields will be updated.
+   * Update contact point
+   */
+  async updateContactPoint(
+    requestParameters: UpdateContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = UpdateContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "PATCH",
+        headers: headerParameters,
+
+        body: params.contactPointUpdateBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
+  }
+  /**
+   * Partially update a monitor. Only provided fields are modified. Use /activate, /pause, or DELETE to change monitor status.
+   * Update monitor
+   */
+  async updateMonitorApi(
+    requestParameters: UpdateMonitorApiRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<MonitorResult> {
+    const params = UpdateMonitorApiRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/monitors/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "PATCH",
+        headers: headerParameters,
+
+        body: params.signalApiUpdateBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return MonitorResultSchema.parse(raw);
+  }
+  /**
    * Partially update a source group owned by the organization associated with the API key. Only provided fields will be updated.
    * Update source group
    */
   async updateSourceGroup(
     requestParameters: UpdateSourceGroupRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<SourceGroupResult> {
     const params = UpdateSourceGroupRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2865,14 +4114,8 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return SourceGroupResultSchema.parse(raw);
   }
   /**
    * Partially update a watchlist owned by the organization associated with the API key. Only provided fields will be updated.
@@ -2881,7 +4124,7 @@ export class V1Api extends runtime.BaseAPI {
   async updateWatchlist(
     requestParameters: UpdateWatchlistRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
-  ): Promise<unknown> {
+  ): Promise<WatchlistResult> {
     const params = UpdateWatchlistRequestSchema.parse(requestParameters);
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -2909,14 +4152,8 @@ export class V1Api extends runtime.BaseAPI {
       initOverrides,
     );
 
-    // Upstream spec omits a 2xx success schema for this operation.
-    // Parse the JSON response if available and return it as `unknown`
-    // so callers can narrow at the call site.
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return (await response.json()) as unknown;
-    }
-    return undefined as unknown;
+    const raw = await response.json();
+    return WatchlistResultSchema.parse(raw);
   }
   /**
    * Perform a natural language search over news articles from the past 6 months using semantic relevance. The result includes a list of articles most closely matched to your query intent.
@@ -2989,39 +4226,3 @@ export class V1Api extends runtime.BaseAPI {
     return WikipediaVectorSearchResultSchema.parse(raw);
   }
 }
-
-/**
- * @export
- */
-export const GetStoryCountsSplitByEnum = {
-  Hour: "HOUR",
-  Day: "DAY",
-  Week: "WEEK",
-  Month: "MONTH",
-  None: "NONE",
-} as const;
-export type GetStoryCountsSplitByEnum =
-  (typeof GetStoryCountsSplitByEnum)[keyof typeof GetStoryCountsSplitByEnum];
-/**
- * @export
- */
-export const GetStoryHistorySortByEnum = {
-  CreatedAt: "createdAt",
-  TriggeredAt: "triggeredAt",
-} as const;
-export type GetStoryHistorySortByEnum =
-  (typeof GetStoryHistorySortByEnum)[keyof typeof GetStoryHistorySortByEnum];
-/**
- * @export
- */
-export const SearchWikipediaSortByEnum = {
-  Relevance: "relevance",
-  RevisionTsDesc: "revisionTsDesc",
-  RevisionTsAsc: "revisionTsAsc",
-  PageViewsDesc: "pageViewsDesc",
-  PageViewsAsc: "pageViewsAsc",
-  ScrapedAtDesc: "scrapedAtDesc",
-  ScrapedAtAsc: "scrapedAtAsc",
-} as const;
-export type SearchWikipediaSortByEnum =
-  (typeof SearchWikipediaSortByEnum)[keyof typeof SearchWikipediaSortByEnum];
