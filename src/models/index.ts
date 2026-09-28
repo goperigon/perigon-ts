@@ -1223,6 +1223,121 @@ export const CompanySearchResultSchema = z.object({
 
 export type CompanySearchResult = z.infer<typeof CompanySearchResultSchema>;
 
+export const ContactPointApiDtoSchema = z.object({
+  /**
+   * Unique identifier for the contact point.
+   */
+  uuid: z.string().optional().nullable(),
+  /**
+   * Date and time the contact point was created, in ISO 8601 format.
+   */
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Date and time the contact point was last updated, in ISO 8601 format.
+   */
+  updatedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  /**
+   * Delivery channel type. API-managed contact points use WEBHOOK.
+   */
+  type: z.enum(["EMAIL", "FASTN", "WEBHOOK"]).optional().nullable(),
+  /**
+   * Current lifecycle status of the contact point.
+   */
+  status: z
+    .enum(["ACTIVE", "STOPPED", "FAILING", "ARCHIVED"])
+    .optional()
+    .nullable(),
+  /**
+   * Display name for the contact point.
+   */
+  name: z.string().optional().nullable(),
+  /**
+   * Email address when the contact point type is email-based.
+   */
+  email: z.string().optional().nullable(),
+  /**
+   * HTTPS webhook URL that receives monitor notifications.
+   */
+  webhookUrl: z.string().optional().nullable(),
+  /**
+   * Secret used to sign webhook deliveries.
+   */
+  webhookSecret: z.string().optional().nullable(),
+  /**
+   * Date and time the contact point was verified, in ISO 8601 format.
+   */
+  verifiedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  verified: z.boolean().optional().nullable(),
+});
+
+export type ContactPointApiDto = z.infer<typeof ContactPointApiDtoSchema>;
+
+export const ContactPointListResultSchema = z.object({
+  /**
+   * Total number of matching contact points across all pages.
+   */
+  total: z.number(),
+  /**
+   * Contact points returned for the requested page.
+   */
+  data: z.array(ContactPointApiDtoSchema),
+});
+
+export type ContactPointListResult = z.infer<
+  typeof ContactPointListResultSchema
+>;
+
+export const ContactPointRequestBodySchema = z.object({
+  type: z.enum(["EMAIL", "FASTN", "WEBHOOK"]),
+  name: z.string(),
+  email: z.string().optional().nullable(),
+  webhook: z.string().optional().nullable(),
+});
+
+export type ContactPointRequestBody = z.infer<
+  typeof ContactPointRequestBodySchema
+>;
+
+export const ContactPointResultSchema = z.object({
+  data: ContactPointApiDtoSchema,
+});
+
+export type ContactPointResult = z.infer<typeof ContactPointResultSchema>;
+
+export const ContactPointSortBySchema = z.enum(["createdAt", "updatedAt"]);
+
+export type ContactPointSortBy = z.infer<typeof ContactPointSortBySchema>;
+
+export const ContactPointSortBy = {
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+} as const;
+
+export const ContactPointUpdateBodySchema = z.object({
+  name: z.string().optional().nullable(),
+  status: z
+    .enum(["ACTIVE", "STOPPED", "FAILING", "ARCHIVED"])
+    .optional()
+    .nullable(),
+  webhook: z.string().optional().nullable(),
+});
+
+export type ContactPointUpdateBody = z.infer<
+  typeof ContactPointUpdateBodySchema
+>;
+
 export const CreateSourceGroupParamsSchema = z.object({
   name: z.string(),
   displayName: z.string().optional().nullable(),

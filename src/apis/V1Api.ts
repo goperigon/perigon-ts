@@ -19,6 +19,8 @@ import * as Models from "../models/index";
 import type {
   ArticlesVectorSearchResult,
   CompanySearchResult,
+  ContactPointListResult,
+  ContactPointResult,
   Journalist,
   JournalistSearchResult,
   PeopleSearchResult,
@@ -41,6 +43,8 @@ import type {
 import {
   ArticlesVectorSearchResultSchema,
   CompanySearchResultSchema,
+  ContactPointListResultSchema,
+  ContactPointResultSchema,
   JournalistSchema,
   JournalistSearchResultSchema,
   PeopleSearchResultSchema,
@@ -87,6 +91,54 @@ export type GetStoryHistorySortByEnum = z.infer<
 export const GetStoryHistorySortByEnum = {
   CreatedAt: "createdAt",
   TriggeredAt: "triggeredAt",
+} as const;
+
+export const ListContactPointsSortOrderEnumSchema = z.enum(["asc", "desc"]);
+export type ListContactPointsSortOrderEnum = z.infer<
+  typeof ListContactPointsSortOrderEnumSchema
+>;
+export const ListContactPointsSortOrderEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export const ListContactPointsStatusEnumSchema = z.enum([
+  "ACTIVE",
+  "STOPPED",
+  "FAILING",
+  "ARCHIVED",
+]);
+export type ListContactPointsStatusEnum = z.infer<
+  typeof ListContactPointsStatusEnumSchema
+>;
+export const ListContactPointsStatusEnum = {
+  Active: "ACTIVE",
+  Stopped: "STOPPED",
+  Failing: "FAILING",
+  Archived: "ARCHIVED",
+} as const;
+
+export const ListContactPointsTypeEnumSchema = z.enum([
+  "EMAIL",
+  "FASTN",
+  "WEBHOOK",
+]);
+export type ListContactPointsTypeEnum = z.infer<
+  typeof ListContactPointsTypeEnumSchema
+>;
+export const ListContactPointsTypeEnum = {
+  Email: "EMAIL",
+  Fastn: "FASTN",
+  Webhook: "WEBHOOK",
+} as const;
+
+export const ListContactPointsNullsEnumSchema = z.enum(["first", "last"]);
+export type ListContactPointsNullsEnum = z.infer<
+  typeof ListContactPointsNullsEnumSchema
+>;
+export const ListContactPointsNullsEnum = {
+  First: "first",
+  Last: "last",
 } as const;
 
 export const ListSourceGroupsSortOrderEnumSchema = z.enum(["asc", "desc"]);
@@ -147,6 +199,22 @@ export const SearchWikipediaSortByEnum = {
   ScrapedAtAsc: "scrapedAtAsc",
 } as const;
 
+export const CreateContactPointBodySchema = z.object({
+  /**
+   * Parameter contactPointRequestBody
+   * @required
+   */
+  contactPointRequestBody: Models.ContactPointRequestBodySchema,
+});
+
+export const CreateContactPointRequestSchema = z.object({
+  ...CreateContactPointBodySchema.shape,
+});
+
+export type CreateContactPointRequest = z.input<
+  typeof CreateContactPointRequestSchema
+>;
+
 export const CreateSourceGroupBodySchema = z.object({
   /**
    * Parameter createSourceGroupParams
@@ -179,6 +247,22 @@ export type CreateWatchlistRequest = z.input<
   typeof CreateWatchlistRequestSchema
 >;
 
+export const DeleteContactPointPathSchema = z.object({
+  /**
+   * Parameter uuid
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const DeleteContactPointRequestSchema = z.object({
+  ...DeleteContactPointPathSchema.shape,
+});
+
+export type DeleteContactPointRequest = z.input<
+  typeof DeleteContactPointRequestSchema
+>;
+
 export const DeleteSourceGroupPathSchema = z.object({
   /**
    * Parameter id
@@ -209,6 +293,22 @@ export const DeleteWatchlistRequestSchema = z.object({
 
 export type DeleteWatchlistRequest = z.input<
   typeof DeleteWatchlistRequestSchema
+>;
+
+export const GetContactPointPathSchema = z.object({
+  /**
+   * Parameter uuid
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const GetContactPointRequestSchema = z.object({
+  ...GetContactPointPathSchema.shape,
+});
+
+export type GetContactPointRequest = z.input<
+  typeof GetContactPointRequestSchema
 >;
 
 export const GetJournalistByIdPathSchema = z.object({
@@ -463,6 +563,49 @@ export const GetWatchlistRequestSchema = z.object({
 });
 
 export type GetWatchlistRequest = z.input<typeof GetWatchlistRequestSchema>;
+
+export const ListContactPointsQuerySchema = z.object({
+  /**
+   * Parameter status
+   */
+  status: ListContactPointsStatusEnumSchema.optional(),
+  /**
+   * Parameter type
+   */
+  type: ListContactPointsTypeEnumSchema.optional(),
+  /**
+   * Parameter sortBy
+   * @required
+   */
+  sortBy: Models.ContactPointSortBySchema,
+
+  /**
+   * Zero-based page number to retrieve. Defaults to 0.
+   */
+  page: z.number().optional(),
+  /**
+   * Number of results per page. Must be between 1 and 100; defaults to 10.
+   */
+  size: z.number().optional(),
+  /**
+   * Required direction used to sort results. Accepts asc or desc.
+   * @required
+   */
+  sortOrder: ListContactPointsSortOrderEnumSchema,
+
+  /**
+   * Placement of null values in sorted results. Accepts first or last.
+   */
+  nulls: ListContactPointsNullsEnumSchema.optional(),
+});
+
+export const ListContactPointsRequestSchema = z.object({
+  ...ListContactPointsQuerySchema.shape,
+});
+
+export type ListContactPointsRequest = z.input<
+  typeof ListContactPointsRequestSchema
+>;
 
 export const ListSourceGroupsQuerySchema = z.object({
   /**
@@ -2040,6 +2183,31 @@ export type SearchWikipediaRequest = z.input<
   typeof SearchWikipediaRequestSchema
 >;
 
+export const UpdateContactPointBodySchema = z.object({
+  /**
+   * Parameter contactPointUpdateBody
+   * @required
+   */
+  contactPointUpdateBody: Models.ContactPointUpdateBodySchema,
+});
+
+export const UpdateContactPointPathSchema = z.object({
+  /**
+   * Parameter uuid
+   * @required
+   */
+  uuid: z.string(),
+});
+
+export const UpdateContactPointRequestSchema = z.object({
+  ...UpdateContactPointBodySchema.shape,
+  ...UpdateContactPointPathSchema.shape,
+});
+
+export type UpdateContactPointRequest = z.input<
+  typeof UpdateContactPointRequestSchema
+>;
+
 export const UpdateSourceGroupBodySchema = z.object({
   /**
    * Parameter patchSourceGroupParams
@@ -2127,6 +2295,41 @@ export type VectorSearchWikipediaRequest = z.input<
  */
 export class V1Api extends runtime.BaseAPI {
   /**
+   * Create a new contact point under the organization associated with the API key. Only WEBHOOK contact points can be created via the API.
+   * Create contact point
+   */
+  async createContactPoint(
+    requestParameters: CreateContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = CreateContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints`,
+        method: "POST",
+        headers: headerParameters,
+
+        body: params.contactPointRequestBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
+  }
+  /**
    * Create a new source group under the organization associated with the API key.
    * Create source group
    */
@@ -2197,6 +2400,41 @@ export class V1Api extends runtime.BaseAPI {
     return WatchlistResultSchema.parse(raw);
   }
   /**
+   * Delete a contact point owned by the organization associated with the API key. Contact points with historical notifications are archived rather than hard-deleted.
+   * Delete contact point
+   */
+  async deleteContactPoint(
+    requestParameters: DeleteContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = DeleteContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "DELETE",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
+  }
+  /**
    * Delete a source group owned by the organization associated with the API key.
    * Delete source group
    */
@@ -2265,6 +2503,41 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return WatchlistResultSchema.parse(raw);
+  }
+  /**
+   * Retrieve a contact point by UUID. Only returns contact points owned by the organization associated with the API key. FASTN contact points are not accessible via this endpoint.
+   * Get contact point
+   */
+  async getContactPoint(
+    requestParameters: GetContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = GetContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "GET",
+        headers: headerParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
   }
   /**
    * Find additional details on a journalist by using the journalist ID found in an article response object.
@@ -2438,6 +2711,40 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return WatchlistResultSchema.parse(raw);
+  }
+  /**
+   * List contact points owned by the organization associated with the API key. Supports filtering by status and type. FASTN contact points are excluded from results.
+   * List contact points
+   */
+  async listContactPoints(
+    requestParameters: ListContactPointsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointListResult> {
+    const params = ListContactPointsRequestSchema.parse(requestParameters);
+    const queryParameters = ListContactPointsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointListResultSchema.parse(raw);
   }
   /**
    * List source groups owned by the organization associated with the API key, as well as publicly visible source groups. Supports filtering by name and domain.
@@ -2882,6 +3189,44 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return WikipediaSearchResultSchema.parse(raw);
+  }
+  /**
+   * Partially update a contact point owned by the organization associated with the API key. Only provided fields will be updated.
+   * Update contact point
+   */
+  async updateContactPoint(
+    requestParameters: UpdateContactPointRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<ContactPointResult> {
+    const params = UpdateContactPointRequestSchema.parse(requestParameters);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters["Content-Type"] = "application/json";
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/api/contactPoints/{uuid}`.replace(
+          `{${"uuid"}}`,
+          encodeURIComponent(String(params.uuid)),
+        ),
+        method: "PATCH",
+        headers: headerParameters,
+
+        body: params.contactPointUpdateBody,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return ContactPointResultSchema.parse(raw);
   }
   /**
    * Partially update a source group owned by the organization associated with the API key. Only provided fields will be updated.
