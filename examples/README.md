@@ -141,9 +141,7 @@ import { V1Api, Configuration } from "@goperigon/perigon-ts";
 const configuration = new Configuration({
   apiKey: () => Promise.resolve(process.env.PERIGON_API_KEY),
   basePath: "https://api.perigon.io", // Optional: custom endpoint
-  middleware: [
-    /* custom middleware */
-  ], // Optional: request/response middleware
+  middleware: [/* custom middleware */], // Optional: request/response middleware
 });
 
 const perigon = new V1Api(configuration);

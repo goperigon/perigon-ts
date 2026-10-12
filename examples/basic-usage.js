@@ -48,11 +48,7 @@ async function main() {
     );
     articlesResult.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
-      console.log(
-        `     Source: ${article.source?.name || "Unknown"} (${
-          article.source?.domain || "N/A"
-        })`,
-      );
+      console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
       console.log(
         `     Published: ${
           article.pubDate
@@ -85,7 +81,7 @@ async function main() {
     );
     filteredArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
-      console.log(`     Source: ${article.source?.name || "Unknown"}`);
+      console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
       console.log(
         `     Published: ${
           article.pubDate
@@ -118,8 +114,10 @@ async function main() {
     storiesResult.results.forEach((story, index) => {
       console.log(`  ${index + 1}. ${story.name}`);
       console.log(`     Summary: ${story.summary || "No summary available"}`);
-      console.log(`     Article Count: ${story.articleCount} articles`);
-      console.log(`     Unique Sources: ${story.uniqueSourceCount} sources`);
+      console.log(`     Article Count: ${story.totalCount ?? 0} articles`);
+      console.log(
+        `     Unique Sources: ${story.uniqueSources?.length ?? 0} sources`,
+      );
       console.log(
         `     Created: ${
           story.createdAt
@@ -151,7 +149,7 @@ async function main() {
     );
     companyArticles.articles.forEach((article, index) => {
       console.log(`  ${index + 1}. ${article.title}`);
-      console.log(`     Source: ${article.source?.name || "Unknown"}`);
+      console.log(`     Source: ${article.source?.domain ?? "Unknown"}`);
       console.log(
         `     Published: ${
           article.pubDate

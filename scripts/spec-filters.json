@@ -1,0 +1,9 @@
+{
+  "$description": "Filters applied to the OpenAPI spec before SDK generation. `hiddenFields` is schema-name -> property names to omit from generated Zod schemas and types. `excludedPaths` is a list of minimatch globs matched against OpenAPI path keys. A pattern with no wildcards is an exact match; use `*` for one segment and `**` for nested paths (e.g. `/v1/api/monitors/**`). Brace expansion is disabled so `{uuid}` stays literal. Remove an entry here to re-expose a field or endpoint.",
+  "hiddenFields": {
+    "Article": ["vectors"],
+    "ScoredDataArticle": ["vectors"],
+    "ScoredDataWikiData": ["vectors"]
+  },
+  "excludedPaths": ["/v1/articles/refresh", "/v1/articles/refresh/**"]
+}

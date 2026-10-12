@@ -1,5 +1,8 @@
-import { V1Api, Configuration } from "../../src";
+import * as dotenv from "dotenv";
+import { ZodError } from "zod";
 import {
+  V1Api,
+  Configuration,
   Middleware,
   UnauthorizedError,
   BadRequestError,
@@ -8,9 +11,7 @@ import {
   RateLimitError,
   ServerError,
   HttpError,
-} from "../../src/runtime";
-import { ZodError } from "zod";
-import * as dotenv from "dotenv";
+} from "../../src";
 
 dotenv.config();
 

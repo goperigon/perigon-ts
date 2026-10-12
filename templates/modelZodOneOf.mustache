@@ -27,16 +27,16 @@ export const {{classname}}Schema = z.union([
                     {{#isString}}z.string(){{/isString}}
                     {{#isNumeric}}z.number(){{/isNumeric}}
                     {{#isBoolean}}z.boolean(){{/isBoolean}}
-                    {{#isDateTimeType}}z.union([z.string().date(),z.string().datetime()]).transform(val => new Date(val)){{/isDateType}}{{/isDateTimeType}}
-                    {{#isDateType}}z.union([z.string().date(),z.string().datetime()]).transform(val => new Date(val)){{/isDateType}}
+                    {{#isDateTimeType}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateTimeType}}
+                    {{#isDateType}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateType}}
                 {{/items}})
             {{/isArray}}
             {{^isArray}}
                 {{#isString}}z.string(){{/isString}}
                 {{#isNumeric}}z.number(){{/isNumeric}}
                 {{#isBoolean}}z.boolean(){{/isBoolean}}
-                {{#isDateTimeType}}z.union([z.string().date(),z.string().datetime()]).transform(val => new Date(val)){{/isDateType}}{{/isDateTimeType}}
-                {{#isDateType}}z.union([z.string().date(),z.string().datetime()]).transform(val => new Date(val)){{/isDateType}}{{/isDateType}}
+                {{#isDateTimeType}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateTimeType}}
+                {{#isDateType}}z.union([z.iso.date(),z.iso.datetime())]).transform(val => new Date(val)){{/isDateType}}
             {{/isArray}}
         {{/oneOfPrimitives}}{{^-last}},{{/-last}}
     {{/oneOf}}

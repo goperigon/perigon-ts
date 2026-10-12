@@ -1,6 +1,5 @@
-src/apis/SourceGroupsApi.ts
+src/apis/UtilitiesApi.ts
 src/apis/V1Api.ts
-src/apis/WatchlistsApi.ts
 src/apis/index.ts
 src/index.ts
 src/models/index.ts
