@@ -1999,7 +1999,13 @@ export const FilledFieldSchema = z.object({
   /**
    * Search method used to populate the field. Accepts WEB_SEARCH or ARTICLE_SEARCH.
    */
-  method: z.enum(["WEB_SEARCH", "ARTICLE_SEARCH", "X_POST"]),
+  method: z.enum([
+    "WEB_SEARCH",
+    "ARTICLE_SEARCH",
+    "LINKEDIN_POST",
+    "REDDIT_POST",
+    "X_POST",
+  ]),
   /**
    * How enrichment was initiated. Accepts MANUAL or BACKGROUND.
    */
@@ -2165,7 +2171,7 @@ export const SignalEventDtoSchema = z.object({
    */
   eventType: z.string().optional().nullable(),
   /**
-   * Structured event fields defined by the monitor's data schema.
+   * Structured event fields defined by the monitor's data schema. May also include standard source fields describing the event's primary source: url, pubDate, authorsByline, language, title, content (Mentions social posts only), and sourceChannel (NEWS, LINKEDIN, REDDIT, or X). These fields are not guaranteed; older events or events whose producer did not supply them may omit any of them.
    */
   data: z.record(z.string(), z.unknown()).optional().nullable(),
   /**
@@ -2232,6 +2238,19 @@ export type MonitorEventListResult = z.infer<
   typeof MonitorEventListResultSchema
 >;
 
+export const SignalLinkedInQuerySchema = z.object({
+  version: z.enum(["V1"]),
+  keyword: z.string(),
+  contentType: z
+    .enum(["PHOTOS", "VIDEOS", "JOBS", "LIVE_VIDEOS", "DOCUMENTS"])
+    .optional()
+    .nullable(),
+  authorTitle: z.string().optional().nullable(),
+  mentionsOrganization: z.array(z.number()).optional().nullable(),
+});
+
+export type SignalLinkedInQuery = z.infer<typeof SignalLinkedInQuerySchema>;
+
 export const SignalMonitoringPlanDataSchemaPropertySchema = z.object({
   /**
    * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
@@ -2295,6 +2314,14 @@ export const SignalMonitoringPlanNewsletterConfigSchema = z.object({
 export type SignalMonitoringPlanNewsletterConfig = z.infer<
   typeof SignalMonitoringPlanNewsletterConfigSchema
 >;
+
+export const SignalRedditQuerySchema = z.object({
+  version: z.enum(["V1"]),
+  query: z.string(),
+  subreddit: z.string().optional().nullable(),
+});
+
+export type SignalRedditQuery = z.infer<typeof SignalRedditQuerySchema>;
 
 export const ScheduleIntervalSchema = z.object({
   /**
@@ -2408,6 +2435,8 @@ export const SignalApiDtoSchema = z.object({
    */
   entityGroups: z.array(EntityGroupSchema).optional().nullable(),
   query: ComplexAllEndpointQuerySchema.optional().nullable(),
+  linkedInQuery: SignalLinkedInQuerySchema.optional().nullable(),
+  redditQuery: SignalRedditQuerySchema.optional().nullable(),
   schedulePolicy: SignalSchedulePolicySchema.optional().nullable(),
   /**
    * Numeric ID of the watchlist associated with the monitor, if any.
@@ -2678,6 +2707,8 @@ export const SignalApiCreateBodySchema = z.object({
    */
   entityGroups: z.array(EntityGroupSchema).optional().nullable(),
   query: ComplexAllEndpointQuerySchema,
+  linkedInQuery: SignalLinkedInQuerySchema.optional().nullable(),
+  redditQuery: SignalRedditQuerySchema.optional().nullable(),
   schedulePolicy: SignalSchedulePolicySchema.optional().nullable(),
   /**
    * Numeric ID of a visible watchlist in the monitor's organization to associate with the monitor.
@@ -2717,6 +2748,8 @@ export const SignalApiUpdateBodySchema = z.object({
    */
   entityGroups: z.array(EntityGroupSchema),
   query: ComplexAllEndpointQuerySchema,
+  linkedInQuery: SignalLinkedInQuerySchema,
+  redditQuery: SignalRedditQuerySchema,
   schedulePolicy: SignalSchedulePolicySchema.optional().nullable(),
   /**
    * Numeric ID of a visible watchlist in the monitor's organization to associate with the monitor.

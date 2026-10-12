@@ -701,6 +701,11 @@ export const GetStoryCountsQuerySchema = z.object({
    * @required
    */
   splitBy: GetStoryCountsSplitByEnumSchema,
+
+  /**
+   * IANA time zone used to align interval buckets (e.g. America/Chicago). Defaults to UTC. Applies to intervalArticleCounts.
+   */
+  timeZone: z.string().optional(),
 });
 
 export const GetStoryCountsRequestSchema = z.object({
