@@ -5,8 +5,8 @@ export default defineConfig({
   target: "es2020",
   treeshake: true,
   format: ["esm", "cjs"],
-  sourcemap: true, // keep them for debugging
-  clean: false,
-  minify: true,
-  dts: true, // rolls everything into dist/index.d.ts
+  sourcemap: false,
+  clean: true,
+  minify: false,
+  dts: true, // rolls everything into dist/index.d.mts and dist/index.d.cts
 });
