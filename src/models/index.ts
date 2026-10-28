@@ -2126,6 +2126,7 @@ export const XPostSchema = z.object({
     .union([z.iso.date(), z.iso.datetime()])
     .transform((val) => new Date(val)),
   avatarUrl: z.string().optional().nullable(),
+  views: z.number().optional().nullable(),
   favorites: z.number().optional().nullable(),
   replies: z.number().optional().nullable(),
   quotes: z.number().optional().nullable(),
@@ -2764,6 +2765,260 @@ export const SignalApiUpdateBodySchema = z.object({
 
 export type SignalApiUpdateBody = z.infer<typeof SignalApiUpdateBodySchema>;
 
+export const SocialLinkedInFeedPostAuthorSchema = z.object({
+  /**
+   * Person or company display name.
+   */
+  name: z.string().optional().nullable(),
+  publicIdentifier: z.string().optional().nullable(),
+  occupation: z.string().optional().nullable(),
+  type: z.string().optional().nullable(),
+  url: z.string().optional().nullable(),
+  followers: z.number().optional().nullable(),
+});
+
+export type SocialLinkedInFeedPostAuthor = z.infer<
+  typeof SocialLinkedInFeedPostAuthorSchema
+>;
+
+export const SocialLinkedInFeedPostCommentSchema = z.object({
+  urn: z.string().optional().nullable(),
+  url: z.string().optional().nullable(),
+  text: z.string().optional().nullable(),
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  likes: z.number().optional().nullable(),
+});
+
+export type SocialLinkedInFeedPostComment = z.infer<
+  typeof SocialLinkedInFeedPostCommentSchema
+>;
+
+export const SocialLinkedInFeedPostReactionSchema = z.object({
+  reactionType: z.string(),
+  count: z.number().optional().nullable(),
+});
+
+export type SocialLinkedInFeedPostReaction = z.infer<
+  typeof SocialLinkedInFeedPostReactionSchema
+>;
+
+export const SocialLinkedInFeedPostSchema = z.object({
+  /**
+   * Kind of person activity: `Post`, `Repost`, `Comment`, `Reply` or `Reaction`. Empty for company posts.
+   */
+  activityType: z.string().optional().nullable(),
+  urn: z.string().optional().nullable(),
+  url: z.string().optional().nullable(),
+  shareUrl: z.string().optional().nullable(),
+  text: z.string().optional().nullable(),
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  isRepost: z.boolean().optional().nullable(),
+  likes: z.number().optional().nullable(),
+  comments: z.number().optional().nullable(),
+  shares: z.number().optional().nullable(),
+  reactions: z
+    .array(SocialLinkedInFeedPostReactionSchema)
+    .optional()
+    .nullable(),
+  /**
+   * Types of the post's attachments, e.g. `image` or `video`.
+   */
+  attachmentTypes: z.array(z.string()).optional().nullable(),
+  author: SocialLinkedInFeedPostAuthorSchema.optional().nullable(),
+  sharedPost: z
+    .unknown() /* Self-reference to SocialLinkedInFeedPostSchema prevented */
+    .optional()
+    .nullable(),
+  originalPostUrl: z.string().optional().nullable(),
+  comment: SocialLinkedInFeedPostCommentSchema.optional().nullable(),
+  reactionText: z.string().optional().nullable(),
+});
+
+export type SocialLinkedInFeedPost = z.infer<
+  typeof SocialLinkedInFeedPostSchema
+>;
+
+export const SocialLinkedInFeedResultSchema = z.object({
+  status: z.number(),
+  numResults: z.number(),
+  results: z.array(SocialLinkedInFeedPostSchema),
+  nextCursor: z.string().optional().nullable(),
+});
+
+export type SocialLinkedInFeedResult = z.infer<
+  typeof SocialLinkedInFeedResultSchema
+>;
+
+export const SocialLinkedInPostAuthorSchema = z.object({
+  id: z.string().optional().nullable(),
+  fullName: z.string().optional().nullable(),
+  username: z.string().optional().nullable(),
+  /**
+   * Author kind, e.g. `person` or `company`.
+   */
+  type: z.string().optional().nullable(),
+  url: z.string().optional().nullable(),
+  urn: z.string().optional().nullable(),
+  /**
+   * URL of the largest available profile picture.
+   */
+  profilePictureUrl: z.string().optional().nullable(),
+});
+
+export type SocialLinkedInPostAuthor = z.infer<
+  typeof SocialLinkedInPostAuthorSchema
+>;
+
+export const SocialLinkedInPostSchema = z.object({
+  urn: z.string(),
+  url: z.string().optional().nullable(),
+  text: z.string().optional().nullable(),
+  postedAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  reposted: z.boolean().optional().nullable(),
+  author: SocialLinkedInPostAuthorSchema.optional().nullable(),
+  reactions: z.number().optional().nullable(),
+  likes: z.number().optional().nullable(),
+  empathy: z.number().optional().nullable(),
+  appreciation: z.number().optional().nullable(),
+  praise: z.number().optional().nullable(),
+  interest: z.number().optional().nullable(),
+  funny: z.number().optional().nullable(),
+  maybe: z.number().optional().nullable(),
+  comments: z.number().optional().nullable(),
+});
+
+export type SocialLinkedInPost = z.infer<typeof SocialLinkedInPostSchema>;
+
+export const SocialLinkedInPostSearchResultSchema = z.object({
+  status: z.number(),
+  numResults: z.number(),
+  results: z.array(SocialLinkedInPostSchema),
+  nextPage: z.number().optional().nullable(),
+});
+
+export type SocialLinkedInPostSearchResult = z.infer<
+  typeof SocialLinkedInPostSearchResultSchema
+>;
+
+export const SocialRedditPostSchema = z.object({
+  id: z.string(),
+  /**
+   * Reddit fullname, e.g. `t3_abc123`.
+   */
+  fullname: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
+  text: z.string().optional().nullable(),
+  author: z.string().optional().nullable(),
+  subreddit: z.string().optional().nullable(),
+  subredditPrefixed: z.string().optional().nullable(),
+  subredditSubscribers: z.number().optional().nullable(),
+  /**
+   * Permalink of the post.
+   */
+  url: z.string().optional().nullable(),
+  /**
+   * Link the post points to, for link posts.
+   */
+  linkUrl: z.string().optional().nullable(),
+  domain: z.string().optional().nullable(),
+  flair: z.string().optional().nullable(),
+  postHint: z.string().optional().nullable(),
+  score: z.number().optional().nullable(),
+  upvotes: z.number().optional().nullable(),
+  upvoteRatio: z.number().optional().nullable(),
+  numComments: z.number().optional().nullable(),
+  numCrossposts: z.number().optional().nullable(),
+  totalAwardsReceived: z.number().optional().nullable(),
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  isVideo: z.boolean().optional().nullable(),
+  isSelf: z.boolean().optional().nullable(),
+  over18: z.boolean().optional().nullable(),
+  spoiler: z.boolean().optional().nullable(),
+  stickied: z.boolean().optional().nullable(),
+  locked: z.boolean().optional().nullable(),
+  archived: z.boolean().optional().nullable(),
+  thumbnail: z.string().optional().nullable(),
+});
+
+export type SocialRedditPost = z.infer<typeof SocialRedditPostSchema>;
+
+export const SocialRedditPostSearchResultSchema = z.object({
+  status: z.number(),
+  numResults: z.number(),
+  results: z.array(SocialRedditPostSchema),
+  nextCursor: z.string().optional().nullable(),
+});
+
+export type SocialRedditPostSearchResult = z.infer<
+  typeof SocialRedditPostSearchResultSchema
+>;
+
+export const SocialXPostAuthorSchema = z.object({
+  screenName: z.string(),
+  avatarUrl: z.string().optional().nullable(),
+});
+
+export type SocialXPostAuthor = z.infer<typeof SocialXPostAuthorSchema>;
+
+export const SocialXPostSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+  text: z.string().optional().nullable(),
+  /**
+   * BCP 47 language tag, `und` when unknown.
+   */
+  lang: z.string().optional().nullable(),
+  createdAt: z
+    .union([z.iso.date(), z.iso.datetime()])
+    .transform((val) => new Date(val))
+    .optional()
+    .nullable(),
+  author: SocialXPostAuthorSchema,
+  views: z.number().optional().nullable(),
+  likes: z.number().optional().nullable(),
+  reposts: z.number().optional().nullable(),
+  replies: z.number().optional().nullable(),
+  quotes: z.number().optional().nullable(),
+  bookmarks: z.number().optional().nullable(),
+  /**
+   * URLs of attached photos.
+   */
+  photoUrls: z.array(z.string()).optional().nullable(),
+  /**
+   * URLs of attached video thumbnails.
+   */
+  videoUrls: z.array(z.string()).optional().nullable(),
+});
+
+export type SocialXPost = z.infer<typeof SocialXPostSchema>;
+
+export const SocialXPostSearchResultSchema = z.object({
+  status: z.number(),
+  numResults: z.number(),
+  results: z.array(SocialXPostSchema),
+  nextCursor: z.string().optional().nullable(),
+});
+
+export type SocialXPostSearchResult = z.infer<
+  typeof SocialXPostSearchResultSchema
+>;
+
 export const SourceGroupDtoSchema = z.object({
   /**
    * Numeric identifier for the source group.
@@ -2994,25 +3249,15 @@ export const SummaryBodySchema = z.object({
    * The underlying LLM model to use for generation.
    */
   model: z
-    .enum([
-      "gpt-5.4-mini",
-      "gpt-5.4-nano",
-      "gpt-5-mini",
-      "gpt-5-nano",
-      "gpt-4o",
-      "gpt-4o-mini",
-      "gpt-4.1",
-      "gpt-4.1-mini",
-      "openai/gpt-oss-120b",
-    ])
+    .enum(["gpt-6-luna", "gpt-6.1-sol", "openai/gpt-oss-120b"])
     .optional()
     .nullable(),
   /**
-   * Sampling temperature from 0.0 to 2.0. Ignored by gpt-5.4-mini, gpt-5.4-nano, gpt-5-mini, and gpt-5-nano.
+   * Sampling temperature from 0.0 to 2.0. Ignored by gpt-6-luna and gpt-6.1-sol.
    */
   temperature: z.number().optional().nullable(),
   /**
-   * Nucleus sampling (top-p) for the LLM (0.0 to 1.0).
+   * Nucleus sampling (top-p) for the LLM (0.0 to 1.0). Ignored by gpt-6-luna and gpt-6.1-sol.
    */
   topP: z.number().optional().nullable(),
   /**

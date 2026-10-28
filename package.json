@@ -73,23 +73,23 @@
     "undici": ">=5"
   },
   "dependencies": {
-    "zod": "^4.6.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.41.0",
+    "@openapitools/openapi-generator-cli": "^2.42.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.5",
-    "@typescript-eslint/eslint-plugin": "^8.71.1",
-    "@typescript-eslint/parser": "^8.71.1",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
     "doctoc": "^2.5.0",
-    "dotenv": "^18.0.7",
-    "eslint": "^10.12.0",
+    "dotenv": "^18.0.9",
+    "eslint": "^10.13.0",
     "eslint-plugin-unused-imports": "^4.4.1",
     "jest": "^30.5.2",
-    "minimatch": "^10.2.6",
+    "minimatch": "^11.0.2",
     "prettier": "^3.9.10",
-    "ts-jest": "^29.4.14",
-    "tsdown": "^0.23.1",
+    "ts-jest": "^29.4.15",
+    "tsdown": "^0.23.3",
     "typescript": "^6.0.3"
   }
 }
