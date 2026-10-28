@@ -31,6 +31,10 @@ import type {
   MonitorSummaryListResult,
   PeopleSearchResult,
   QuerySearchResult,
+  SocialLinkedInFeedResult,
+  SocialLinkedInPostSearchResult,
+  SocialRedditPostSearchResult,
+  SocialXPostSearchResult,
   SourceGroupListResult,
   SourceGroupResolveResult,
   SourceGroupResult,
@@ -61,6 +65,10 @@ import {
   MonitorSummaryListResultSchema,
   PeopleSearchResultSchema,
   QuerySearchResultSchema,
+  SocialLinkedInFeedResultSchema,
+  SocialLinkedInPostSearchResultSchema,
+  SocialRedditPostSearchResultSchema,
+  SocialXPostSearchResultSchema,
   SourceGroupListResultSchema,
   SourceGroupResolveResultSchema,
   SourceGroupResultSchema,
@@ -76,6 +84,34 @@ import {
   WikipediaSearchResultSchema,
   WikipediaVectorSearchResultSchema,
 } from "../models/index";
+
+export const GetLinkedinCompanyPostsTypeEnumSchema = z.enum([
+  "ALL",
+  "ARTICLES",
+  "DOCUMENTS",
+]);
+export type GetLinkedinCompanyPostsTypeEnum = z.infer<
+  typeof GetLinkedinCompanyPostsTypeEnumSchema
+>;
+export const GetLinkedinCompanyPostsTypeEnum = {
+  All: "ALL",
+  Articles: "ARTICLES",
+  Documents: "DOCUMENTS",
+} as const;
+
+export const GetLinkedinPersonActivityTypeEnumSchema = z.enum([
+  "POSTS",
+  "COMMENTS",
+  "REACTIONS",
+]);
+export type GetLinkedinPersonActivityTypeEnum = z.infer<
+  typeof GetLinkedinPersonActivityTypeEnumSchema
+>;
+export const GetLinkedinPersonActivityTypeEnum = {
+  Posts: "POSTS",
+  Comments: "COMMENTS",
+  Reactions: "REACTIONS",
+} as const;
 
 export const GetStoryCountsSplitByEnumSchema = z.enum([
   "hour",
@@ -300,6 +336,88 @@ export const ListWatchlistsNullsEnum = {
   Last: "last",
 } as const;
 
+export const SearchLinkedinPostsSortByEnumSchema = z.enum([
+  "DATE_POSTED",
+  "RELEVANCE",
+]);
+export type SearchLinkedinPostsSortByEnum = z.infer<
+  typeof SearchLinkedinPostsSortByEnumSchema
+>;
+export const SearchLinkedinPostsSortByEnum = {
+  DatePosted: "DATE_POSTED",
+  Relevance: "RELEVANCE",
+} as const;
+
+export const SearchLinkedinPostsDatePostedEnumSchema = z.enum([
+  "PAST_24H",
+  "PAST_WEEK",
+  "PAST_MONTH",
+]);
+export type SearchLinkedinPostsDatePostedEnum = z.infer<
+  typeof SearchLinkedinPostsDatePostedEnumSchema
+>;
+export const SearchLinkedinPostsDatePostedEnum = {
+  Past24H: "PAST_24H",
+  PastWeek: "PAST_WEEK",
+  PastMonth: "PAST_MONTH",
+} as const;
+
+export const SearchLinkedinPostsContentTypeEnumSchema = z.enum([
+  "PHOTOS",
+  "VIDEOS",
+  "JOBS",
+  "LIVE_VIDEOS",
+  "DOCUMENTS",
+]);
+export type SearchLinkedinPostsContentTypeEnum = z.infer<
+  typeof SearchLinkedinPostsContentTypeEnumSchema
+>;
+export const SearchLinkedinPostsContentTypeEnum = {
+  Photos: "PHOTOS",
+  Videos: "VIDEOS",
+  Jobs: "JOBS",
+  LiveVideos: "LIVE_VIDEOS",
+  Documents: "DOCUMENTS",
+} as const;
+
+export const SearchRedditPostsSortEnumSchema = z.enum([
+  "RELEVANCE",
+  "HOT",
+  "TOP",
+  "NEW",
+  "COMMENTS",
+]);
+export type SearchRedditPostsSortEnum = z.infer<
+  typeof SearchRedditPostsSortEnumSchema
+>;
+export const SearchRedditPostsSortEnum = {
+  Relevance: "RELEVANCE",
+  Hot: "HOT",
+  Top: "TOP",
+  New: "NEW",
+  Comments: "COMMENTS",
+} as const;
+
+export const SearchRedditPostsTimeEnumSchema = z.enum([
+  "HOUR",
+  "DAY",
+  "WEEK",
+  "MONTH",
+  "YEAR",
+  "ALL",
+]);
+export type SearchRedditPostsTimeEnum = z.infer<
+  typeof SearchRedditPostsTimeEnumSchema
+>;
+export const SearchRedditPostsTimeEnum = {
+  Hour: "HOUR",
+  Day: "DAY",
+  Week: "WEEK",
+  Month: "MONTH",
+  Year: "YEAR",
+  All: "ALL",
+} as const;
+
 export const SearchWikipediaSortByEnumSchema = z.enum([
   "relevance",
   "revisionTsDesc",
@@ -320,6 +438,20 @@ export const SearchWikipediaSortByEnum = {
   PageViewsAsc: "pageViewsAsc",
   ScrapedAtDesc: "scrapedAtDesc",
   ScrapedAtAsc: "scrapedAtAsc",
+} as const;
+
+export const SearchXPostsSearchTypeEnumSchema = z.enum([
+  "TOP",
+  "LATEST",
+  "MEDIA",
+]);
+export type SearchXPostsSearchTypeEnum = z.infer<
+  typeof SearchXPostsSearchTypeEnumSchema
+>;
+export const SearchXPostsSearchTypeEnum = {
+  Top: "TOP",
+  Latest: "LATEST",
+  Media: "MEDIA",
 } as const;
 
 export const ActivateMonitorApiPathSchema = z.object({
@@ -510,6 +642,56 @@ export const GetLimitsRequestSchema = z.object({
 });
 
 export type GetLimitsRequest = z.input<typeof GetLimitsRequestSchema>;
+
+export const GetLinkedinCompanyPostsQuerySchema = z.object({
+  /**
+   * LinkedIn company page URL, e.g. `https://www.linkedin.com/company/microsoft`.
+   * @required
+   */
+  url: z.string(),
+
+  /**
+   * Kind of posts to return. Defaults to all posts.
+   */
+  type: GetLinkedinCompanyPostsTypeEnumSchema.optional(),
+  /**
+   * `nextCursor` from the previous page.
+   */
+  cursor: z.string().optional(),
+});
+
+export const GetLinkedinCompanyPostsRequestSchema = z.object({
+  ...GetLinkedinCompanyPostsQuerySchema.shape,
+});
+
+export type GetLinkedinCompanyPostsRequest = z.input<
+  typeof GetLinkedinCompanyPostsRequestSchema
+>;
+
+export const GetLinkedinPersonActivityQuerySchema = z.object({
+  /**
+   * LinkedIn profile URL, e.g. `https://www.linkedin.com/in/williamhgates`.
+   * @required
+   */
+  url: z.string(),
+
+  /**
+   * Kind of activity to return. Defaults to posts.
+   */
+  type: GetLinkedinPersonActivityTypeEnumSchema.optional(),
+  /**
+   * `nextCursor` from the previous page.
+   */
+  cursor: z.string().optional(),
+});
+
+export const GetLinkedinPersonActivityRequestSchema = z.object({
+  ...GetLinkedinPersonActivityQuerySchema.shape,
+});
+
+export type GetLinkedinPersonActivityRequest = z.input<
+  typeof GetLinkedinPersonActivityRequestSchema
+>;
 
 export const GetMonitorApiPathSchema = z.object({
   /**
@@ -1725,6 +1907,43 @@ export type SearchJournalistsRequest = z.input<
   typeof SearchJournalistsRequestSchema
 >;
 
+export const SearchLinkedinPostsQuerySchema = z.object({
+  /**
+   * Search keywords.
+   * @required
+   */
+  q: z.string(),
+
+  /**
+   * Sort order of the results.
+   */
+  sortBy: SearchLinkedinPostsSortByEnumSchema.optional(),
+  /**
+   * Only return posts published within this time window.
+   */
+  datePosted: SearchLinkedinPostsDatePostedEnumSchema.optional(),
+  /**
+   * Only return posts with this type of content.
+   */
+  contentType: SearchLinkedinPostsContentTypeEnumSchema.optional(),
+  /**
+   * Only return posts by authors whose title matches this value.
+   */
+  authorTitle: z.string().optional(),
+  /**
+   * Page number, starting at 1.
+   */
+  page: z.number().optional(),
+});
+
+export const SearchLinkedinPostsRequestSchema = z.object({
+  ...SearchLinkedinPostsQuerySchema.shape,
+});
+
+export type SearchLinkedinPostsRequest = z.input<
+  typeof SearchLinkedinPostsRequestSchema
+>;
+
 export const SearchPeopleQuerySchema = z.object({
   /**
    * String. Search by person's name. Supports Boolean operators (AND, OR, NOT), exact phrases with quotes, and wildcards (* and ?) for flexible searching.
@@ -1757,6 +1976,39 @@ export const SearchPeopleRequestSchema = z.object({
 });
 
 export type SearchPeopleRequest = z.input<typeof SearchPeopleRequestSchema>;
+
+export const SearchRedditPostsQuerySchema = z.object({
+  /**
+   * Search query.
+   * @required
+   */
+  q: z.string(),
+
+  /**
+   * Restrict the search to a subreddit (without the `r/` prefix).
+   */
+  subreddit: z.string().optional(),
+  /**
+   * Sort order of the results.
+   */
+  sort: SearchRedditPostsSortEnumSchema.optional(),
+  /**
+   * Time window of the results. Only applies to the `TOP` sort.
+   */
+  time: SearchRedditPostsTimeEnumSchema.optional(),
+  /**
+   * `nextCursor` from the previous page.
+   */
+  cursor: z.string().optional(),
+});
+
+export const SearchRedditPostsRequestSchema = z.object({
+  ...SearchRedditPostsQuerySchema.shape,
+});
+
+export type SearchRedditPostsRequest = z.input<
+  typeof SearchRedditPostsRequestSchema
+>;
 
 export const SearchSourcesQuerySchema = z.object({
   /**
@@ -2620,6 +2872,31 @@ export type SearchWikipediaRequest = z.input<
   typeof SearchWikipediaRequestSchema
 >;
 
+export const SearchXPostsQuerySchema = z.object({
+  /**
+   * Search query. Supports X search operators, e.g. `from:perigon`, `#ai` or `"exact phrase"`.
+   * @required
+   */
+  q: z.string(),
+
+  /**
+   * Which posts to return: top, latest or media posts.
+   * @required
+   */
+  searchType: SearchXPostsSearchTypeEnumSchema,
+
+  /**
+   * `nextCursor` from the previous page.
+   */
+  cursor: z.string().optional(),
+});
+
+export const SearchXPostsRequestSchema = z.object({
+  ...SearchXPostsQuerySchema.shape,
+});
+
+export type SearchXPostsRequest = z.input<typeof SearchXPostsRequestSchema>;
+
 export const UpdateContactPointBodySchema = z.object({
   /**
    * Parameter contactPointUpdateBody
@@ -3174,6 +3451,76 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return LimitsResultSchema.parse(raw);
+  }
+  /**
+   * Get the recent posts of a LinkedIn company page, newest first. Each request counts against your social request quota, separate from the news API quota.
+   * LinkedIn Company Posts
+   */
+  async getLinkedinCompanyPosts(
+    requestParameters: GetLinkedinCompanyPostsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<SocialLinkedInFeedResult> {
+    const params =
+      GetLinkedinCompanyPostsRequestSchema.parse(requestParameters);
+    const queryParameters = GetLinkedinCompanyPostsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/social/linkedin/companies/posts`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return SocialLinkedInFeedResultSchema.parse(raw);
+  }
+  /**
+   * Get the recent posts, comments or reactions of a LinkedIn member, newest first. Each request counts against your social request quota, separate from the news API quota.
+   * LinkedIn Person Activity
+   */
+  async getLinkedinPersonActivity(
+    requestParameters: GetLinkedinPersonActivityRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<SocialLinkedInFeedResult> {
+    const params =
+      GetLinkedinPersonActivityRequestSchema.parse(requestParameters);
+    const queryParameters = GetLinkedinPersonActivityQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/social/linkedin/people/activity`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return SocialLinkedInFeedResultSchema.parse(raw);
   }
   /**
    * Retrieve a monitor by UUID for the organization associated with the API key.
@@ -3803,6 +4150,40 @@ export class V1Api extends runtime.BaseAPI {
     return JournalistSearchResultSchema.parse(raw);
   }
   /**
+   * Search public LinkedIn posts by keyword. Each request counts against your social request quota, separate from the news API quota.
+   * LinkedIn Posts
+   */
+  async searchLinkedinPosts(
+    requestParameters: SearchLinkedinPostsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<SocialLinkedInPostSearchResult> {
+    const params = SearchLinkedinPostsRequestSchema.parse(requestParameters);
+    const queryParameters = SearchLinkedinPostsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/social/linkedin/posts`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return SocialLinkedInPostSearchResultSchema.parse(raw);
+  }
+  /**
    * Search and retrieve additional information on known persons that exist within Perigon\'s entity database and as referenced in any article response object. Our database contains over 650,000 people from around the world and is refreshed frequently. People data is derived from Wikidata and includes a wikidataId field that can be used to lookup even more information on Wikidata\'s website.
    * People
    */
@@ -3835,6 +4216,40 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return PeopleSearchResultSchema.parse(raw);
+  }
+  /**
+   * Search Reddit posts, optionally within a single subreddit. Each request counts against your social request quota, separate from the news API quota.
+   * Reddit Posts
+   */
+  async searchRedditPosts(
+    requestParameters: SearchRedditPostsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<SocialRedditPostSearchResult> {
+    const params = SearchRedditPostsRequestSchema.parse(requestParameters);
+    const queryParameters = SearchRedditPostsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/social/reddit/posts`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return SocialRedditPostSearchResultSchema.parse(raw);
   }
   /**
    * Search and filter the 200,000+ media sources available via the Perigon API. The result includes a list of individual media sources that were matched to your specific criteria.
@@ -4007,6 +4422,40 @@ export class V1Api extends runtime.BaseAPI {
 
     const raw = await response.json();
     return WikipediaSearchResultSchema.parse(raw);
+  }
+  /**
+   * Search recent posts on X (Twitter). Each request counts against your social request quota, separate from the news API quota.
+   * X Posts
+   */
+  async searchXPosts(
+    requestParameters: SearchXPostsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction,
+  ): Promise<SocialXPostSearchResult> {
+    const params = SearchXPostsRequestSchema.parse(requestParameters);
+    const queryParameters = SearchXPostsQuerySchema.parse(params);
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      const token = this.configuration.accessToken;
+      const tokenString = await token("apiKeyAuth", []);
+      if (tokenString) {
+        headerParameters["Authorization"] = `Bearer ${tokenString}`;
+      }
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/social/x/posts`,
+        method: "GET",
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides,
+    );
+
+    const raw = await response.json();
+    return SocialXPostSearchResultSchema.parse(raw);
   }
   /**
    * Partially update a contact point owned by the organization associated with the API key. Only provided fields will be updated.
