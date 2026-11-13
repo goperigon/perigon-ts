@@ -177,7 +177,7 @@ const { results } = await perigon.searchStories({
 });
 ```
 
-`extraParams` values (strings, numbers, booleans, dates, or arrays of these) are sent as-is, without validation, and override declared parameters with the same name. Undeclared top-level keys that bypass the types (e.g. from JavaScript) are dropped.
+`extraParams` accepts strings, numbers, booleans, single dates, and arrays of strings, numbers, or booleans; `null` and `undefined` values are omitted. These values override declared parameters with the same name without checking the declared parameter's type. Undeclared top-level keys that bypass the types (e.g. from JavaScript) are dropped.
 
 ## ⚠️ Error Handling
 
