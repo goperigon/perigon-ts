@@ -1,6 +1,10 @@
+import { z } from "zod";
+
 export const BASE_PATH = "https://api.perigon.io".replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
+  /** API origin, e.g. a staging host. Defaults to {@link BASE_PATH}. */
+  basePath?: string;
   fetchApi?: FetchAPI;
   middleware?: Middleware[];
   queryParamsStringify?: (params: HTTPQuery) => string;
@@ -21,7 +25,9 @@ export class Configuration {
   }
 
   get basePath() {
-    return BASE_PATH;
+    return this.configuration.basePath != null
+      ? this.configuration.basePath.replace(/\/+$/, "")
+      : BASE_PATH;
   }
   get fetchApi() {
     return this.configuration.fetchApi;
@@ -428,6 +434,46 @@ export interface RequestOpts {
   headers: HTTPHeaders;
   query?: HTTPQuery;
   body?: HTTPBody;
+}
+
+const ExtraQueryParamValueSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.date(),
+  z.array(z.union([z.string(), z.number(), z.boolean()])),
+]);
+
+export type ExtraQueryParamValue = z.infer<typeof ExtraQueryParamValueSchema>;
+
+/**
+ * Query parameters sent as-is, without validation. Values override declared
+ * parameters with the same name; `null` and `undefined` values are omitted.
+ */
+export const ExtraQueryParamsSchema = z
+  .record(z.string(), ExtraQueryParamValueSchema.nullish())
+  .optional();
+
+export type ExtraQueryParams = z.input<typeof ExtraQueryParamsSchema>;
+
+/**
+ * Builds the query for a request. Later sources override earlier ones;
+ * `null` and `undefined` values are omitted.
+ */
+export function buildQuery(
+  ...sources: Array<
+    { [key: string]: HTTPQuery[string] | undefined } | undefined
+  >
+): HTTPQuery {
+  const query: HTTPQuery = {};
+  for (const source of sources) {
+    for (const [key, value] of Object.entries(source ?? {})) {
+      if (value !== null && value !== undefined) {
+        query[key] = value;
+      }
+    }
+  }
+  return query;
 }
 
 export function querystring(params: HTTPQuery, prefix: string = ""): string {

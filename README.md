@@ -36,6 +36,7 @@ Fully-typed TypeScript SDK for the Perigon API. Access news articles, AI summari
 - [🚀 Quick Start](#-quick-start)
 - [🔑 Authentication](#-authentication)
 - [📚 Endpoints](#-endpoints)
+- [🧩 Undeclared Parameters](#-undeclared-parameters)
 - [⚠️ Error Handling](#-error-handling)
 - [🪪 License](#-license)
 
@@ -96,6 +97,8 @@ const perigon = new V1Api(
   }),
 );
 ```
+
+Requests go to `https://api.perigon.io` by default. To send them elsewhere, such as through a proxy, pass `basePath: "https://your-host"` to `Configuration`.
 
 ## 📚 Endpoints
 
@@ -162,6 +165,19 @@ const { results } = await perigon.searchWikipedia({
 
 - [`searchWikipedia`](https://dev.perigon.io/reference?endpoint=13) – Search Wikipedia articles with full-text matching and filtering
 - [`vectorSearchWikipedia`](https://dev.perigon.io/reference?endpoint=12) – Find semantically related Wikipedia content using vector similarity
+
+## 🧩 Undeclared Parameters
+
+Declared request parameters are validated; TypeScript rejects undeclared ones. To send a query parameter the API accepts but this SDK version does not declare yet, pass it through `extraParams`:
+
+```ts
+const { results } = await perigon.searchStories({
+  q: "climate change",
+  extraParams: { someNewFilter: "value" },
+});
+```
+
+`extraParams` accepts strings, numbers, booleans, single dates, and arrays of strings, numbers, or booleans; `null` and `undefined` values are omitted. These values override declared parameters with the same name without checking the declared parameter's type. Undeclared top-level keys that bypass the types (e.g. from JavaScript) are dropped.
 
 ## ⚠️ Error Handling
 

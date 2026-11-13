@@ -11,8 +11,20 @@ function main() {
   const modelsPath = join(process.cwd(), "src/models/index.ts");
 
   console.log("🔍 Reading models file...");
-  let content = readFileSync(modelsPath, "utf-8");
+  const content = readFileSync(modelsPath, "utf-8");
 
+  const reorderedContent = reorderModels(content);
+
+  // Write the updated content
+  writeFileSync(modelsPath, reorderedContent, "utf-8");
+
+  console.log("🎉 Successfully reordered schemas!");
+  console.log(
+    "💡 All schemas now properly ordered with circular dependencies handled",
+  );
+}
+
+export function reorderModels(content: string): string {
   console.log("🔄 Parsing schema definitions and dependencies...");
 
   // Extract all schema definitions and their dependencies
@@ -27,15 +39,23 @@ function main() {
 
   // Reorder the content
   console.log("✏️ Reordering schema definitions...");
-  const reorderedContent = reorderSchemas(content, sortedSchemas, dependencies);
+  const reordered = reorderSchemas(content, sortedSchemas, dependencies);
 
-  // Write the updated content
-  writeFileSync(modelsPath, reorderedContent, "utf-8");
-
-  console.log("🎉 Successfully reordered schemas!");
-  console.log(
-    "💡 All schemas now properly ordered with circular dependencies handled",
-  );
+  // Lines outside the extracted schema blocks are not copied, so make sure no
+  // schema or inferred type got lost along the way. Property enum constants
+  // (e.g. `FooStatusEnum`) have never been part of the output.
+  const exportsOf = (text: string) =>
+    text
+      .split("\n")
+      .filter((line) =>
+        /^export (const \w+Schema =|type \w+ = z\.infer<)/.test(line),
+      );
+  const kept = new Set(exportsOf(reordered));
+  const lost = exportsOf(content).filter((line) => !kept.has(line));
+  if (lost.length > 0) {
+    throw new Error(`Reordering dropped exports:\n${lost.join("\n")}`);
+  }
+  return reordered;
 }
 
 interface SchemaInfo {
@@ -57,33 +77,14 @@ function extractSchemas(content: string): SchemaInfo[] {
       const schemaName = schemaMatch[1];
       const startLine = i;
 
-      // Find the end of this schema definition
+      // The templates close every multi-line schema (z.object, z.enum,
+      // z.union, z.discriminatedUnion) with `});` or `]);` at column 0.
       let endLine = startLine;
-      let braceCount = 0;
-      let inSchema = false;
-
       for (let j = startLine; j < lines.length; j++) {
-        const currentLine = lines[j];
-
         if (
-          currentLine.includes("z.object(") ||
-          currentLine.includes("z.enum(")
+          (j === startLine && lines[j].trimEnd().endsWith(";")) ||
+          /^[\]}]\);$/.test(lines[j])
         ) {
-          inSchema = true;
-        }
-
-        if (inSchema) {
-          braceCount += (currentLine.match(/\{/g) || []).length;
-          braceCount -= (currentLine.match(/\}/g) || []).length;
-
-          if (braceCount === 0 && currentLine.includes("}")) {
-            endLine = j;
-            break;
-          }
-        }
-
-        // Handle single-line schemas
-        if (j === startLine && currentLine.includes(";")) {
           endLine = j;
           break;
         }
@@ -91,7 +92,7 @@ function extractSchemas(content: string): SchemaInfo[] {
 
       // Look for associated type definition and enum constant
       let finalEndLine = endLine;
-      const typeName = schemaName.replace("Schema", "");
+      const typeName = schemaName.replace(/Schema$/, "");
 
       // Check for type definition: export type TypeName = z.infer<typeof TypeNameSchema>;
       for (let k = endLine + 1; k < Math.min(endLine + 10, lines.length); k++) {
