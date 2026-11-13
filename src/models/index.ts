@@ -124,6 +124,382 @@ export const ApiLimitsDtoSchema = z.object({
 
 export type ApiLimitsDto = z.infer<typeof ApiLimitsDtoSchema>;
 
+export const BooleanSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export type BooleanSpec = z.infer<typeof BooleanSpecSchema>;
+
+export const DateSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export type DateSpec = z.infer<typeof DateSpecSchema>;
+
+export const DatetimeSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export type DatetimeSpec = z.infer<typeof DatetimeSpecSchema>;
+
+export const EnumSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+  /**
+   * Allowed string values for the enum. Must contain at least one value.
+   */
+  values: z.array(z.string()),
+});
+
+export type EnumSpec = z.infer<typeof EnumSpecSchema>;
+
+export const IntegerPropertySchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+  /**
+   * Maximum allowed integer value, inclusive.
+   */
+  max: z.number().optional().nullable(),
+  /**
+   * Minimum allowed integer value, inclusive.
+   */
+  min: z.number().optional().nullable(),
+});
+
+export type IntegerProperty = z.infer<typeof IntegerPropertySchema>;
+
+export const NumberPropertySchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+  /**
+   * Maximum allowed numeric value, inclusive.
+   */
+  max: z.number().optional().nullable(),
+  /**
+   * Minimum allowed numeric value, inclusive.
+   */
+  min: z.number().optional().nullable(),
+});
+
+export type NumberProperty = z.infer<typeof NumberPropertySchema>;
+
+export const StringSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export type StringSpec = z.infer<typeof StringSpecSchema>;
+
+export const UrlSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export type UrlSpec = z.infer<typeof UrlSpecSchema>;
+
+export const PrimitiveSpecSchema = z.discriminatedUnion("type", [
+  z.lazy(() => BooleanSpecSchema.extend({ type: z.literal("BOOLEAN") })),
+  z.lazy(() => DateSpecSchema.extend({ type: z.literal("DATE") })),
+  z.lazy(() => DatetimeSpecSchema.extend({ type: z.literal("DATETIME") })),
+  z.lazy(() => EnumSpecSchema.extend({ type: z.literal("ENUM") })),
+  z.lazy(() => IntegerPropertySchema.extend({ type: z.literal("INTEGER") })),
+  z.lazy(() => NumberPropertySchema.extend({ type: z.literal("NUMBER") })),
+  z.lazy(() => StringSpecSchema.extend({ type: z.literal("STRING") })),
+  z.lazy(() => UrlSpecSchema.extend({ type: z.literal("URL") })),
+]);
+
+export type PrimitiveSpec = z.infer<typeof PrimitiveSpecSchema>;
+
+export const ObjectSpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+  /**
+   * Whether the object may contain fields not defined in shape. Defaults to false.
+   */
+  allowExtra: z.boolean().optional(),
+  /**
+   * Primitive field definitions keyed by object field name.
+   */
+  shape: z.record(z.string(), PrimitiveSpecSchema),
+});
+
+export type ObjectSpec = z.infer<typeof ObjectSpecSchema>;
+
+export const ArrayElementSpecSchema = z.discriminatedUnion("type", [
+  z.lazy(() => BooleanSpecSchema.extend({ type: z.literal("BOOLEAN") })),
+  z.lazy(() => DateSpecSchema.extend({ type: z.literal("DATE") })),
+  z.lazy(() => DatetimeSpecSchema.extend({ type: z.literal("DATETIME") })),
+  z.lazy(() => EnumSpecSchema.extend({ type: z.literal("ENUM") })),
+  z.lazy(() => IntegerPropertySchema.extend({ type: z.literal("INTEGER") })),
+  z.lazy(() => NumberPropertySchema.extend({ type: z.literal("NUMBER") })),
+  z.lazy(() => ObjectSpecSchema.extend({ type: z.literal("OBJECT") })),
+  z.lazy(() => StringSpecSchema.extend({ type: z.literal("STRING") })),
+  z.lazy(() => UrlSpecSchema.extend({ type: z.literal("URL") })),
+]);
+
+export type ArrayElementSpec = z.infer<typeof ArrayElementSpecSchema>;
+
+export const ArraySpecSchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+  element: ArrayElementSpecSchema,
+});
+
+export type ArraySpec = z.infer<typeof ArraySpecSchema>;
+
 export const CategoryHolderSchema = z.object({
   /**
    * Content category assigned to the article.
@@ -727,7 +1103,11 @@ export const NewsClusterSchema = z.object({
    */
   highlights: z.record(z.string(), z.array(z.string())).optional().nullable(),
   /**
-   * Ratio of unique publisher domains to total articles in the story.
+   * Number of distinct publisher domains represented in the story.
+   */
+  uniqueSourcesCount: z.number().optional().nullable(),
+  /**
+   * Ratio of distinct publisher domains to total articles in the story, including reprints (uniqueSourcesCount / totalCount).
    */
   sourceDiversity: z.number().optional().nullable(),
 });
@@ -1874,6 +2254,9 @@ export const WatchlistCompanySchema = z.object({
   domain: z.string().optional().nullable(),
   aliases: z.array(z.string()).optional().nullable(),
   query: z.string().optional().nullable(),
+  linkedInQuery: z.string().optional().nullable(),
+  redditQuery: z.string().optional().nullable(),
+  xQuery: z.string().optional().nullable(),
 });
 
 export type WatchlistCompany = z.infer<typeof WatchlistCompanySchema>;
@@ -1884,6 +2267,9 @@ export const WatchlistPersonSchema = z.object({
   aliases: z.array(z.string()).optional().nullable(),
   wikidataId: z.string().optional().nullable(),
   query: z.string().optional().nullable(),
+  linkedInQuery: z.string().optional().nullable(),
+  redditQuery: z.string().optional().nullable(),
+  xQuery: z.string().optional().nullable(),
 });
 
 export type WatchlistPerson = z.infer<typeof WatchlistPersonSchema>;
@@ -2252,35 +2638,23 @@ export const SignalLinkedInQuerySchema = z.object({
 
 export type SignalLinkedInQuery = z.infer<typeof SignalLinkedInQuerySchema>;
 
-export const SignalMonitoringPlanDataSchemaPropertySchema = z.object({
-  /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
-   */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
-  /**
-   * Plain-language instructions describing the value to extract for this field.
-   */
-  description: z.string().optional().nullable(),
-  /**
-   * Whether the extracted value may be null. Defaults to true.
-   */
-  nullable: z.boolean().optional().nullable(),
-  /**
-   * Whether the field must appear in extracted event data. Defaults to true.
-   */
-  required: z.boolean().optional().nullable(),
-});
+export const SignalMonitoringPlanDataSchemaSchemaValueSchema =
+  z.discriminatedUnion("type", [
+    z.lazy(() => ArraySpecSchema.extend({ type: z.literal("ARRAY") })),
+    z.lazy(() => BooleanSpecSchema.extend({ type: z.literal("BOOLEAN") })),
+    z.lazy(() => DateSpecSchema.extend({ type: z.literal("DATE") })),
+    z.lazy(() => DatetimeSpecSchema.extend({ type: z.literal("DATETIME") })),
+    z.lazy(() => EnumSpecSchema.extend({ type: z.literal("ENUM") })),
+    z.lazy(() => IntegerPropertySchema.extend({ type: z.literal("INTEGER") })),
+    z.lazy(() => NumberPropertySchema.extend({ type: z.literal("NUMBER") })),
+    z.lazy(() => ObjectSpecSchema.extend({ type: z.literal("OBJECT") })),
+    z.lazy(() => StringSpecSchema.extend({ type: z.literal("STRING") })),
+    z.lazy(() => UrlSpecSchema.extend({ type: z.literal("URL") })),
+  ]);
+
+export type SignalMonitoringPlanDataSchemaSchemaValue = z.infer<
+  typeof SignalMonitoringPlanDataSchemaSchemaValueSchema
+>;
 
 export const SignalMonitoringPlanDataSchemaSchema = z.object({
   /**
@@ -2294,7 +2668,7 @@ export const SignalMonitoringPlanDataSchemaSchema = z.object({
   /**
    * Structured event field definitions keyed by output field name.
    */
-  schema: z.record(z.string(), SignalMonitoringPlanDataSchemaPropertySchema),
+  schema: z.record(z.string(), SignalMonitoringPlanDataSchemaSchemaValueSchema),
 });
 
 export type SignalMonitoringPlanDataSchema = z.infer<
@@ -2728,15 +3102,15 @@ export const SignalApiUpdateBodySchema = z.object({
   /**
    * New display name for the monitor. Must be non-blank and at most 256 characters.
    */
-  name: z.string(),
+  name: z.string().nullable(),
   /**
    * New classification behavior. Accepts EVENT, MENTIONS, or TOPIC.
    */
-  classificationType: z.enum(["EVENT", "MENTIONS", "TOPIC"]),
+  classificationType: z.enum(["EVENT", "MENTIONS", "TOPIC"]).nullable(),
   /**
    * New plain-language monitoring objective. Must be non-blank and at most 4,096 characters.
    */
-  monitoringObjective: z.string(),
+  monitoringObjective: z.string().nullable(),
   /**
    * New instructions used to guide monitor processing. Limited to 8,192 characters and may be cleared with null.
    */
@@ -2747,7 +3121,7 @@ export const SignalApiUpdateBodySchema = z.object({
   /**
    * Replacement entity groups for the monitor. Send an empty list to remove all groups.
    */
-  entityGroups: z.array(EntityGroupSchema),
+  entityGroups: z.array(EntityGroupSchema).nullable(),
   query: ComplexAllEndpointQuerySchema,
   linkedInQuery: SignalLinkedInQuerySchema,
   redditQuery: SignalRedditQuerySchema,
@@ -2759,11 +3133,104 @@ export const SignalApiUpdateBodySchema = z.object({
   /**
    * Replacement UUIDs of verified, non-archived contact points. Send an empty list to remove all contact points.
    */
-  contactPointIds: z.array(z.string()),
+  contactPointIds: z.array(z.string()).nullable(),
   xQuery: SignalXQuerySchema.optional().nullable(),
 });
 
 export type SignalApiUpdateBody = z.infer<typeof SignalApiUpdateBodySchema>;
+
+export const SignalEventSortBySchema = z.enum([
+  "createdAt",
+  "updatedAt",
+  "eventDate",
+]);
+
+export type SignalEventSortBy = z.infer<typeof SignalEventSortBySchema>;
+
+/**
+ * Required field used to sort events. Accepts createdAt, updatedAt, or eventDate.
+ * @export
+ */
+export const SignalEventSortBy = {
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+  EventDate: "eventDate",
+} as const;
+
+export const SignalMonitoringPlanDataSchemaPropertySchema = z.object({
+  /**
+   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   */
+  type: z.enum([
+    "ARRAY",
+    "BOOLEAN",
+    "DATE",
+    "DATETIME",
+    "ENUM",
+    "INTEGER",
+    "NUMBER",
+    "OBJECT",
+    "STRING",
+    "URL",
+  ]),
+  /**
+   * Plain-language instructions describing the value to extract for this field.
+   */
+  description: z.string().optional().nullable(),
+  /**
+   * Whether the extracted value may be null. Defaults to true.
+   */
+  nullable: z.boolean().optional().nullable(),
+  /**
+   * Whether the field must appear in extracted event data. Defaults to true.
+   */
+  required: z.boolean().optional().nullable(),
+});
+
+export type SignalMonitoringPlanDataSchemaProperty = z.infer<
+  typeof SignalMonitoringPlanDataSchemaPropertySchema
+>;
+
+export const SignalNewsletterSortBySchema = z.enum(["createdAt", "updatedAt"]);
+
+export type SignalNewsletterSortBy = z.infer<
+  typeof SignalNewsletterSortBySchema
+>;
+
+/**
+ * Required field used to sort newsletters. Accepts createdAt or updatedAt.
+ * @export
+ */
+export const SignalNewsletterSortBy = {
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+} as const;
+
+export const SignalSortBySchema = z.enum(["createdAt", "updatedAt"]);
+
+export type SignalSortBy = z.infer<typeof SignalSortBySchema>;
+
+/**
+ * Required field used to sort monitors. Accepts createdAt or updatedAt.
+ * @export
+ */
+export const SignalSortBy = {
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+} as const;
+
+export const SignalSummarySortBySchema = z.enum(["createdAt", "updatedAt"]);
+
+export type SignalSummarySortBy = z.infer<typeof SignalSummarySortBySchema>;
+
+/**
+ * Required field used to sort summaries. Accepts createdAt or updatedAt.
+ * @export
+ */
+export const SignalSummarySortBy = {
+  CreatedAt: "createdAt",
+  UpdatedAt: "updatedAt",
+} as const;
 
 export const SocialLinkedInFeedPostAuthorSchema = z.object({
   /**
@@ -3357,6 +3824,9 @@ export const WatchlistCompanyDtoSchema = z.object({
   domain: z.string().optional().nullable(),
   aliases: z.array(z.string()).optional().nullable(),
   query: z.string().optional().nullable(),
+  linkedInQuery: z.string().optional().nullable(),
+  redditQuery: z.string().optional().nullable(),
+  xQuery: z.string().optional().nullable(),
 });
 
 export type WatchlistCompanyDto = z.infer<typeof WatchlistCompanyDtoSchema>;
@@ -3367,6 +3837,9 @@ export const WatchlistPersonDtoSchema = z.object({
   wikidataId: z.string().optional().nullable(),
   aliases: z.array(z.string()).optional().nullable(),
   query: z.string().optional().nullable(),
+  linkedInQuery: z.string().optional().nullable(),
+  redditQuery: z.string().optional().nullable(),
+  xQuery: z.string().optional().nullable(),
 });
 
 export type WatchlistPersonDto = z.infer<typeof WatchlistPersonDtoSchema>;

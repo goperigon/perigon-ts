@@ -8,38 +8,26 @@
 {{#discriminator}}
 export const {{classname}}Schema = z.discriminatedUnion('{{discriminator.propertyName}}', [
 {{#discriminator.mappedModels}}
-    z.lazy(() => {{modelName}}Schema){{^-last}},{{/-last}}
+    z.lazy(() => {{modelName}}Schema.extend({ {{discriminator.propertyName}}: z.literal('{{mappingName}}') })),
 {{/discriminator.mappedModels}}
 ]);
 {{/discriminator}}
 {{^discriminator}}
+{{! openapi-generator 7.13 does not populate oneOfPrimitives, so every option is read from composedSchemas. }}
 export const {{classname}}Schema = z.union([
-    {{#oneOf}}
-        {{#oneOfModels}}
-            z.lazy(() => {{.}}Schema){{/oneOfModels}}
-        {{#oneOfArrays}}
-            z.array(z.lazy(() => {{.}}Schema))
-        {{/oneOfArrays}}
-        {{#oneOfPrimitives}}
-            {{#isArray}}
-                z.array(
-                {{#items}}
-                    {{#isString}}z.string(){{/isString}}
-                    {{#isNumeric}}z.number(){{/isNumeric}}
-                    {{#isBoolean}}z.boolean(){{/isBoolean}}
-                    {{#isDateTimeType}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateTimeType}}
-                    {{#isDateType}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateType}}
-                {{/items}})
-            {{/isArray}}
-            {{^isArray}}
-                {{#isString}}z.string(){{/isString}}
-                {{#isNumeric}}z.number(){{/isNumeric}}
-                {{#isBoolean}}z.boolean(){{/isBoolean}}
-                {{#isDateTimeType}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateTimeType}}
-                {{#isDateType}}z.union([z.iso.date(),z.iso.datetime())]).transform(val => new Date(val)){{/isDateType}}
-            {{/isArray}}
-        {{/oneOfPrimitives}}{{^-last}},{{/-last}}
-    {{/oneOf}}
+    {{#composedSchemas.oneOf}}
+    {{#isModel}}
+    z.lazy(() => {{dataType}}Schema),
+    {{/isModel}}
+    {{#isArray}}
+    z.array({{#items}}{{#isModel}}z.lazy(() => {{dataType}}Schema){{/isModel}}{{^isModel}}{{>modelZodOneOfPrimitive}}{{/isModel}}{{/items}}),
+    {{/isArray}}
+    {{^isModel}}
+    {{^isArray}}
+    {{>modelZodOneOfPrimitive}},
+    {{/isArray}}
+    {{/isModel}}
+    {{/composedSchemas.oneOf}}
 ]);
 {{/discriminator}}
 

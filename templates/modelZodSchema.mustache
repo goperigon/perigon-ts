@@ -6,7 +6,7 @@
  */
 {{/unescapedDescription}}
 export const {{classname}}Schema = z.object({
-{{#vars}}
+{{#allVars}}
 {{^vendorExtensions.x-internal}}
     {{#unescapedDescription}}
     /**
@@ -18,7 +18,7 @@ export const {{classname}}Schema = z.object({
     {{/unescapedDescription}}
     {{name}}: {{>zodFieldType}}{{^required}}.optional(){{/required}}{{#isNullable}}.nullable(){{/isNullable}},
 {{/vendorExtensions.x-internal}}
-{{/vars}}
+{{/allVars}}
 });
 
 export type {{classname}} = z.infer<typeof {{classname}}Schema>;
