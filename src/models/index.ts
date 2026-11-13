@@ -126,20 +126,9 @@ export type ApiLimitsDto = z.infer<typeof ApiLimitsDtoSchema>;
 
 export const BooleanSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always BOOLEAN.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("BOOLEAN"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -158,20 +147,9 @@ export type BooleanSpec = z.infer<typeof BooleanSpecSchema>;
 
 export const DateSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always DATE.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("DATE"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -190,20 +168,9 @@ export type DateSpec = z.infer<typeof DateSpecSchema>;
 
 export const DatetimeSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always DATETIME.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("DATETIME"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -222,20 +189,9 @@ export type DatetimeSpec = z.infer<typeof DatetimeSpecSchema>;
 
 export const EnumSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always ENUM.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("ENUM"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -258,20 +214,9 @@ export type EnumSpec = z.infer<typeof EnumSpecSchema>;
 
 export const IntegerPropertySchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always INTEGER.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("INTEGER"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -298,20 +243,9 @@ export type IntegerProperty = z.infer<typeof IntegerPropertySchema>;
 
 export const NumberPropertySchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always NUMBER.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("NUMBER"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -338,20 +272,9 @@ export type NumberProperty = z.infer<typeof NumberPropertySchema>;
 
 export const StringSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always STRING.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("STRING"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -370,20 +293,9 @@ export type StringSpec = z.infer<typeof StringSpecSchema>;
 
 export const UrlSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always URL.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("URL"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -415,20 +327,9 @@ export type PrimitiveSpec = z.infer<typeof PrimitiveSpecSchema>;
 
 export const ObjectSpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always OBJECT.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("OBJECT"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -469,20 +370,9 @@ export type ArrayElementSpec = z.infer<typeof ArrayElementSpecSchema>;
 
 export const ArraySpecSchema = z.object({
   /**
-   * Value type extracted for this field. Accepts ARRAY, BOOLEAN, DATE, DATETIME, ENUM, INTEGER, NUMBER, OBJECT, STRING, or URL.
+   * Always ARRAY.
    */
-  type: z.enum([
-    "ARRAY",
-    "BOOLEAN",
-    "DATE",
-    "DATETIME",
-    "ENUM",
-    "INTEGER",
-    "NUMBER",
-    "OBJECT",
-    "STRING",
-    "URL",
-  ]),
+  type: z.literal("ARRAY"),
   /**
    * Plain-language instructions describing the value to extract for this field.
    */
@@ -2638,8 +2528,9 @@ export const SignalLinkedInQuerySchema = z.object({
 
 export type SignalLinkedInQuery = z.infer<typeof SignalLinkedInQuerySchema>;
 
-export const SignalMonitoringPlanDataSchemaSchemaValueSchema =
-  z.discriminatedUnion("type", [
+export const SignalMonitoringPlanDataSchemaValueSchema = z.discriminatedUnion(
+  "type",
+  [
     z.lazy(() => ArraySpecSchema.extend({ type: z.literal("ARRAY") })),
     z.lazy(() => BooleanSpecSchema.extend({ type: z.literal("BOOLEAN") })),
     z.lazy(() => DateSpecSchema.extend({ type: z.literal("DATE") })),
@@ -2650,10 +2541,11 @@ export const SignalMonitoringPlanDataSchemaSchemaValueSchema =
     z.lazy(() => ObjectSpecSchema.extend({ type: z.literal("OBJECT") })),
     z.lazy(() => StringSpecSchema.extend({ type: z.literal("STRING") })),
     z.lazy(() => UrlSpecSchema.extend({ type: z.literal("URL") })),
-  ]);
+  ],
+);
 
-export type SignalMonitoringPlanDataSchemaSchemaValue = z.infer<
-  typeof SignalMonitoringPlanDataSchemaSchemaValueSchema
+export type SignalMonitoringPlanDataSchemaValue = z.infer<
+  typeof SignalMonitoringPlanDataSchemaValueSchema
 >;
 
 export const SignalMonitoringPlanDataSchemaSchema = z.object({
@@ -2668,7 +2560,7 @@ export const SignalMonitoringPlanDataSchemaSchema = z.object({
   /**
    * Structured event field definitions keyed by output field name.
    */
-  schema: z.record(z.string(), SignalMonitoringPlanDataSchemaSchemaValueSchema),
+  schema: z.record(z.string(), SignalMonitoringPlanDataSchemaValueSchema),
 });
 
 export type SignalMonitoringPlanDataSchema = z.infer<

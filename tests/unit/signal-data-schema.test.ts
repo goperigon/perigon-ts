@@ -1,4 +1,6 @@
 import {
+  ArraySpecSchema,
+  BooleanSpecSchema,
   Configuration,
   SignalMonitoringPlanDataSchemaSchema,
   V1Api,
@@ -75,6 +77,15 @@ describe("signal monitoring data schema", () => {
     ],
   ])("rejects %s", (_, field) => {
     expect(parseField(field).success).toBe(false);
+  });
+
+  it("pins each field spec schema to its own type", () => {
+    expect(BooleanSpecSchema.safeParse({ type: "BOOLEAN" }).success).toBe(true);
+    expect(BooleanSpecSchema.safeParse({ type: "STRING" }).success).toBe(false);
+    expect(
+      ArraySpecSchema.safeParse({ type: "OBJECT", element: { type: "URL" } })
+        .success,
+    ).toBe(false);
   });
 
   it("narrows fields by type", () => {

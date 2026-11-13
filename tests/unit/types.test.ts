@@ -1,6 +1,7 @@
 import type {
+  BooleanSpec,
   ExtraQueryParams,
-  SignalMonitoringPlanDataSchemaSchemaValue,
+  SignalMonitoringPlanDataSchemaValue,
   V1Api,
 } from "../../src";
 
@@ -20,13 +21,13 @@ function typeChecks(api: V1Api) {
   const extra: ExtraQueryParams = { a: undefined };
   void extra;
 
-  const field = {} as SignalMonitoringPlanDataSchemaSchemaValue;
+  const field = {} as SignalMonitoringPlanDataSchemaValue;
   if (field.type === "ENUM") {
     field.values satisfies string[];
   }
   if (field.type === "ARRAY") {
     field.element.type satisfies Exclude<
-      SignalMonitoringPlanDataSchemaSchemaValue["type"],
+      SignalMonitoringPlanDataSchemaValue["type"],
       "ARRAY"
     >;
     // @ts-expect-error Arrays cannot contain arrays.
@@ -34,10 +35,14 @@ function typeChecks(api: V1Api) {
   }
 
   // @ts-expect-error ENUM requires values.
-  const enumWithoutValues: SignalMonitoringPlanDataSchemaSchemaValue = {
+  const enumWithoutValues: SignalMonitoringPlanDataSchemaValue = {
     type: "ENUM",
   };
   void enumWithoutValues;
+
+  // @ts-expect-error Each field spec has its own type.
+  const booleanAsString: BooleanSpec = { type: "STRING" };
+  void booleanAsString;
 }
 
 describe("types", () => {
