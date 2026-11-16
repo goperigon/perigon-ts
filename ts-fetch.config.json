@@ -6,5 +6,8 @@
   "withInterfaces": true,
   "githubOrg": "goperigon",
   "githubRepo": "perigon-ts",
-  "modelPropertyNaming": "original"
+  "modelPropertyNaming": "original",
+  "inlineSchemaNameMappings": {
+    "SignalMonitoringPlanDataSchema_schema_value": "SignalMonitoringPlanDataSchemaValue"
+  }
 }

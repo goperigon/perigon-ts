@@ -6,7 +6,8 @@
  * Downloads the remote Perigon OpenAPI spec and produces a local snapshot
  * at `.openapi-generator/spec.local.json` that the generator consumes.
  *
- * Three transformations are applied, all driven by `scripts/spec-filters.json`:
+ * Four transformations are applied; the first three are driven by
+ * `scripts/spec-filters.json`:
  *
  *   1. Hidden properties: for each `<Schema>: [<field>, ...]` entry the
  *      matching property is removed from `components.schemas.<Schema>` AND
@@ -27,7 +28,12 @@
  *      or dropping a path (e.g. `/v1/api/monitors`) leaves its referenced
  *      schema unused.
  *
- * Why both layers:
+ *   4. Discriminator pins: every schema named in a discriminator `mapping`
+ *      gets its discriminator property narrowed to its mapped value and
+ *      marked `x-zod-literal`, which `templates/zodFieldType.mustache`
+ *      renders as `z.literal(...)`.
+ *
+ * Why both layers (for hidden properties):
  *   - The template rule makes it visible in version control *why* a field
  *     is hidden (it's a generator-level policy, not a side effect).
  *   - The preprocessor cleans up downstream schemas that the template alone
@@ -62,6 +68,7 @@ type SpecFiltersConfig = z.infer<typeof SpecFiltersConfigSchema>;
 const OpenApiSchemaSchema = z.looseObject({
   properties: z.record(z.string(), z.looseObject({})).optional(),
   required: z.array(z.string()).optional(),
+  allOf: z.array(z.looseObject({})).optional(),
 });
 
 const OpenApiSpecSchema = z.looseObject({
@@ -177,6 +184,81 @@ function collectRefs(node: unknown, acc: Set<string>): void {
   }
 }
 
+const DiscriminatorSchema = z.object({
+  propertyName: z.string(),
+  mapping: z.record(z.string(), z.string()).optional(),
+});
+
+function collectDiscriminators(
+  node: unknown,
+  acc: z.infer<typeof DiscriminatorSchema>[],
+): void {
+  if (node === null || typeof node !== "object") return;
+  if (Array.isArray(node)) {
+    for (const v of node) collectDiscriminators(v, acc);
+    return;
+  }
+  for (const [k, v] of Object.entries(node)) {
+    const discriminator =
+      k === "discriminator" && DiscriminatorSchema.safeParse(v);
+    if (discriminator && discriminator.success) {
+      acc.push(discriminator.data);
+    } else {
+      collectDiscriminators(v, acc);
+    }
+  }
+}
+
+/**
+ * Subtypes inherit the discriminator property from their base schema, which
+ * lists every subtype's value. Narrow it to the subtype's own value so the
+ * standalone subtype schema rejects the others.
+ */
+function pinDiscriminatorValues(spec: OpenApiSpec): string[] {
+  const schemas = spec.components?.schemas ?? {};
+  const discriminators: z.infer<typeof DiscriminatorSchema>[] = [];
+  collectDiscriminators(spec, discriminators);
+
+  const pins = new Map<string, { propertyName: string; value: string }>();
+  for (const { propertyName, mapping = {} } of discriminators) {
+    for (const [value, ref] of Object.entries(mapping)) {
+      const name = ref.replace("#/components/schemas/", "");
+      const pin = pins.get(name);
+      if (pin && (pin.propertyName !== propertyName || pin.value !== value)) {
+        throw new Error(
+          `${name} is mapped to both ${pin.propertyName}=${pin.value} and ${propertyName}=${value}`,
+        );
+      }
+      pins.set(name, { propertyName, value });
+    }
+  }
+
+  const pinned: string[] = [];
+  for (const [name, { propertyName, value }] of pins) {
+    const schema = schemas[name];
+    if (!schema) continue;
+    const property = {
+      type: "string",
+      description: `Always ${value}.`,
+      enum: [value],
+      "x-zod-literal": value,
+    };
+    // openapi-generator merges `allOf` members in order, so a trailing member
+    // overrides the property inherited from the base schema.
+    if (Array.isArray(schema.allOf)) {
+      schema.allOf.push({
+        type: "object",
+        properties: { [propertyName]: property },
+      });
+    } else {
+      schema.properties = { ...schema.properties, [propertyName]: property };
+    }
+    pinned.push(`${name}.${propertyName}`);
+    console.log(`  📌 Pinned ${name}.${propertyName} to ${value}`);
+  }
+  return pinned;
+}
+
 function pruneOrphanSchemas(spec: OpenApiSpec): string[] {
   const schemas = spec.components?.schemas;
   if (!schemas) return [];
@@ -258,13 +340,15 @@ async function main(): Promise<void> {
   }
 
   const pruned = pruneOrphanSchemas(spec);
+  const pinned = pinDiscriminatorValues(spec);
 
   mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
   writeFileSync(OUTPUT_PATH, JSON.stringify(spec, null, 2), "utf-8");
   console.log(
     `✅ Wrote preprocessed spec to ${OUTPUT_PATH} ` +
       `(${applied} field(s) hidden, ${excluded.length} path(s) excluded, ` +
-      `${pruned.length} orphan schema(s) pruned)`,
+      `${pruned.length} orphan schema(s) pruned, ` +
+      `${pinned.length} discriminator(s) pinned)`,
   );
 }
 

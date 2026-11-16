@@ -118,6 +118,7 @@ export const GetStoryCountsSplitByEnumSchema = z.enum([
   "day",
   "week",
   "month",
+  "none",
 ]);
 export type GetStoryCountsSplitByEnum = z.infer<
   typeof GetStoryCountsSplitByEnumSchema
@@ -127,6 +128,7 @@ export const GetStoryCountsSplitByEnum = {
   Day: "day",
   Week: "week",
   Month: "month",
+  None: "none",
 } as const;
 
 export const GetStoryHistorySortByEnumSchema = z.enum([
@@ -464,6 +466,12 @@ export const ActivateMonitorApiPathSchema = z.object({
 
 export const ActivateMonitorApiRequestSchema = z.object({
   ...ActivateMonitorApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ActivateMonitorApiRequest = z.input<
@@ -480,6 +488,12 @@ export const ArchiveMonitorApiPathSchema = z.object({
 
 export const ArchiveMonitorApiRequestSchema = z.object({
   ...ArchiveMonitorApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ArchiveMonitorApiRequest = z.input<
@@ -496,6 +510,12 @@ export const CreateContactPointBodySchema = z.object({
 
 export const CreateContactPointRequestSchema = z.object({
   ...CreateContactPointBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type CreateContactPointRequest = z.input<
@@ -512,6 +532,12 @@ export const CreateMonitorApiBodySchema = z.object({
 
 export const CreateMonitorApiRequestSchema = z.object({
   ...CreateMonitorApiBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type CreateMonitorApiRequest = z.input<
@@ -528,6 +554,12 @@ export const CreateSourceGroupBodySchema = z.object({
 
 export const CreateSourceGroupRequestSchema = z.object({
   ...CreateSourceGroupBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type CreateSourceGroupRequest = z.input<
@@ -544,6 +576,12 @@ export const CreateWatchlistBodySchema = z.object({
 
 export const CreateWatchlistRequestSchema = z.object({
   ...CreateWatchlistBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type CreateWatchlistRequest = z.input<
@@ -560,6 +598,12 @@ export const DeleteContactPointPathSchema = z.object({
 
 export const DeleteContactPointRequestSchema = z.object({
   ...DeleteContactPointPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type DeleteContactPointRequest = z.input<
@@ -576,6 +620,12 @@ export const DeleteSourceGroupPathSchema = z.object({
 
 export const DeleteSourceGroupRequestSchema = z.object({
   ...DeleteSourceGroupPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type DeleteSourceGroupRequest = z.input<
@@ -592,6 +642,12 @@ export const DeleteWatchlistPathSchema = z.object({
 
 export const DeleteWatchlistRequestSchema = z.object({
   ...DeleteWatchlistPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type DeleteWatchlistRequest = z.input<
@@ -608,6 +664,12 @@ export const GetContactPointPathSchema = z.object({
 
 export const GetContactPointRequestSchema = z.object({
   ...GetContactPointPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetContactPointRequest = z.input<
@@ -624,6 +686,12 @@ export const GetJournalistByIdPathSchema = z.object({
 
 export const GetJournalistByIdRequestSchema = z.object({
   ...GetJournalistByIdPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetJournalistByIdRequest = z.input<
@@ -639,6 +707,12 @@ export const GetLimitsQuerySchema = z.object({
 
 export const GetLimitsRequestSchema = z.object({
   ...GetLimitsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetLimitsRequest = z.input<typeof GetLimitsRequestSchema>;
@@ -653,15 +727,21 @@ export const GetLinkedinCompanyPostsQuerySchema = z.object({
   /**
    * Kind of posts to return. Defaults to all posts.
    */
-  type: GetLinkedinCompanyPostsTypeEnumSchema.optional(),
+  type: GetLinkedinCompanyPostsTypeEnumSchema.optional().nullable(),
   /**
    * `nextCursor` from the previous page.
    */
-  cursor: z.string().optional(),
+  cursor: z.string().optional().nullable(),
 });
 
 export const GetLinkedinCompanyPostsRequestSchema = z.object({
   ...GetLinkedinCompanyPostsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetLinkedinCompanyPostsRequest = z.input<
@@ -678,15 +758,21 @@ export const GetLinkedinPersonActivityQuerySchema = z.object({
   /**
    * Kind of activity to return. Defaults to posts.
    */
-  type: GetLinkedinPersonActivityTypeEnumSchema.optional(),
+  type: GetLinkedinPersonActivityTypeEnumSchema.optional().nullable(),
   /**
    * `nextCursor` from the previous page.
    */
-  cursor: z.string().optional(),
+  cursor: z.string().optional().nullable(),
 });
 
 export const GetLinkedinPersonActivityRequestSchema = z.object({
   ...GetLinkedinPersonActivityQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetLinkedinPersonActivityRequest = z.input<
@@ -703,6 +789,12 @@ export const GetMonitorApiPathSchema = z.object({
 
 export const GetMonitorApiRequestSchema = z.object({
   ...GetMonitorApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetMonitorApiRequest = z.input<typeof GetMonitorApiRequestSchema>;
@@ -717,6 +809,12 @@ export const GetSourceGroupPathSchema = z.object({
 
 export const GetSourceGroupRequestSchema = z.object({
   ...GetSourceGroupPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetSourceGroupRequest = z.input<typeof GetSourceGroupRequestSchema>;
@@ -787,7 +885,7 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   minUniqueSources: z.number().optional(),
   /**
-   * Float. Minimum ratio of unique sources to unique articles (uniqueSources / uniqueCount). Filters out stories dominated by a single publisher. For example, a value of 0.05 requires at least 1 unique source per 20 articles. Not applied by default.
+   * Float. Minimum ratio of unique sources to total articles including reprints (uniqueSourcesCount / totalCount). Filters out stories dominated by a single publisher. For example, a value of 0.05 requires at least 1 unique source per 20 articles. Not applied by default.
    */
   minSourceDiversity: z.number().optional(),
   /**
@@ -879,7 +977,7 @@ export const GetStoryCountsQuerySchema = z.object({
    */
   showDuplicates: z.boolean().optional(),
   /**
-   * Time interval used to group story counts. Accepts hour, day, week, or month and defaults to month.
+   * Time interval used to group story counts. Accepts hour, day, week, or month and defaults to month. Use none to return a single total count, without a date, for the whole range.
    * @required
    */
   splitBy: GetStoryCountsSplitByEnumSchema,
@@ -892,6 +990,12 @@ export const GetStoryCountsQuerySchema = z.object({
 
 export const GetStoryCountsRequestSchema = z.object({
   ...GetStoryCountsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetStoryCountsRequest = z.input<typeof GetStoryCountsRequestSchema>;
@@ -929,6 +1033,12 @@ export const GetStoryHistoryQuerySchema = z.object({
 
 export const GetStoryHistoryRequestSchema = z.object({
   ...GetStoryHistoryQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetStoryHistoryRequest = z.input<
@@ -945,6 +1055,12 @@ export const GetWatchlistPathSchema = z.object({
 
 export const GetWatchlistRequestSchema = z.object({
   ...GetWatchlistPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type GetWatchlistRequest = z.input<typeof GetWatchlistRequestSchema>;
@@ -986,6 +1102,12 @@ export const ListContactPointsQuerySchema = z.object({
 
 export const ListContactPointsRequestSchema = z.object({
   ...ListContactPointsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListContactPointsRequest = z.input<
@@ -1009,7 +1131,7 @@ export const ListMonitorEventsApiQuerySchema = z.object({
    * Required field used to sort events. Accepts createdAt, updatedAt, or eventDate.
    * @required
    */
-  sortBy: z.string(),
+  sortBy: Models.SignalEventSortBySchema,
 
   /**
    * Zero-based page number to retrieve. Defaults to 0.
@@ -1043,6 +1165,12 @@ export const ListMonitorEventsApiRequestSchema = z.object({
   ...ListMonitorEventsApiQuerySchema.shape,
 
   ...ListMonitorEventsApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListMonitorEventsApiRequest = z.input<
@@ -1066,7 +1194,7 @@ export const ListMonitorNewslettersApiQuerySchema = z.object({
    * Required field used to sort newsletters. Accepts createdAt or updatedAt.
    * @required
    */
-  sortBy: z.string(),
+  sortBy: Models.SignalNewsletterSortBySchema,
 
   /**
    * Zero-based page number to retrieve. Defaults to 0.
@@ -1100,6 +1228,12 @@ export const ListMonitorNewslettersApiRequestSchema = z.object({
   ...ListMonitorNewslettersApiQuerySchema.shape,
 
   ...ListMonitorNewslettersApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListMonitorNewslettersApiRequest = z.input<
@@ -1119,7 +1253,7 @@ export const ListMonitorSummariesApiQuerySchema = z.object({
    * Required field used to sort summaries. Accepts createdAt or updatedAt.
    * @required
    */
-  sortBy: z.string(),
+  sortBy: Models.SignalSummarySortBySchema,
 
   /**
    * Zero-based page number to retrieve. Defaults to 0.
@@ -1153,6 +1287,12 @@ export const ListMonitorSummariesApiRequestSchema = z.object({
   ...ListMonitorSummariesApiQuerySchema.shape,
 
   ...ListMonitorSummariesApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListMonitorSummariesApiRequest = z.input<
@@ -1180,7 +1320,7 @@ export const ListMonitorsApiQuerySchema = z.object({
    * Required field used to sort monitors. Accepts createdAt or updatedAt.
    * @required
    */
-  sortBy: z.string(),
+  sortBy: Models.SignalSortBySchema,
 
   /**
    * Zero-based page number to retrieve. Defaults to 0.
@@ -1204,6 +1344,12 @@ export const ListMonitorsApiQuerySchema = z.object({
 
 export const ListMonitorsApiRequestSchema = z.object({
   ...ListMonitorsApiQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListMonitorsApiRequest = z.input<
@@ -1247,6 +1393,12 @@ export const ListSourceGroupsQuerySchema = z.object({
 
 export const ListSourceGroupsRequestSchema = z.object({
   ...ListSourceGroupsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListSourceGroupsRequest = z.input<
@@ -1286,6 +1438,12 @@ export const ListWatchlistsQuerySchema = z.object({
 
 export const ListWatchlistsRequestSchema = z.object({
   ...ListWatchlistsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ListWatchlistsRequest = z.input<typeof ListWatchlistsRequestSchema>;
@@ -1300,6 +1458,12 @@ export const PauseMonitorApiPathSchema = z.object({
 
 export const PauseMonitorApiRequestSchema = z.object({
   ...PauseMonitorApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type PauseMonitorApiRequest = z.input<
@@ -1315,6 +1479,12 @@ export const ResolveSourceGroupsQuerySchema = z.object({
 
 export const ResolveSourceGroupsRequestSchema = z.object({
   ...ResolveSourceGroupsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ResolveSourceGroupsRequest = z.input<
@@ -1330,6 +1500,12 @@ export const ResolveWatchlistsQuerySchema = z.object({
 
 export const ResolveWatchlistsRequestSchema = z.object({
   ...ResolveWatchlistsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type ResolveWatchlistsRequest = z.input<
@@ -1729,6 +1905,12 @@ export const SearchArticlesQuerySchema = z.object({
 
 export const SearchArticlesRequestSchema = z.object({
   ...SearchArticlesQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchArticlesRequest = z.input<typeof SearchArticlesRequestSchema>;
@@ -1802,6 +1984,12 @@ export const SearchCompaniesQuerySchema = z.object({
 
 export const SearchCompaniesRequestSchema = z.object({
   ...SearchCompaniesQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchCompaniesRequest = z.input<
@@ -1901,6 +2089,12 @@ export const SearchJournalistsQuerySchema = z.object({
 
 export const SearchJournalistsRequestSchema = z.object({
   ...SearchJournalistsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchJournalistsRequest = z.input<
@@ -1917,27 +2111,33 @@ export const SearchLinkedinPostsQuerySchema = z.object({
   /**
    * Sort order of the results.
    */
-  sortBy: SearchLinkedinPostsSortByEnumSchema.optional(),
+  sortBy: SearchLinkedinPostsSortByEnumSchema.optional().nullable(),
   /**
    * Only return posts published within this time window.
    */
-  datePosted: SearchLinkedinPostsDatePostedEnumSchema.optional(),
+  datePosted: SearchLinkedinPostsDatePostedEnumSchema.optional().nullable(),
   /**
    * Only return posts with this type of content.
    */
-  contentType: SearchLinkedinPostsContentTypeEnumSchema.optional(),
+  contentType: SearchLinkedinPostsContentTypeEnumSchema.optional().nullable(),
   /**
    * Only return posts by authors whose title matches this value.
    */
-  authorTitle: z.string().optional(),
+  authorTitle: z.string().optional().nullable(),
   /**
    * Page number, starting at 1.
    */
-  page: z.number().optional(),
+  page: z.number().optional().nullable(),
 });
 
 export const SearchLinkedinPostsRequestSchema = z.object({
   ...SearchLinkedinPostsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchLinkedinPostsRequest = z.input<
@@ -1973,6 +2173,12 @@ export const SearchPeopleQuerySchema = z.object({
 
 export const SearchPeopleRequestSchema = z.object({
   ...SearchPeopleQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchPeopleRequest = z.input<typeof SearchPeopleRequestSchema>;
@@ -1987,23 +2193,29 @@ export const SearchRedditPostsQuerySchema = z.object({
   /**
    * Restrict the search to a subreddit (without the `r/` prefix).
    */
-  subreddit: z.string().optional(),
+  subreddit: z.string().optional().nullable(),
   /**
    * Sort order of the results.
    */
-  sort: SearchRedditPostsSortEnumSchema.optional(),
+  sort: SearchRedditPostsSortEnumSchema.optional().nullable(),
   /**
    * Time window of the results. Only applies to the `TOP` sort.
    */
-  time: SearchRedditPostsTimeEnumSchema.optional(),
+  time: SearchRedditPostsTimeEnumSchema.optional().nullable(),
   /**
    * `nextCursor` from the previous page.
    */
-  cursor: z.string().optional(),
+  cursor: z.string().optional().nullable(),
 });
 
 export const SearchRedditPostsRequestSchema = z.object({
   ...SearchRedditPostsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchRedditPostsRequest = z.input<
@@ -2111,6 +2323,12 @@ export const SearchSourcesQuerySchema = z.object({
 
 export const SearchSourcesRequestSchema = z.object({
   ...SearchSourcesQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchSourcesRequest = z.input<typeof SearchSourcesRequestSchema>;
@@ -2193,7 +2411,7 @@ export const SearchStoriesQuerySchema = z.object({
    */
   minUniqueSources: z.number().optional(),
   /**
-   * Float. Minimum ratio of unique sources to unique articles (uniqueSources / uniqueCount). Filters out stories dominated by a single publisher. For example, a value of 0.05 requires at least 1 unique source per 20 articles. Not applied by default.
+   * Float. Minimum ratio of unique sources to total articles including reprints (uniqueSourcesCount / totalCount). Filters out stories dominated by a single publisher. For example, a value of 0.05 requires at least 1 unique source per 20 articles. Not applied by default.
    */
   minSourceDiversity: z.number().optional(),
   /**
@@ -2324,6 +2542,12 @@ export const SearchStoriesQuerySchema = z.object({
 
 export const SearchStoriesRequestSchema = z.object({
   ...SearchStoriesQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchStoriesRequest = z.input<typeof SearchStoriesRequestSchema>;
@@ -2722,6 +2946,12 @@ export const SearchSummarizerBodySchema = z.object({
 export const SearchSummarizerRequestSchema = z.object({
   ...SearchSummarizerQuerySchema.shape,
   ...SearchSummarizerBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchSummarizerRequest = z.input<
@@ -2753,6 +2983,12 @@ export const SearchTopicsQuerySchema = z.object({
 
 export const SearchTopicsRequestSchema = z.object({
   ...SearchTopicsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchTopicsRequest = z.input<typeof SearchTopicsRequestSchema>;
@@ -2866,6 +3102,12 @@ export const SearchWikipediaQuerySchema = z.object({
 
 export const SearchWikipediaRequestSchema = z.object({
   ...SearchWikipediaQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchWikipediaRequest = z.input<
@@ -2888,11 +3130,17 @@ export const SearchXPostsQuerySchema = z.object({
   /**
    * `nextCursor` from the previous page.
    */
-  cursor: z.string().optional(),
+  cursor: z.string().optional().nullable(),
 });
 
 export const SearchXPostsRequestSchema = z.object({
   ...SearchXPostsQuerySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type SearchXPostsRequest = z.input<typeof SearchXPostsRequestSchema>;
@@ -2916,6 +3164,12 @@ export const UpdateContactPointPathSchema = z.object({
 export const UpdateContactPointRequestSchema = z.object({
   ...UpdateContactPointBodySchema.shape,
   ...UpdateContactPointPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type UpdateContactPointRequest = z.input<
@@ -2941,6 +3195,12 @@ export const UpdateMonitorApiPathSchema = z.object({
 export const UpdateMonitorApiRequestSchema = z.object({
   ...UpdateMonitorApiBodySchema.shape,
   ...UpdateMonitorApiPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type UpdateMonitorApiRequest = z.input<
@@ -2966,6 +3226,12 @@ export const UpdateSourceGroupPathSchema = z.object({
 export const UpdateSourceGroupRequestSchema = z.object({
   ...UpdateSourceGroupBodySchema.shape,
   ...UpdateSourceGroupPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type UpdateSourceGroupRequest = z.input<
@@ -2991,6 +3257,12 @@ export const UpdateWatchlistPathSchema = z.object({
 export const UpdateWatchlistRequestSchema = z.object({
   ...UpdateWatchlistBodySchema.shape,
   ...UpdateWatchlistPathSchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type UpdateWatchlistRequest = z.input<
@@ -3007,6 +3279,12 @@ export const VectorSearchArticlesBodySchema = z.object({
 
 export const VectorSearchArticlesRequestSchema = z.object({
   ...VectorSearchArticlesBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type VectorSearchArticlesRequest = z.input<
@@ -3023,6 +3301,12 @@ export const VectorSearchWikipediaBodySchema = z.object({
 
 export const VectorSearchWikipediaRequestSchema = z.object({
   ...VectorSearchWikipediaBodySchema.shape,
+
+  /**
+   * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+   * Values override declared parameters with the same name.
+   */
+  extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type VectorSearchWikipediaRequest = z.input<
@@ -3042,6 +3326,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorResult> {
     const params = ActivateMonitorApiRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3061,6 +3346,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "POST",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3077,6 +3363,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorResult> {
     const params = ArchiveMonitorApiRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3096,6 +3383,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "DELETE",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3112,6 +3400,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ContactPointResult> {
     const params = CreateContactPointRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -3129,7 +3418,7 @@ export class V1Api extends runtime.BaseAPI {
         path: `/v1/api/contactPoints`,
         method: "POST",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.contactPointRequestBody,
       },
       initOverrides,
@@ -3147,6 +3436,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorResult> {
     const params = CreateMonitorApiRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -3164,7 +3454,7 @@ export class V1Api extends runtime.BaseAPI {
         path: `/v1/api/monitors`,
         method: "POST",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.signalApiCreateBody,
       },
       initOverrides,
@@ -3182,6 +3472,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceGroupResult> {
     const params = CreateSourceGroupRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -3199,7 +3490,7 @@ export class V1Api extends runtime.BaseAPI {
         path: `/v1/api/sourceGroups`,
         method: "POST",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.createSourceGroupParams,
       },
       initOverrides,
@@ -3217,6 +3508,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WatchlistResult> {
     const params = CreateWatchlistRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -3234,7 +3526,7 @@ export class V1Api extends runtime.BaseAPI {
         path: `/v1/api/watchlists`,
         method: "POST",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.createWatchlistParams,
       },
       initOverrides,
@@ -3252,6 +3544,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ContactPointResult> {
     const params = DeleteContactPointRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3271,6 +3564,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "DELETE",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3287,6 +3581,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceGroupResult> {
     const params = DeleteSourceGroupRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3306,6 +3601,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "DELETE",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3322,6 +3618,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WatchlistResult> {
     const params = DeleteWatchlistRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3341,6 +3638,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "DELETE",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3357,6 +3655,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ContactPointResult> {
     const params = GetContactPointRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3376,6 +3675,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "GET",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3392,6 +3692,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<Journalist> {
     const params = GetJournalistByIdRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3411,6 +3712,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "GET",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3427,7 +3729,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<LimitsResult> {
     const params = GetLimitsRequestSchema.parse(requestParameters);
-    const queryParameters = GetLimitsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      GetLimitsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3453,7 +3758,7 @@ export class V1Api extends runtime.BaseAPI {
     return LimitsResultSchema.parse(raw);
   }
   /**
-   * Get the recent posts of a LinkedIn company page, newest first. Each request counts against your social request quota, separate from the news API quota.
+   * Get the recent posts of a LinkedIn company page, newest first. Each request counts against your social request quota if your plan has one, otherwise against your regular request quota.
    * LinkedIn Company Posts
    */
   async getLinkedinCompanyPosts(
@@ -3462,7 +3767,10 @@ export class V1Api extends runtime.BaseAPI {
   ): Promise<SocialLinkedInFeedResult> {
     const params =
       GetLinkedinCompanyPostsRequestSchema.parse(requestParameters);
-    const queryParameters = GetLinkedinCompanyPostsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      GetLinkedinCompanyPostsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3488,7 +3796,7 @@ export class V1Api extends runtime.BaseAPI {
     return SocialLinkedInFeedResultSchema.parse(raw);
   }
   /**
-   * Get the recent posts, comments or reactions of a LinkedIn member, newest first. Each request counts against your social request quota, separate from the news API quota.
+   * Get the recent posts, comments or reactions of a LinkedIn member, newest first. Each request counts against your social request quota if your plan has one, otherwise against your regular request quota.
    * LinkedIn Person Activity
    */
   async getLinkedinPersonActivity(
@@ -3497,7 +3805,10 @@ export class V1Api extends runtime.BaseAPI {
   ): Promise<SocialLinkedInFeedResult> {
     const params =
       GetLinkedinPersonActivityRequestSchema.parse(requestParameters);
-    const queryParameters = GetLinkedinPersonActivityQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      GetLinkedinPersonActivityQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3531,6 +3842,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorResult> {
     const params = GetMonitorApiRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3550,6 +3862,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "GET",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3566,6 +3879,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceGroupResult> {
     const params = GetSourceGroupRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3585,6 +3899,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "GET",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3601,7 +3916,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<StatResult> {
     const params = GetStoryCountsRequestSchema.parse(requestParameters);
-    const queryParameters = GetStoryCountsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      GetStoryCountsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3635,7 +3953,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<StoryHistoryResult> {
     const params = GetStoryHistoryRequestSchema.parse(requestParameters);
-    const queryParameters = GetStoryHistoryQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      GetStoryHistoryQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3669,6 +3990,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WatchlistResult> {
     const params = GetWatchlistRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3688,6 +4010,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "GET",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3704,7 +4027,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ContactPointListResult> {
     const params = ListContactPointsRequestSchema.parse(requestParameters);
-    const queryParameters = ListContactPointsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListContactPointsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3738,7 +4064,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorEventListResult> {
     const params = ListMonitorEventsApiRequestSchema.parse(requestParameters);
-    const queryParameters = ListMonitorEventsApiQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListMonitorEventsApiQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3776,7 +4105,10 @@ export class V1Api extends runtime.BaseAPI {
   ): Promise<MonitorNewsletterListResult> {
     const params =
       ListMonitorNewslettersApiRequestSchema.parse(requestParameters);
-    const queryParameters = ListMonitorNewslettersApiQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListMonitorNewslettersApiQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3814,7 +4146,10 @@ export class V1Api extends runtime.BaseAPI {
   ): Promise<MonitorSummaryListResult> {
     const params =
       ListMonitorSummariesApiRequestSchema.parse(requestParameters);
-    const queryParameters = ListMonitorSummariesApiQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListMonitorSummariesApiQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3851,7 +4186,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorListResult> {
     const params = ListMonitorsApiRequestSchema.parse(requestParameters);
-    const queryParameters = ListMonitorsApiQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListMonitorsApiQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3885,7 +4223,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceGroupListResult> {
     const params = ListSourceGroupsRequestSchema.parse(requestParameters);
-    const queryParameters = ListSourceGroupsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListSourceGroupsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3919,7 +4260,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WatchlistListResult> {
     const params = ListWatchlistsRequestSchema.parse(requestParameters);
-    const queryParameters = ListWatchlistsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ListWatchlistsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3953,6 +4297,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorResult> {
     const params = PauseMonitorApiRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3972,6 +4317,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "POST",
         headers: headerParameters,
+        query: queryParameters,
       },
       initOverrides,
     );
@@ -3988,7 +4334,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceGroupResolveResult> {
     const params = ResolveSourceGroupsRequestSchema.parse(requestParameters);
-    const queryParameters = ResolveSourceGroupsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ResolveSourceGroupsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4022,7 +4371,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WatchlistResolveResult> {
     const params = ResolveWatchlistsRequestSchema.parse(requestParameters);
-    const queryParameters = ResolveWatchlistsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      ResolveWatchlistsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4056,7 +4408,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<QuerySearchResult> {
     const params = SearchArticlesRequestSchema.parse(requestParameters);
-    const queryParameters = SearchArticlesQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchArticlesQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4090,7 +4445,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<CompanySearchResult> {
     const params = SearchCompaniesRequestSchema.parse(requestParameters);
-    const queryParameters = SearchCompaniesQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchCompaniesQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4124,7 +4482,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<JournalistSearchResult> {
     const params = SearchJournalistsRequestSchema.parse(requestParameters);
-    const queryParameters = SearchJournalistsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchJournalistsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4150,7 +4511,7 @@ export class V1Api extends runtime.BaseAPI {
     return JournalistSearchResultSchema.parse(raw);
   }
   /**
-   * Search public LinkedIn posts by keyword. Each request counts against your social request quota, separate from the news API quota.
+   * Search public LinkedIn posts by keyword. Each request counts against your social request quota if your plan has one, otherwise against your regular request quota.
    * LinkedIn Posts
    */
   async searchLinkedinPosts(
@@ -4158,7 +4519,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SocialLinkedInPostSearchResult> {
     const params = SearchLinkedinPostsRequestSchema.parse(requestParameters);
-    const queryParameters = SearchLinkedinPostsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchLinkedinPostsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4192,7 +4556,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<PeopleSearchResult> {
     const params = SearchPeopleRequestSchema.parse(requestParameters);
-    const queryParameters = SearchPeopleQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchPeopleQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4218,7 +4585,7 @@ export class V1Api extends runtime.BaseAPI {
     return PeopleSearchResultSchema.parse(raw);
   }
   /**
-   * Search Reddit posts, optionally within a single subreddit. Each request counts against your social request quota, separate from the news API quota.
+   * Search Reddit posts, optionally within a single subreddit. Each request counts against your social request quota if your plan has one, otherwise against your regular request quota.
    * Reddit Posts
    */
   async searchRedditPosts(
@@ -4226,7 +4593,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SocialRedditPostSearchResult> {
     const params = SearchRedditPostsRequestSchema.parse(requestParameters);
-    const queryParameters = SearchRedditPostsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchRedditPostsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4260,7 +4630,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceSearchResult> {
     const params = SearchSourcesRequestSchema.parse(requestParameters);
-    const queryParameters = SearchSourcesQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchSourcesQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4294,7 +4667,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<StorySearchResult> {
     const params = SearchStoriesRequestSchema.parse(requestParameters);
-    const queryParameters = SearchStoriesQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchStoriesQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4328,7 +4704,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SummarySearchResult> {
     const params = SearchSummarizerRequestSchema.parse(requestParameters);
-    const queryParameters = SearchSummarizerQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchSummarizerQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4364,7 +4743,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<TopicSearchResult> {
     const params = SearchTopicsRequestSchema.parse(requestParameters);
-    const queryParameters = SearchTopicsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchTopicsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4398,7 +4780,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WikipediaSearchResult> {
     const params = SearchWikipediaRequestSchema.parse(requestParameters);
-    const queryParameters = SearchWikipediaQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchWikipediaQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4424,7 +4809,7 @@ export class V1Api extends runtime.BaseAPI {
     return WikipediaSearchResultSchema.parse(raw);
   }
   /**
-   * Search recent posts on X (Twitter). Each request counts against your social request quota, separate from the news API quota.
+   * Search recent posts on X (Twitter). Each request counts against your social request quota if your plan has one, otherwise against your regular request quota.
    * X Posts
    */
   async searchXPosts(
@@ -4432,7 +4817,10 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SocialXPostSearchResult> {
     const params = SearchXPostsRequestSchema.parse(requestParameters);
-    const queryParameters = SearchXPostsQuerySchema.parse(params);
+    const queryParameters = runtime.buildQuery(
+      SearchXPostsQuerySchema.parse(params),
+      params.extraParams,
+    );
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -4466,6 +4854,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ContactPointResult> {
     const params = UpdateContactPointRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4486,7 +4875,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "PATCH",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.contactPointUpdateBody,
       },
       initOverrides,
@@ -4504,6 +4893,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<MonitorResult> {
     const params = UpdateMonitorApiRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4524,7 +4914,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "PATCH",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.signalApiUpdateBody,
       },
       initOverrides,
@@ -4542,6 +4932,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<SourceGroupResult> {
     const params = UpdateSourceGroupRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4562,7 +4953,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "PATCH",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.patchSourceGroupParams,
       },
       initOverrides,
@@ -4580,6 +4971,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WatchlistResult> {
     const params = UpdateWatchlistRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4600,7 +4992,7 @@ export class V1Api extends runtime.BaseAPI {
         ),
         method: "PATCH",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.updateWatchlistParams,
       },
       initOverrides,
@@ -4618,6 +5010,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<ArticlesVectorSearchResult> {
     const params = VectorSearchArticlesRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4635,7 +5028,7 @@ export class V1Api extends runtime.BaseAPI {
         path: `/v1/vector/news/all`,
         method: "POST",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.articleSearchParams,
       },
       initOverrides,
@@ -4653,6 +5046,7 @@ export class V1Api extends runtime.BaseAPI {
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<WikipediaVectorSearchResult> {
     const params = VectorSearchWikipediaRequestSchema.parse(requestParameters);
+    const queryParameters = runtime.buildQuery(params.extraParams);
 
     const headerParameters: runtime.HTTPHeaders = {};
     headerParameters["Content-Type"] = "application/json";
@@ -4670,7 +5064,7 @@ export class V1Api extends runtime.BaseAPI {
         path: `/v1/vector/wikipedia/all`,
         method: "POST",
         headers: headerParameters,
-
+        query: queryParameters,
         body: params.wikipediaSearchParams,
       },
       initOverrides,

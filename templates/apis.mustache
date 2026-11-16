@@ -95,6 +95,11 @@ export const {{operationIdCamelCase}}RequestSchema = z.object({
 {{#bodyParam}}...{{operationIdCamelCase}}BodySchema.shape,{{/bodyParam}}
 {{#pathParams.0}}...{{operationIdCamelCase}}PathSchema.shape,{{/pathParams.0}}
 {{#headerParams.0}}...{{operationIdCamelCase}}HeaderSchema.shape,{{/headerParams.0}}
+    /**
+     * Query parameters sent as-is, without validation, e.g. ones this SDK version does not declare yet.
+     * Values override declared parameters with the same name.
+     */
+    extraParams: runtime.ExtraQueryParamsSchema,
 });
 
 export type {{operationIdCamelCase}}Request = z.input<typeof {{operationIdCamelCase}}RequestSchema>;
@@ -123,9 +128,10 @@ export class {{classname}} extends runtime.BaseAPI {
     async {{nickname}}({{#allParams.0}}requestParameters: {{operationIdCamelCase}}Request{{^hasRequiredParams}} = {}{{/hasRequiredParams}}, {{/allParams.0}}initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{{{returnType}}}{{#returnType}}{{#isResponseOptional}} | null | undefined {{/isResponseOptional}}{{/returnType}}{{^returnType}}unknown{{/returnType}}> {
         {{#allParams.0}}
         const params = {{operationIdCamelCase}}RequestSchema.parse(requestParameters);
-        {{#queryParams.0}}
-        const queryParameters = {{operationIdCamelCase}}QuerySchema.parse(params);
-        {{/queryParams.0}}
+        const queryParameters = runtime.buildQuery(
+            {{#queryParams.0}}{{operationIdCamelCase}}QuerySchema.parse(params),{{/queryParams.0}}
+            params.extraParams,
+        );
         {{/allParams.0}}
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -168,7 +174,7 @@ export class {{classname}} extends runtime.BaseAPI {
             path: `{{{path}}}`{{#pathParams}}.replace(`{${"{{baseName}}"}}`, encodeURIComponent(String(params.{{paramName}}))){{/pathParams}},
             method: '{{httpMethod}}',
             headers: headerParameters,
-            {{#queryParams.0}}query: queryParameters,{{/queryParams.0}}
+            {{#allParams.0}}query: queryParameters,{{/allParams.0}}
             {{#hasBodyParam}}
             {{#bodyParam}}
             {{#isContainer}}

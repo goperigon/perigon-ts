@@ -1,0 +1,1 @@
+{{#isString}}z.string(){{/isString}}{{#isNumeric}}z.number(){{/isNumeric}}{{#isBoolean}}z.boolean(){{/isBoolean}}{{#isDateTime}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDateTime}}{{#isDate}}z.union([z.iso.date(),z.iso.datetime()]).transform(val => new Date(val)){{/isDate}}
